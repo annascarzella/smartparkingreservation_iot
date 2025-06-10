@@ -20,4 +20,5 @@ frontend-run:
     docker compose up frontend
 
 node-red:
-    docker run -it -p 1880:1880 -v ./node-red:/data --name mynodered nodered/node-red
+    docker compose build --no-cache node-red
+    docker compose up node-red
