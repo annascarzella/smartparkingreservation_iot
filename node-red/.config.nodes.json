@@ -427,6 +427,29 @@
             }
         }
     },
+    "node-red-contrib-web-worldmap-cn": {
+        "name": "node-red-contrib-web-worldmap-cn",
+        "version": "4.8.2",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "worldmap": {
+                "name": "worldmap",
+                "types": [
+                    "worldmap",
+                    "ui_worldmap",
+                    "worldmap in",
+                    "worldmap-tracks",
+                    "worldmap-hull"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-web-worldmap-cn",
+                "file": "/data/node_modules/node-red-contrib-web-worldmap-cn/worldmap.js"
+            }
+        }
+    },
     "node-red-dashboard": {
         "name": "node-red-dashboard",
         "version": "3.6.5",
@@ -663,29 +686,6 @@
                 "user": false,
                 "module": "node-red-dashboard",
                 "file": "/data/node_modules/node-red-dashboard/nodes/ui_spacer.js"
-            }
-        }
-    },
-    "node-red-contrib-web-worldmap-cn": {
-        "name": "node-red-contrib-web-worldmap-cn",
-        "version": "4.8.2",
-        "local": true,
-        "user": true,
-        "nodes": {
-            "worldmap": {
-                "name": "worldmap",
-                "types": [
-                    "worldmap",
-                    "ui_worldmap",
-                    "worldmap in",
-                    "worldmap-tracks",
-                    "worldmap-hull"
-                ],
-                "enabled": true,
-                "local": true,
-                "user": false,
-                "module": "node-red-contrib-web-worldmap-cn",
-                "file": "/data/node_modules/node-red-contrib-web-worldmap-cn/worldmap.js"
             }
         }
     }
