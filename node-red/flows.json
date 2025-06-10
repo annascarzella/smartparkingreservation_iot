@@ -1,0 +1,76 @@
+[
+    {
+        "id": "03e10e9aa75d8466",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "197302fdc942412f",
+        "type": "inject",
+        "z": "03e10e9aa75d8466",
+        "name": "first",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "pizza",
+        "payload": "object",
+        "payloadType": "date",
+        "x": 290,
+        "y": 240,
+        "wires": [
+            [
+                "614fa339d00299a8"
+            ]
+        ]
+    },
+    {
+        "id": "c177299495c16bf5",
+        "type": "debug",
+        "z": "03e10e9aa75d8466",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 800,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "614fa339d00299a8",
+        "type": "function",
+        "z": "03e10e9aa75d8466",
+        "name": "function 1",
+        "func": "// Create a Date object from the payload\nvar date = new Date(msg.payload);\n// Change the payload to be a formatted Date string\nmsg.payload = date.toString();\n// Return the message so it can be sent on\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 240,
+        "wires": [
+            [
+                "c177299495c16bf5"
+            ]
+        ]
+    }
+]
