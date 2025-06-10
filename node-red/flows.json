@@ -8,6 +8,196 @@
         "env": []
     },
     {
+        "id": "4d557c6e03ed11a6",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "7c8db23661c1552d",
+        "type": "tab",
+        "label": "Data  flow",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "3183d960bb512fc5",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "1a3cd9b708133f3a",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "1a3cd9b708133f3a",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "ac45a6a93184702e",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "dcd841fbaba3184b",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "test.mosquitto.org",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "7a6e4a7151544774",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "5e317bd49bd8242f",
+        "type": "ui_group",
+        "name": "Locatization",
+        "tab": "7a6e4a7151544774",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "85621b31f330f358",
+        "type": "ui_group",
+        "name": "Charts",
+        "tab": "7a6e4a7151544774",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
         "id": "197302fdc942412f",
         "type": "inject",
         "z": "03e10e9aa75d8466",
@@ -49,8 +239,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 800,
-        "y": 240,
+        "x": 840,
+        "y": 160,
         "wires": []
     },
     {
@@ -58,19 +248,495 @@
         "type": "function",
         "z": "03e10e9aa75d8466",
         "name": "function 1",
-        "func": "// Create a Date object from the payload\nvar date = new Date(msg.payload);\n// Change the payload to be a formatted Date string\nmsg.payload = date.toString();\n// Return the message so it can be sent on\nreturn msg;",
+        "func": "// Create a Date object from the payload\nvar date = new Date(msg.payload);\n// Change the payload to be a formatted Date string\nmsg.payload = date.toString();\n// Return the message so it can be sent on\n\n\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 500,
-        "y": 240,
+        "x": 580,
+        "y": 280,
         "wires": [
             [
                 "c177299495c16bf5"
             ]
         ]
+    },
+    {
+        "id": "a7e578d3415a4298",
+        "type": "http request",
+        "z": "4d557c6e03ed11a6",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.csv",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 350,
+        "y": 200,
+        "wires": [
+            [
+                "bef8d68a1d07a4aa"
+            ]
+        ]
+    },
+    {
+        "id": "bef8d68a1d07a4aa",
+        "type": "csv",
+        "z": "4d557c6e03ed11a6",
+        "name": "",
+        "spec": "rfc",
+        "sep": ",",
+        "hdrin": true,
+        "hdrout": "none",
+        "multi": "one",
+        "ret": "\\r\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 590,
+        "y": 280,
+        "wires": [
+            [
+                "1fb28b8bec757a59",
+                "020f09cd9775b056"
+            ]
+        ]
+    },
+    {
+        "id": "1fb28b8bec757a59",
+        "type": "debug",
+        "z": "4d557c6e03ed11a6",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "020f09cd9775b056",
+        "type": "switch",
+        "z": "4d557c6e03ed11a6",
+        "name": "",
+        "property": "payload.mag",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gte",
+                "v": "6",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 680,
+        "y": 460,
+        "wires": [
+            [
+                "6dd1f828ea13b8cd"
+            ]
+        ]
+    },
+    {
+        "id": "6dd1f828ea13b8cd",
+        "type": "change",
+        "z": "4d557c6e03ed11a6",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "PANIC!",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 960,
+        "y": 460,
+        "wires": [
+            [
+                "279415351bd091d3"
+            ]
+        ]
+    },
+    {
+        "id": "279415351bd091d3",
+        "type": "debug",
+        "z": "4d557c6e03ed11a6",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1200,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "78f4eddb8c191b75",
+        "type": "inject",
+        "z": "4d557c6e03ed11a6",
+        "name": "csv",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "300",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 160,
+        "wires": [
+            [
+                "a7e578d3415a4298"
+            ]
+        ]
+    },
+    {
+        "id": "367e4ca7b6813d1f",
+        "type": "mqtt in",
+        "z": "7c8db23661c1552d",
+        "name": "",
+        "topic": "dibris/iomt",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "dcd841fbaba3184b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 100,
+        "y": 140,
+        "wires": [
+            [
+                "5d6dcd64d7529b48",
+                "0c632d75adf47ae7"
+            ]
+        ]
+    },
+    {
+        "id": "7b5e16bfcda9a1ec",
+        "type": "debug",
+        "z": "7c8db23661c1552d",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "0248f5d63f1ec2e2",
+        "type": "worldmap",
+        "z": "7c8db23661c1552d",
+        "name": "Map",
+        "lat": "44.403423",
+        "lon": "8.958433",
+        "zoom": "18",
+        "layer": "OSMG",
+        "cluster": "",
+        "maxage": "60",
+        "usermenu": "show",
+        "layers": "show",
+        "panit": "false",
+        "panlock": "false",
+        "zoomlock": "false",
+        "hiderightclick": "false",
+        "coords": "none",
+        "showgrid": "false",
+        "showruler": "false",
+        "allowFileDrop": "false",
+        "path": "/worldmap",
+        "overlist": "DR,CO,RA,DN",
+        "maplist": "OSMG,OSMC,EsriC,EsriS,UKOS",
+        "mapname": "",
+        "mapurl": "",
+        "mapopt": "",
+        "mapwms": false,
+        "x": 810,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "e0f236f764d23686",
+        "type": "function",
+        "z": "7c8db23661c1552d",
+        "name": "prepare marker",
+        "func": "let id = msg.payload.ID;\nlet temp = msg.payload.t;\n\nmsg.payload = {\n    \"name\": id,\n    \"temperature\" : temp,\n    \"lat\": 44.403423,\n    \"lon\": 8.958433\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 40,
+        "wires": [
+            [
+                "0248f5d63f1ec2e2",
+                "7b5e16bfcda9a1ec"
+            ]
+        ]
+    },
+    {
+        "id": "1546f44585fe12e5",
+        "type": "ui_template",
+        "z": "7c8db23661c1552d",
+        "group": "5e317bd49bd8242f",
+        "name": "Site",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "format": "<iframe src=\"http://127.0.0.1:1880/worldmap\" \ntitle=\"Map\" \nheight=400 \nwidth=300>\n</iframe>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 810,
+        "y": 40,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b17271e3dbaa88ec",
+        "type": "ui_chart",
+        "z": "7c8db23661c1552d",
+        "name": "",
+        "group": "85621b31f330f358",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "User 1",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 810,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1458ec4adf735082",
+        "type": "function",
+        "z": "7c8db23661c1552d",
+        "name": "prepare data",
+        "func": "let id = msg.payload.ID;\nlet temp = msg.payload.t;\n\nmsg.payload = temp;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 100,
+        "wires": [
+            [
+                "b17271e3dbaa88ec"
+            ]
+        ]
+    },
+    {
+        "id": "5d6dcd64d7529b48",
+        "type": "switch",
+        "z": "7c8db23661c1552d",
+        "name": "",
+        "property": "payload.ID",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "2",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "3",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 270,
+        "y": 240,
+        "wires": [
+            [
+                "1458ec4adf735082",
+                "e0f236f764d23686"
+            ],
+            [
+                "4e16452761362153",
+                "9afdb1365bbc7540"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "4e16452761362153",
+        "type": "function",
+        "z": "7c8db23661c1552d",
+        "name": "prepare data",
+        "func": "let id = msg.payload.ID;\nlet temp = msg.payload.t;\n\nmsg.payload = temp;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 340,
+        "wires": [
+            [
+                "841d2d5ffb1307a1"
+            ]
+        ]
+    },
+    {
+        "id": "841d2d5ffb1307a1",
+        "type": "ui_chart",
+        "z": "7c8db23661c1552d",
+        "name": "",
+        "group": "85621b31f330f358",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "User 2",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 810,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9afdb1365bbc7540",
+        "type": "function",
+        "z": "7c8db23661c1552d",
+        "name": "prepare marker",
+        "func": "let id = msg.payload.ID;\nlet temp = msg.payload.t;\n\nmsg.payload = {\n    \"name\": id,\n    \"temperature\" : temp,\n    \"lat\": 44.403001,\n    \"lon\": 8.958208\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 260,
+        "wires": [
+            [
+                "7b5e16bfcda9a1ec",
+                "0248f5d63f1ec2e2"
+            ]
+        ]
+    },
+    {
+        "id": "0c632d75adf47ae7",
+        "type": "debug",
+        "z": "7c8db23661c1552d",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 220,
+        "y": 380,
+        "wires": []
     }
 ]
