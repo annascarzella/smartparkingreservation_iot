@@ -2,6 +2,7 @@
   "dependencies": {
     "aedes": "^0.51.3",
     "http": "^0.0.1-security",
+    "mqtt": "^5.13.1",
     "websocket-stream": "^5.5.2"
   }
 }

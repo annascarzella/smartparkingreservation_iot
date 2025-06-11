@@ -209,7 +209,7 @@
         "id": "ab4256557d4a6aac",
         "type": "mqtt-broker",
         "name": "provolone",
-        "broker": "ws://localhost:8000",
+        "broker": "ws://mqtt:8000",
         "port": "8000",
         "clientid": "",
         "autoConnect": true,

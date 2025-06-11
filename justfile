@@ -26,3 +26,7 @@ node-red:
 mqtt:
     docker compose build --no-cache mqtt
     docker compose up mqtt
+
+devices:
+    docker compose build --no-cache devices
+    docker compose up devices
