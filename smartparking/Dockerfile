@@ -2,11 +2,14 @@ FROM node:current-alpine
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY package.json ./
 
-# Install dependencies
 RUN npm install
-RUN npm i nuxt
+
+COPY . .
+
 RUN npm rebuild
+
+EXPOSE 3000
 
 CMD ["npm", "run", "dev"]

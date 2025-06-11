@@ -3,9 +3,13 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./smartparking
-    volumes:
-      - ./smartparking:/app
-    network_mode: host
+    ports:
+      - "3000:3000"
+    #volumes:
+    #  - ./smartparking:/app
+    environment:
+      - NODE_ENV=development
+
   node-red:
     image: nodered/node-red
     container_name: mynodered
