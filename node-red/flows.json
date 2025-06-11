@@ -467,7 +467,7 @@
         "topic": "dibris/iomt",
         "qos": "0",
         "datatype": "auto-detect",
-        "broker": "dcd841fbaba3184b",
+        "broker": "",
         "nl": false,
         "rap": true,
         "rh": 0,
@@ -791,8 +791,8 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 410,
-        "y": 280,
+        "x": 310,
+        "y": 180,
         "wires": [
             [
                 "a1f30bb30f2edf9e"
@@ -811,8 +811,113 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 760,
-        "y": 300,
+        "x": 1040,
+        "y": 280,
         "wires": []
+    },
+    {
+        "id": "2203b360efd12625",
+        "type": "mqtt in",
+        "z": "834b73d92d2d0f01",
+        "name": "",
+        "topic": "gateway-2/heartbeat",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ab4256557d4a6aac",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 310,
+        "y": 300,
+        "wires": [
+            [
+                "a1f30bb30f2edf9e"
+            ]
+        ]
+    },
+    {
+        "id": "c58060a98ffdd37b",
+        "type": "mqtt in",
+        "z": "834b73d92d2d0f01",
+        "name": "",
+        "topic": "gateway-3/heartbeat",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ab4256557d4a6aac",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 310,
+        "y": 420,
+        "wires": [
+            [
+                "a1f30bb30f2edf9e"
+            ]
+        ]
+    },
+    {
+        "id": "e03094effb7903c1",
+        "type": "mqtt in",
+        "z": "834b73d92d2d0f01",
+        "name": "",
+        "topic": "gateway-1/up_link",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ab4256557d4a6aac",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 570,
+        "y": 520,
+        "wires": [
+            [
+                "a1f30bb30f2edf9e"
+            ]
+        ]
+    },
+    {
+        "id": "b49dbd345230accd",
+        "type": "mqtt in",
+        "z": "834b73d92d2d0f01",
+        "name": "",
+        "topic": "gateway-2/up_link",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ab4256557d4a6aac",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 570,
+        "y": 640,
+        "wires": [
+            [
+                "a1f30bb30f2edf9e"
+            ]
+        ]
+    },
+    {
+        "id": "50e0ff3c8ccec022",
+        "type": "mqtt in",
+        "z": "834b73d92d2d0f01",
+        "name": "",
+        "topic": "gateway-3/up_link",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ab4256557d4a6aac",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 570,
+        "y": 760,
+        "wires": [
+            [
+                "a1f30bb30f2edf9e"
+            ]
+        ]
     }
 ]

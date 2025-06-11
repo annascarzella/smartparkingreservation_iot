@@ -61,7 +61,7 @@ client.on("connect", function () {
       console.log(`Publishing heartbeat for gateway ${gateway.id}`);
       client.publish(`${gateway.id}/heartbeat`, Json);
     }
-  }, 5_000);
+  }, 60_000);
 });
 
 // on mqtt message received of topic down_link
