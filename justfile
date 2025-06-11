@@ -22,3 +22,7 @@ frontend-run:
 node-red:
     docker compose build --no-cache node-red
     docker compose up node-red
+
+mqtt:
+    docker compose build --no-cache mqtt
+    docker compose up mqtt
