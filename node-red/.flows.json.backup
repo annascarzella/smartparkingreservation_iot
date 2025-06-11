@@ -24,15 +24,12 @@
         "env": []
     },
     {
-        "id": "3183d960bb512fc5",
-        "type": "ui_group",
-        "name": "Default",
-        "tab": "1a3cd9b708133f3a",
-        "order": 1,
-        "disp": true,
-        "width": 6,
-        "collapse": false,
-        "className": ""
+        "id": "834b73d92d2d0f01",
+        "type": "tab",
+        "label": "Flow 3",
+        "disabled": false,
+        "info": "",
+        "env": []
     },
     {
         "id": "1a3cd9b708133f3a",
@@ -194,6 +191,17 @@
         "order": 2,
         "disp": true,
         "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "3183d960bb512fc5",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "1a3cd9b708133f3a",
+        "order": 1,
+        "disp": true,
+        "width": 6,
         "collapse": false,
         "className": ""
     },
@@ -425,7 +433,7 @@
         "type": "mqtt in",
         "z": "7c8db23661c1552d",
         "name": "",
-        "topic": "test_temp",
+        "topic": "dibris/iomt",
         "qos": "0",
         "datatype": "auto-detect",
         "broker": "dcd841fbaba3184b",
@@ -738,5 +746,28 @@
         "x": 220,
         "y": 380,
         "wires": []
+    },
+    {
+        "id": "51e301db0502d960",
+        "type": "aedes broker",
+        "z": "834b73d92d2d0f01",
+        "name": "provolone",
+        "mqtt_port": "8001",
+        "mqtt_ws_bind": "port",
+        "mqtt_ws_port": "",
+        "mqtt_ws_path": "",
+        "cert": "",
+        "key": "",
+        "certname": "",
+        "keyname": "",
+        "persistence_bind": "memory",
+        "dburl": "",
+        "usetls": false,
+        "x": 280,
+        "y": 200,
+        "wires": [
+            [],
+            []
+        ]
     }
 ]

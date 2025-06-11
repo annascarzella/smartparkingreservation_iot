@@ -13,9 +13,10 @@ services:
   node-red:
     image: nodered/node-red
     container_name: mynodered
-    ports:
-      - "1880:1880"
+    #ports:
+    #  - "1880:1880"
     volumes:
       - ./node-red:/data
     stdin_open: true
     tty: true
+    network_mode: host
