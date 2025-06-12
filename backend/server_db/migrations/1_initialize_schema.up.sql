@@ -60,7 +60,7 @@ INSERT INTO lock (gateway_id, latitude, longitude, status, alarm, magneticsensor
 (2, 45.465, 9.192, 'free', 'off', 'off'),
 (3, 45.466, 9.193, 'free', 'off', 'off');
 
-INSERT INTO user (email, password_hash) VALUES
+INSERT INTO users (email, password_hash) VALUES
 ('user1@example.com', 'password1'),
 ('user2@example.com', 'password2'),
 ('user3@example.com', 'password3');
