@@ -34,15 +34,15 @@ CREATE TABLE IF NOT EXISTS lock (
     UNIQUE (gateway_id, latitude, longitude)
 );
 
-CREATE TABLE IF NOT EXISTS user (
+CREATE TABLE IF NOT EXISTS users (
     id serial PRIMARY KEY,
     email varchar(100) NOT NULL UNIQUE,
-    password_hash varchar(255) NOT NULL,
+    password_hash varchar(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS reservation (
     id serial PRIMARY KEY,
-    user_id int NOT NULL REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    user_id int NOT NULL REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
     lock_id int NOT NULL REFERENCES lock(id) ON UPDATE CASCADE ON DELETE CASCADE,
     start_time timestamp with time zone NOT NULL,
     end_time timestamp with time zone NOT NULL,

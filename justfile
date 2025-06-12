@@ -15,11 +15,11 @@ down:
     docker image prune -f
     docker container prune -f
 
-frontend-run:
+frontend:
     docker compose build --no-cache frontend
     docker compose up frontend
 
-node-red:
+nodered:
     docker compose build --no-cache node-red
     docker compose up node-red
 
@@ -30,3 +30,11 @@ mqtt:
 devices:
     docker compose build --no-cache devices
     docker compose up devices
+
+migration:
+    docker compose build --no-cache database-migrations
+    docker compose up database-migrations -d
+
+postgres:
+    docker compose build --no-cache postgres
+    docker compose up postgres -d
