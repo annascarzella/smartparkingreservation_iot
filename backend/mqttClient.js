@@ -1,6 +1,9 @@
-const mqtt = require("mqtt");
-const dotenv = require("dotenv");
+//const mqtt = require("mqtt");
+
+import mqtt from "mqtt";
+import dotenv from 'dotenv';
 dotenv.config();
+
 var client = mqtt.connect(process.env.WSMQTT);
 
 var IDsgateways = [1, 2, 3];
@@ -45,4 +48,5 @@ function mqttClient() {
   });
 }
 
-module.exports = mqttClient;
+//module.exports = mqttClient;
+export default mqttClient;

@@ -8,8 +8,10 @@ RUN npm install
 
 COPY . .
 
+RUN chmod +x entrypoint.sh
 RUN npm rebuild
+RUN apk add --no-cache postgresql-client
 
 EXPOSE 5000
 
-CMD ["node", "app.js"]
+ENTRYPOINT [ "/bin/sh" , "entrypoint.sh" ]
