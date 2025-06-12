@@ -29,8 +29,20 @@ function mqttClient() {
   });
 
   client.on('message', (topic, message) => {
-    console.log(`[MQTT] ${topic}: ${message.toString()}`);
-    // Puoi aggiornare DB qui in base allo status del lock
+    if (topic.endsWith('/up_link')) {
+      const gatewayId = topic.split("/")[0];
+      // funzione che mondifica lo stato del lock nel db
+      const payload = JSON.parse(message.toString());
+      console.log(`Received up_link message on ${topic}:`, payload);
+      // Here you can handle the lock status updates
+    }
+    else if (topic.endsWith('/heartbeat')) {
+      const gatewayId = topic.split("/")[0];
+
+      const payload = JSON.parse(message.toString());
+      console.log(`Received heartbeat message on ${topic}:`, payload);
+      // Here you can handle the gateway heartbeat updates
+    }
   });
 }
 
