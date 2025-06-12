@@ -2,7 +2,9 @@
 import { getAllLocks, getAllGateways, getGatewayById } from "./populate.js";
 import { Lock_Status, Gateway_Status } from "./models/enum.js";
 import mqtt from "mqtt";
-var client = mqtt.connect("ws://mqtt:8000");
+import dotenv from "dotenv";
+dotenv.config();
+var client = mqtt.connect(process.env.WSMQTT);
 
 const locks = await getAllLocks();
 const gateways = await getAllGateways();

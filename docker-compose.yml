@@ -22,14 +22,16 @@ services:
 
   mqtt:
     build:
-      context: ./devices
-      dockerfile: Dockerfile.mqtt
+      context: ./mqtt_broker
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"
 
   devices:
     build:
       context: ./devices
-      dockerfile: Dockerfile.devices
+      dockerfile: Dockerfile
     depends_on:
       - mqtt
+    environment:
+      WSMQTT: ${WSMQTT:-changeme}
