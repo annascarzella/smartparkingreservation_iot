@@ -1,9 +1,9 @@
-const mqtt = require('mqtt');
-import dotenv from "dotenv";
+const mqtt = require("mqtt");
+const dotenv = require("dotenv");
 dotenv.config();
 var client = mqtt.connect(process.env.WSMQTT);
 
-var IDsgateways = ["gateway-1", "gateway-2", "gateway-3"];
+var IDsgateways = [1, 2, 3];
 
 function mqttClient() {
   client.on('connect', () => {
@@ -38,7 +38,6 @@ function mqttClient() {
     }
     else if (topic.endsWith('/heartbeat')) {
       const gatewayId = topic.split("/")[0];
-
       const payload = JSON.parse(message.toString());
       console.log(`Received heartbeat message on ${topic}:`, payload);
       // Here you can handle the gateway heartbeat updates

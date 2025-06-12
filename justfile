@@ -38,3 +38,7 @@ migration:
 postgres:
     docker compose build --no-cache postgres
     docker compose up postgres -d
+
+backend:
+    docker compose build --no-cache backend
+    docker compose up backend

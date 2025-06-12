@@ -8,7 +8,7 @@ services:
     #volumes:
     #  - ./smartparking:/app
     environment:
-      - NODE_ENV=development
+      NODE_ENV: development
 
   node-red:
     image: nodered/node-red
@@ -55,6 +55,22 @@ services:
       - ./backend/server_db/migrations:/migrations
     entrypoint: migrate -database ${DB_URL:-postgres://postgres:password@postgres:5432/postgres}?sslmode=disable -path migrations
     command: up
-    read_only: true
     depends_on:
       - postgres
+    restart: on-failure
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - database-migrations
+      - mqtt
+    environment:
+      NODE_ENV: development
+      DB_URL: ${DB_URL:-postgres://postgres:password@postgres:5432/postgres}
+      WSMQTT: ${WSMQTT:-changeme}
+    volumes:
+      - ./backend:/app
