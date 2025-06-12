@@ -20,7 +20,10 @@ const Users = sequelize.define(
       },
   },
   {
+    tableName: 'users',
+    schema: 'smartparking',
     freezeTableName: true,
+    timestamps: false, // Not adds createdAt and updatedAt fields
   },
 );
 

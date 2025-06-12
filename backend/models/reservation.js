@@ -35,7 +35,10 @@ const Reservation = sequelize.define(
     },
   },
   {
+    tableName: 'reservation',
+    schema: 'smartparking',
     freezeTableName: true,
+    timestamps: false, // Not adds createdAt and updatedAt fields
     indexes: [
       {
         unique: true,

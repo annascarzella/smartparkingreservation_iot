@@ -28,7 +28,9 @@ const Gateway = sequelize.define(
   },
   {
     tableName: 'gateway',
+    schema: 'smartparking',
     freezeTableName: true,
+    timestamps: false, // Not adds createdAt and updatedAt fields
     indexes: [
         {
             unique: true,
