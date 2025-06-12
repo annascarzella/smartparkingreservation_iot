@@ -49,5 +49,20 @@ CREATE TABLE IF NOT EXISTS reservation (
     UNIQUE (user_id, lock_id, start_time, end_time)
 );
 
+INSERT INTO gateway (name, status, latitude, longitude) VALUES
+('Gateway 1', 'connected', 40.712776, -74.005974),
+('Gateway 2', 'connected', 34.052235, -118.243683),
+('Gateway 3', 'connected', 51.507351, -0.127758);
+
+INSERT INTO lock (gateway_id, latitude, longitude, status, alarm, magneticsensor) VALUES
+(1, 45.4642, 9.19, 'free', 'off', 'off'),
+(1, 45.4645, 9.191, 'free', 'off', 'off'),
+(2, 45.465, 9.192, 'free', 'off', 'off'),
+(3, 45.466, 9.193, 'free', 'off', 'off');
+
+INSERT INTO user (email, password_hash) VALUES
+('user1@example.com', 'password1'),
+('user2@example.com', 'password2'),
+('user3@example.com', 'password3');
 
 COMMIT;

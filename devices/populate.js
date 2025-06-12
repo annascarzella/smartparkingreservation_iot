@@ -8,9 +8,9 @@ import {
 } from "./models/enum.js";
 
 const locks = [
-  new Lock("lock-1", 45.4642, 9.19, 87),
+  new Lock(1, 45.4642, 9.19, 87),
   new Lock(
-    "lock-2",
+    2,
     45.4645,
     9.191,
     65,
@@ -19,7 +19,7 @@ const locks = [
     Lock_MagneticSensor.ON
   ),
   new Lock(
-    "lock-3",
+    3,
     45.465,
     9.192,
     40,
@@ -27,30 +27,30 @@ const locks = [
     Lock_Alarm.ON,
     Lock_MagneticSensor.OFF
   ),
-  new Lock("lock-4", 45.466, 9.193, 10, Lock_Status.OUT_OF_ORDER),
+  new Lock(4, 45.466, 9.193, 10, Lock_Status.OUT_OF_ORDER),
 ];
 
 const gateways = [
   new Gateway(
-    "gateway-1",
-    "Gateway Centrale",
-    ["lock-1", "lock-2"],
+    1,
+    "Gateway 1",
+    [1, 2],
     45.4642,
     9.19,
     Gateway_Status.CONNECTED
   ),
   new Gateway(
-    "gateway-2",
-    "Gateway Nord",
-    ["lock-3"],
+    2,
+    "Gateway 2",
+    [3],
     45.467,
     9.195,
     Gateway_Status.NOT_CONNECTED
   ),
   new Gateway(
-    "gateway-3",
-    "Gateway Sud",
-    ["lock-4"],
+    3,
+    "Gateway 3",
+    [4],
     45.463,
     9.188,
     Gateway_Status.UNKNOWN
