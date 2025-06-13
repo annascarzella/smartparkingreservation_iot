@@ -1,8 +1,5 @@
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-
-dotenv.config();
-const JWT_SECRET = process.env.JWT_SECRET;
+import JWT_SECRET from "../config/jwt.js";
 
 export default function authMiddleware(req, res, next) {
   const token = req.header("Authorization")?.replace("Bearer ", "");
@@ -10,7 +7,7 @@ export default function authMiddleware(req, res, next) {
 
   try {
     const verified = jwt.verify(token, JWT_SECRET);
-    req.id = verified.id;
+    req.userId = verified.id;
     next();
   } catch (err) {
     throw new Error("Invalid token");
