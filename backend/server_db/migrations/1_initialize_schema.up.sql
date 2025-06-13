@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS lock (
 
 CREATE TABLE IF NOT EXISTS users (
     id serial PRIMARY KEY,
+    name varchar(50) NOT NULL,
     email varchar(100) NOT NULL UNIQUE,
     password_hash varchar(255) NOT NULL
 );
@@ -46,6 +47,7 @@ CREATE TABLE IF NOT EXISTS reservation (
     lock_id int NOT NULL REFERENCES lock(id) ON UPDATE CASCADE ON DELETE CASCADE,
     start_time timestamp with time zone NOT NULL,
     end_time timestamp with time zone NOT NULL,
+    plate_number varchar(7) NOT NULL,
     UNIQUE (user_id, lock_id, start_time, end_time)
 );
 
@@ -60,9 +62,9 @@ INSERT INTO lock (gateway_id, latitude, longitude, status, alarm, magneticsensor
 (2, 45.465, 9.192, 'free', 'off', 'off'),
 (3, 45.466, 9.193, 'free', 'off', 'off');
 
-INSERT INTO users (email, password_hash) VALUES
-('user1@example.com', 'password1'),
-('user2@example.com', 'password2'),
-('user3@example.com', 'password3');
+INSERT INTO users (name, email, password_hash) VALUES
+('Anna', 'user1@example.com', 'password1'),
+('Luigi', 'user2@example.com', 'password2'),
+('Michele', 'user3@example.com', 'password3');
 
 COMMIT;

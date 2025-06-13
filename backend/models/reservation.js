@@ -33,6 +33,10 @@ const Reservation = sequelize.define(
         key: 'id',
       },
     },
+    plateNumber: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
   {
     tableName: 'reservation',
