@@ -4,6 +4,7 @@ import fetchController from "../controllers/fetchController.js";
 const router = express.Router();
 
 router.get("/all", fetchController.fetchAll);
-router.get("/:id", fetchController.fetchById);
+router.get("/gateway/:id", fetchController.fetchByIdGateway);
+router.get("/lock/:id", fetchController.fetchByIdLock);
 
 export default router;

@@ -1,19 +1,17 @@
 //const mqtt = require("mqtt");
 
-import mqtt from "mqtt";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 import Gateway from "./models/gateway.js";
+import { client } from "./config/mqtt.js";
 
 dotenv.config();
-
-var client = mqtt.connect(process.env.WSMQTT);
 
 var IDsgateways = [];
 // Function to fetch gateways from the database and populate IDsgateways
 async function fetchGateways() {
   try {
     const gateways = await Gateway.findAll();
-    IDsgateways = gateways.map(gateway => gateway.id);
+    IDsgateways = gateways.map((gateway) => gateway.id);
     console.log("Gateways fetched:", IDsgateways);
   } catch (error) {
     console.error("Error fetching gateways:", error);
@@ -21,9 +19,9 @@ async function fetchGateways() {
 }
 
 async function mqttClient() {
-  await fetchGateways()
-  client.on('connect', () => {
-    console.log('MQTT connected');
+  await fetchGateways();
+  client.on("connect", () => {
+    console.log("MQTT connected");
     for (const gatewayId of IDsgateways) {
       // Subscribe to the up_link and heartbeat topics for each gateway
       client.subscribe(`${gatewayId}/up_link`, (err) => {
@@ -39,20 +37,18 @@ async function mqttClient() {
           return;
         }
         console.log(`Subscribed to ${gatewayId}/heartbeat`);
-      }
-    );
+      });
     }
   });
 
-  client.on('message', (topic, message) => {
-    if (topic.endsWith('/up_link')) {
+  client.on("message", (topic, message) => {
+    if (topic.endsWith("/up_link")) {
       const gatewayId = topic.split("/")[0];
       // funzione che mondifica lo stato del lock nel db
       const payload = JSON.parse(message.toString());
       console.log(`Received up_link message on ${topic}:`, payload);
       // Here you can handle the lock status updates
-    }
-    else if (topic.endsWith('/heartbeat')) {
+    } else if (topic.endsWith("/heartbeat")) {
       const gatewayId = topic.split("/")[0];
       const payload = JSON.parse(message.toString());
       console.log(`Received heartbeat message on ${topic}:`, payload);

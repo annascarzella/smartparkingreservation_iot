@@ -1,10 +1,11 @@
-import { Sequelize, DataTypes } from 'sequelize';
+import { Sequelize, DataTypes } from "sequelize";
 import sequelize from "../config/conn.js";
+import { GatewayStatus } from "./enums.js";
 
 const Gateway = sequelize.define(
-  'Gateway',
+  "Gateway",
   {
-    id : {
+    id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -14,8 +15,8 @@ const Gateway = sequelize.define(
       allowNull: false,
     },
     status: {
-      type: DataTypes.ENUM('connected', 'not_connected', 'unknown'),
-      defaultValue: 'unknown',
+      type: DataTypes.ENUM(...Object.values(GatewayStatus)),
+      defaultValue: "unknown",
     },
     latitude: {
       type: DataTypes.FLOAT,
@@ -27,17 +28,17 @@ const Gateway = sequelize.define(
     },
   },
   {
-    tableName: 'gateway',
-    schema: 'smartparking',
+    tableName: "gateway",
+    schema: "smartparking",
     freezeTableName: true,
     timestamps: false, // Not adds createdAt and updatedAt fields
     indexes: [
-        {
-            unique: true,
-            fields: ['name', 'latitude', 'longitude'],
-        },
+      {
+        unique: true,
+        fields: ["name", "latitude", "longitude"],
+      },
     ],
-  },
+  }
 );
 
 // `sequelize.define` also returns the model

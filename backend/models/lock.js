@@ -1,8 +1,10 @@
-import { Sequelize, DataTypes } from 'sequelize';
+import { Sequelize, DataTypes } from "sequelize";
 import sequelize from "../config/conn.js";
+import { LockStatus } from "./enums.js";
+import { SensorStatus } from "./enums.js";
 
 const Lock = sequelize.define(
-  'Lock',
+  "Lock",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -10,23 +12,23 @@ const Lock = sequelize.define(
       autoIncrement: true,
     },
     status: {
-      type: DataTypes.ENUM('reserved', 'occupied', 'free', 'out_of_order'),
-      defaultValue: 'free',
+      type: DataTypes.ENUM(...Object.values(LockStatus)),
+      defaultValue: LockStatus.FREE,
     },
     alarm: {
-      type: DataTypes.ENUM('on', 'off'),
-      defaultValue: 'off',
+      type: DataTypes.ENUM(...Object.values(SensorStatus)),
+      defaultValue: SensorStatus.OFF,
     },
     magnetic_sensor: {
-      type: DataTypes.ENUM('on', 'off'),
-      defaultValue: 'off',
+      type: DataTypes.ENUM(...Object.values(SensorStatus)),
+      defaultValue: SensorStatus.OFF,
     },
     gateway_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Gateway',
-        key: 'id',
+        model: "Gateway",
+        key: "id",
       },
     },
     latitude: {
@@ -39,17 +41,17 @@ const Lock = sequelize.define(
     },
   },
   {
-    tableName: 'lock',
-    schema: 'smartparking',
+    tableName: "lock",
+    schema: "smartparking",
     freezeTableName: true,
     timestamps: false, // Not adds createdAt and updatedAt fields
     indexes: [
       {
         unique: true,
-        fields: ['gateway_id', 'latitude', 'longitude'],
+        fields: ["gateway_id", "latitude", "longitude"],
       },
     ],
-  },
+  }
 );
 
 // `sequelize.define` also returns the model

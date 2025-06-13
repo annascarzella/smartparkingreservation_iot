@@ -69,6 +69,7 @@ client.on("connect", function () {
 // on mqtt message received of topic down_link
 client.on("message", function (topic, message) {
   if ("down_link" in topic) {
+    let arrived = false;
     const gatewayId = topic.split("/")[0];
     console.log(`Received down_link message for gateway ${gatewayId}`);
     const gateway = getGatewayById(gatewayId);
@@ -94,6 +95,30 @@ client.on("message", function (topic, message) {
             timestamp: new Date().toISOString(),
           })
         );
+
+        if (message.command === "down") {
+          arrived = true;
+        }
+
+        const msUntilEnd = new Date(message.endTime).getTime() - Date.now();
+        if (msUntilEnd > 0) {
+          setTimeout(() => {
+            if (!arrived) {
+              lock.updateStatus(Lock_Status.FREE);
+              console.log(
+                `Lock ${lock.id} status automatically set to FREE after endtime`
+              );
+              client.publish(
+                `${gatewayId}/up_link`,
+                JSON.stringify({
+                  lockId: lock.id,
+                  status: lock.status,
+                  timestamp: new Date().toISOString(),
+                })
+              );
+            }
+          }, msUntilEnd);
+        }
       } else {
         console.error(`Lock ${message.lockId} not found`);
       }
