@@ -7,7 +7,7 @@ import logger from "morgan";
 import mqttClient from "./mqttClient.js";
 import sequelize from "./config/conn.js";
 
-import { indexRouter, authRouter } from "./routes/index.js";
+import { router, authRouter } from "./routes/index.js";
 
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -36,7 +36,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", indexRouter);
+app.use("/", router);
 app.use("/", authRouter);
 
 // catch 404 and forward to error handler

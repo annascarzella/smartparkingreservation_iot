@@ -42,3 +42,6 @@ postgres:
 backend:
     docker compose build --no-cache backend
     docker compose up backend
+
+nuxt:
+    cd smartparking && npm i && npm run dev

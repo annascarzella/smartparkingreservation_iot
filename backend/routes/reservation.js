@@ -1,9 +1,10 @@
 import express from "express";
-import reservationController from "../controllers/reservationController.js";
+import {addReservation, extendReservation } from "../controllers/reservationController.js";
+import { asyncWrapper } from "../utils/wrapper.js";
 
 const router = express.Router();
 
-router.post("/", reservationController.addReservation);
-router.post("/extend", reservationController.extendReservation);
+router.post("/", asyncWrapper(addReservation));
+router.post("/extend", asyncWrapper(extendReservation));
 
 export default router;

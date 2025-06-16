@@ -1,6 +1,6 @@
-import Reservation from "../models/reservation";
+import Reservation from "../models/reservation.js";
 import Lock from "../models/lock.js";
-import client from "../config/mqtt.js";
+import { client } from "../config/mqtt.js";
 import { LockStatus } from "../models/enums.js";
 
 export async function addReservation(req, res) {
@@ -279,3 +279,8 @@ export async function extendReservation(req, res) {
     res.status(500).json({ message: "Internal server error." });
   }
 }
+
+export default {
+  addReservation,
+  extendReservation,
+};

@@ -1,5 +1,6 @@
-import Gateway from "../models/gateway";
-import Lock from "../models/lock";
+import e from "express";
+import Gateway from "../models/gateway.js";
+import Lock from "../models/lock.js";
 
 export async function fetchAll(req, res) {
   try {
@@ -42,3 +43,9 @@ export async function fetchByIdLock(req, res) {
     res.status(500).json({ message: "Internal server error." });
   }
 }
+
+export default {
+  fetchAll,
+  fetchByIdGateway,
+  fetchByIdLock,
+};

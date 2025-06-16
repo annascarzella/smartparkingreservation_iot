@@ -1,4 +1,4 @@
 import mqtt from "mqtt";
-import WSMQTT from "./wsmqtt.js";
+import { wsmqttConfig } from "./wsmqtt.js";
 
-export const client = mqtt.connect(WSMQTT);
+export const client = mqtt.connect(wsmqttConfig);

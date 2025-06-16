@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
-import { User } from "../models/user.js";
+import Users from "../models/users.js";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config/jwt.js";
 
-export async function loginUser(req, res) {
+export default async function loginUser(req, res) {
   const { password, email } = req.body;
 
   if (!password || !email) {
@@ -13,7 +13,7 @@ export async function loginUser(req, res) {
   }
 
   try {
-    const user = await User.findOne({ where: { email } });
+    const user = await Users.findOne({ where: { email } });
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password." });
     }

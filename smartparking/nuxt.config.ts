@@ -17,6 +17,11 @@ export default defineNuxtConfig({
   nitro: {
     preset: "static", // output statico (Nuxt 3)
   },
+  runtimeConfig: {
+    public: {
+      baseURL: process.env.BACKEND_URL,
+    },
+  },
   compatibilityDate: '2025-05-15',
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],

@@ -1,8 +1,9 @@
 import express from "express";
-import registrationController from "../controllers/registrationController.js";
+import registerUser from "../controllers/registrationController.js";
+import { asyncWrapper } from "../utils/wrapper.js";
 
 const router = express.Router();
 
-router.post("/", registrationController.registerUser);
+router.post("/", asyncWrapper(registerUser));
 
 export default router;

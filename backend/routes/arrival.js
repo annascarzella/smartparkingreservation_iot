@@ -1,8 +1,9 @@
 import express from "express";
-import arrivalController from "../controllers/arrivalController.js";
+import NotifyArrival from "../controllers/arrivalController.js";
+import { asyncWrapper } from "../utils/wrapper.js";
 
 const router = express.Router();
 
-router.post("/", arrivalController.NotifyArrival);
+router.post("/", asyncWrapper(NotifyArrival));
 
 export default router;
