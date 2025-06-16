@@ -1,14 +1,14 @@
-FROM node:current-alpine
+# Usa una versione stabile e compatibile
+FROM node:20
 
 WORKDIR /app
 
-COPY package.json ./
+# Copia i file di package e installa le dipendenze prima
+COPY package*.json ./
+RUN npm ci
 
-RUN npm install
-
+# Poi copia il resto dell'app
 COPY . .
-
-RUN npm rebuild
 
 EXPOSE 3000
 

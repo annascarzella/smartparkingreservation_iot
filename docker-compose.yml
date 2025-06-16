@@ -5,8 +5,9 @@ services:
       context: ./smartparking
     ports:
       - "3000:3000"
-    #volumes:
-    #  - ./smartparking:/app
+    volumes:
+     - ./smartparking:/app
+     - /app/node_modules 
     environment:
       NODE_ENV: development
 
