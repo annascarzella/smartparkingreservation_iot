@@ -12,6 +12,9 @@ export default async function loginUser(req, res) {
       .json({ message: "email and password are required." });
   }
 
+  console.log(`Attempting to log in user with email: ${email}`);
+  console.log(`Password provided: ${password}`);
+
   try {
     const user = await Users.findOne({ where: { email } });
     if (!user) {
@@ -19,6 +22,7 @@ export default async function loginUser(req, res) {
     }
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
     if (!isPasswordValid) {
+      console.log(`Invalid password for user with email: ${email}`);
       return res.status(401).json({ message: "Invalid email or password." });
     }
     console.log(`User ${user.name} logged in successfully.`);
