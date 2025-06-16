@@ -11,6 +11,7 @@ import { router, authRouter } from "./routes/index.js";
 
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import { PORT } from "./config/port.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -36,8 +37,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", router);
 app.use("/", authRouter);
+app.use("/", router);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -51,6 +52,12 @@ app.use(function (err, req, res, next) {
 
   res.status(err.status || 500);
   res.render("error");
+});
+
+// Start the server
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
 export default app;

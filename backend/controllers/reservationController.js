@@ -1,6 +1,7 @@
 import Reservation from "../models/reservation.js";
 import Lock from "../models/lock.js";
-import { client } from "../config/mqtt.js";
+import mqtt from "mqtt";
+import { wsmqttConfig } from "../config/wsmqtt.js";
 import { LockStatus } from "../models/enums.js";
 
 export async function addReservation(req, res) {
@@ -52,6 +53,15 @@ export async function addReservation(req, res) {
   }
 
   let ack_arrived = false;
+  const client = mqtt.connect(wsmqttConfig);
+  client.on("connect", () => {
+    console.log("Connected to MQTT broker.");
+  });
+  client.on("error", (err) => {
+    console.error("MQTT connection error:", err);
+    return res.status(500).json({ message: "MQTT connection error." });
+  });
+
   try {
     client.publish(
       `${lock.gatewayId}/down_link`,
@@ -67,6 +77,7 @@ export async function addReservation(req, res) {
             `Failed to publish message to ${lock.gatewayId}/down_link:`,
             err
           );
+          client.end();
           return res
             .status(500)
             .json({ message: "Failed to notify reservation." });
@@ -83,6 +94,7 @@ export async function addReservation(req, res) {
           `Failed to subscribe to ${lock.gatewayId}/down_link_ack:`,
           err
         );
+        client.end();
         return res
           .status(500)
           .json({ message: "Failed to subscribe for updates." });
@@ -102,8 +114,9 @@ export async function addReservation(req, res) {
             `Received reservation acknowledgment for lock ${lock.id}`
           );
           lock.status = LockStatus.RESERVED;
-          lock.save();
+          await lock.save();
           client.unsubscribe(`${lock.gatewayId}/down_link_ack`);
+          client.end();
           const newReservation = await Reservation.create({
             user_id: req.userId,
             lockId,
@@ -128,6 +141,7 @@ export async function addReservation(req, res) {
               `Unsubscribed from ${lock.gatewayId}/down_link_ack after timeout`
             );
           }
+          client.end();
         });
         return res.status(504).json({
           message: "No acknowledgment received within 20 seconds.",
@@ -196,6 +210,15 @@ export async function extendReservation(req, res) {
     });
   }
 
+  const client = mqtt.connect(wsmqttConfig);
+  client.on("connect", () => {
+    console.log("Connected to MQTT broker.");
+  });
+  client.on("error", (err) => {
+    console.error("MQTT connection error:", err);
+    return res.status(500).json({ message: "MQTT connection error." });
+  });
+
   try {
     client.publish(
       `${lock.gatewayId}/down_link`,
@@ -211,6 +234,7 @@ export async function extendReservation(req, res) {
             `Failed to publish message to ${lock.gatewayId}/down_link:`,
             err
           );
+          client.end();
           return res
             .status(500)
             .json({ message: "Failed to notify reservation extension." });
@@ -227,6 +251,7 @@ export async function extendReservation(req, res) {
           `Failed to subscribe to ${lock.gatewayId}/down_link_ack:`,
           err
         );
+        client.end();
         return res
           .status(500)
           .json({ message: "Failed to subscribe for updates." });
@@ -247,8 +272,9 @@ export async function extendReservation(req, res) {
             `Received reservation extension acknowledgment for lock ${lock.id}`
           );
           lock.status = LockStatus.RESERVED;
-          lock.save();
+          await lock.save();
           client.unsubscribe(`${lock.gatewayId}/down_link_ack`);
+          client.end();
           reservation.endTime = newEndTime;
           await reservation.save();
           res.status(200).json(reservation);
@@ -268,6 +294,7 @@ export async function extendReservation(req, res) {
               `Unsubscribed from ${lock.gatewayId}/down_link_ack after timeout`
             );
           }
+          client.end();
         });
         return res.status(504).json({
           message: "No acknowledgment received within 20 seconds.",

@@ -6,8 +6,8 @@ import fetchRouter from "./fetch.js";
 import arrivalRouter from "./arrival.js";
 import reservationRouter from "./reservation.js";
 
-export const router = express.Router();
-export const authRouter = express.Router();
+const router = express.Router();
+const authRouter = express.Router();
 
 authRouter.use("/login", loginRouter);
 authRouter.use("/register", registrationRouter);
@@ -22,3 +22,5 @@ router.use("/reservation", reservationRouter);
 router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
+
+export { router, authRouter };

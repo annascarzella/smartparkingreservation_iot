@@ -1,10 +1,6 @@
-//const mqtt = require("mqtt");
-
-import dotenv from "dotenv";
 import Gateway from "./models/gateway.js";
-import { client } from "./config/mqtt.js";
-
-dotenv.config();
+import mqtt from "mqtt";
+import { wsmqttConfig } from "./config/wsmqtt.js";
 
 var IDsgateways = [];
 // Function to fetch gateways from the database and populate IDsgateways
@@ -20,6 +16,7 @@ async function fetchGateways() {
 
 async function mqttClient() {
   await fetchGateways();
+  const client = mqtt.connect(wsmqttConfig);
   client.on("connect", () => {
     console.log("MQTT connected");
     for (const gatewayId of IDsgateways) {

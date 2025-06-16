@@ -1,4 +1,3 @@
-import e from "express";
 import Gateway from "../models/gateway.js";
 import Lock from "../models/lock.js";
 

@@ -1,4 +1,5 @@
-import { client } from "../config/mqtt.js";
+import mqtt from "mqtt";
+import { wsmqttConfig } from "../config/wsmqtt.js";
 import Reservation from "../models/reservation.js";
 import Lock from "../models/lock.js";
 import { LockStatus } from "../models/enums.js";
@@ -17,11 +18,9 @@ export async function NotifyArrival(req, res) {
     }
 
     if (reservation.user_id !== req.userId) {
-      return res
-        .status(403)
-        .json({
-          message: "You are not authorized to notify this reservation.",
-        });
+      return res.status(403).json({
+        message: "You are not authorized to notify this reservation.",
+      });
     }
 
     const lock = await Lock.findOne({ where: { id: reservation.lockId } });
@@ -38,10 +37,19 @@ export async function NotifyArrival(req, res) {
     });
 
     let ack_arrived = false;
+    const client = mqtt.connect(wsmqttConfig);
+    client.on("connect", () => {
+      console.log("Connected to MQTT broker.");
+    });
+    client.on("error", (err) => {
+      console.error("MQTT connection error:", err);
+      return res.status(500).json({ message: "MQTT connection error." });
+    });
 
     client.publish(topic, message, (err) => {
       if (err) {
         console.error(`Failed to publish message to ${topic}:`, err);
+        client.end();
         return res.status(500).json({ message: "Failed to notify arrival." });
       }
       console.log(`Published message to ${topic}:`, message);
@@ -52,6 +60,7 @@ export async function NotifyArrival(req, res) {
             `Failed to subscribe to ${lock.gatewayId}/down_link_ack:`,
             err
           );
+          client.end();
           return res
             .status(500)
             .json({ message: "Failed to subscribe for updates." });
@@ -70,6 +79,7 @@ export async function NotifyArrival(req, res) {
                   `Unsubscribed from ${lock.gatewayId}/down_link_ack after timeout`
                 );
               }
+              client.end();
             });
             return res.status(504).json({
               message: "No acknowledgment received within 20 seconds.",
@@ -105,11 +115,13 @@ export async function NotifyArrival(req, res) {
                   `Unsubscribed from ${lock.gatewayId}/down_link_ack`
                 );
               }
+              client.end();
             });
 
             res.status(200).json({ message: "Arrival notification sent." });
           } catch (err) {
             console.error("Failed to update lock status from ack:", err);
+            client.end();
           }
         }
       });
