@@ -36,6 +36,21 @@ export async function addReservation(req, res) {
     return res.status(400).json({ message: "Lock is already reserved." });
   }
 
+  const now = Date.now();
+  const alreadyhavereservation = await Reservation.findOne({
+    where: {
+      user_id: req.userId,
+      endTime: {
+        [Op.gt]: now, // Check if the user has an active reservation
+      },
+    },
+  });
+  if (alreadyhavereservation) {
+    return res.status(400).json({
+      message: "You already have an active reservation.",
+    });
+  }
+
   let ack_arrived = false;
   try {
     client.publish(
@@ -147,20 +162,38 @@ export async function extendReservation(req, res) {
     return res.status(400).json({ message: "Lock is not reserved." });
   }
 
-  // Check if the lock is available for the extended time
-  const existingReservation = await Reservation.findOne({
+  const now = Date.now();
+  const activeReservation = await Reservation.findOne({
     where: {
-      lockId: reservation.lockId,
-      startTime: {
-        [Op.lt]: newEndTime, // Existing reservation starts before the new reservation ends
-      },
+      id: reservation.id,
       endTime: {
-        [Op.gt]: reservation.startTime, // Existing reservation ends after the new reservation starts
+        [Op.gt]: now,
       },
     },
   });
-  if (existingReservation) {
-    return res.status(400).json({ message: "Lock is already reserved." });
+  if (!activeReservation) {
+    return res.status(400).json({ message: "No active reservation found." });
+  }
+
+  // Check if the new end time is valid
+  if (new Date(newEndTime).getTime() <= now) {
+    return res
+      .status(400)
+      .json({ message: "New end time must be in the future." });
+  }
+  if (new Date(newEndTime).getTime() <= reservation.endTime.getTime()) {
+    return res.status(400).json({
+      message: "New end time must be later than the current end time.",
+    });
+  }
+
+  if (
+    new Date(newEndTime).getTime() - reservation.startTime.getTime() >
+    3 * 60 * 60 * 1000
+  ) {
+    return res.status(400).json({
+      message: "Reservation cannot be extended beyond 3 hours.",
+    });
   }
 
   try {
