@@ -1,8 +1,14 @@
 <template>
   <div class="p-8 max-w-md mx-auto">
-    <h1 class="text-2xl font-bold mb-4">Login</h1>
+    <h1 class="text-2xl font-bold mb-4">Registration</h1>
 
-    <form @submit.prevent="handleLogin">
+    <form @submit.prevent="handleRegistration">
+      <input
+        v-model="name"
+        type="text"
+        placeholder="Name"
+        class="w-full p-2 border mb-2"
+      />
       <input
         v-model="email"
         type="email"
@@ -16,7 +22,7 @@
         class="w-full p-2 border mb-4"
       />
       <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">
-        Login
+        Register
       </button>
     </form>
 
@@ -29,9 +35,9 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 import { useUsers } from "@/composables/useUsers";
-import { useCookie } from "#app";
 
 const email = ref("");
+const name = ref("");
 const password = ref("");
 const error = ref("");
 const router = useRouter();
@@ -39,40 +45,35 @@ const router = useRouter();
 //
 const res = ref();
 
-const { login } = useUsers();
+const { register } = useUsers();
 
-const loginUser = async () => {
+const insertUser = async () => {
   const payload = {
+    name: name.value,
     email: email.value,
     password: password.value,
   };
   console.log("Payload for submission:", payload);
 
   try {
-    res.value = await login(payload);
+    res.value = await register(payload);
+    console.log("Registration response:", res);
 
-    const token = useCookie("access_token", {
-      maxAge: 60 * 60 * 5, // 5 hours
-      secure: true,
-      sameSite: "None",
-    });
-    token.value = res.value.token;
-
-    router.push("/ciao");
+    router.push("/login");
   } catch (e) {
-    console.error("Error fetching:", e);
+    console.error("Error fetching:", e.response);
     error.value =
       e.response?._data?.message || "An error occurred during registration.";
   }
 };
 
-function handleLogin() {
-  if (!email.value || !password.value) {
-    error.value = "Email and password are required.";
+function handleRegistration() {
+  if (!name.value || !email.value || !password.value) {
+    error.value = "Name, Email and password are required.";
     return;
   }
 
   error.value = ""; // Clear previous errors
-  loginUser();
+  insertUser();
 }
 </script>

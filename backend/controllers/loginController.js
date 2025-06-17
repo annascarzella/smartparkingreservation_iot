@@ -33,15 +33,15 @@ export default async function loginUser(req) {
 
     // Generate a JWT token
     const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "5h",
     });
 
     return {
       status: 200,
       body: {
-      message: "Login successful.",
-      user: { id: user.id, name: user.name, email: user.email },
-      token: token,
+        message: "Login successful.",
+        user: { id: user.id, name: user.name, email: user.email },
+        token: token,
       },
     };
   } catch (error) {

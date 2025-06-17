@@ -63,8 +63,8 @@ INSERT INTO lock (gateway_id, latitude, longitude, status, alarm, magneticsensor
 (3, 45.466, 9.193, 'free', 'off', 'off');
 
 INSERT INTO users (name, email, password_hash) VALUES
-('Anna', 'user1@example.com', '$2a$12$MrvOSALMutnnPQzDIOxh7.GNhI13wC.Hut9oVE9l2w4BSztglZVGu'), -- password1
-('Luigi', 'user2@example.com', '$2a$12$4DQi8rR.QUXPhtY4G/plg.ZobuSWDXFb.1Q1Poh/IN4Od0riVV1s.'), -- password2
-('Michele', 'user3@example.com', '$2a$12$VUTSkvJHWcC/dPLp5loJse2gAdbHdUSzc/oLN4FUvEelVMD1bZ2SW'); -- password3
+('Anna', 'anna@gmail.com', '$2a$12$MrvOSALMutnnPQzDIOxh7.GNhI13wC.Hut9oVE9l2w4BSztglZVGu'), -- password1
+('Luigi', 'luigi@gmail.com', '$2a$12$MrvOSALMutnnPQzDIOxh7.GNhI13wC.Hut9oVE9l2w4BSztglZVGu'), -- password1
+('Michele', 'michele@gmail.com', '$2a$12$MrvOSALMutnnPQzDIOxh7.GNhI13wC.Hut9oVE9l2w4BSztglZVGu'); -- password1
 
 COMMIT;
