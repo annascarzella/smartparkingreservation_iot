@@ -1,6 +1,6 @@
 import express from "express";
 import {fetchAll, fetchByIdGateway, fetchByIdLock} from "../controllers/fetchController.js";
-import { asyncWrapper } from "../utils/wrapper.js";
+import { asyncWrapper } from "../middleware/wrapper.js";
 
 const router = express.Router();
 

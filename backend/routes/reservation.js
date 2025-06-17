@@ -1,6 +1,6 @@
 import express from "express";
 import {addReservation, extendReservation } from "../controllers/reservationController.js";
-import { asyncWrapper } from "../utils/wrapper.js";
+import { asyncWrapper } from "../middleware/wrapper.js";
 
 const router = express.Router();
 
