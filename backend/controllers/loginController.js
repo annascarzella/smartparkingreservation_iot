@@ -3,27 +3,31 @@ import Users from "../models/users.js";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config/jwt.js";
 
-export default async function loginUser(req, res) {
+export default async function loginUser(req) {
   const { password, email } = req.body;
 
   if (!password || !email) {
-    return res
-      .status(400)
-      .json({ message: "email and password are required." });
+    return {
+      status: 400,
+      body: { message: "email and password are required." },
+    };
   }
-
-  console.log(`Attempting to log in user with email: ${email}`);
-  console.log(`Password provided: ${password}`);
 
   try {
     const user = await Users.findOne({ where: { email } });
     if (!user) {
-      return res.status(401).json({ message: "Invalid email or password." });
+      return {
+        status: 401,
+        body: { message: "Invalid email or password." },
+      };
     }
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
     if (!isPasswordValid) {
       console.log(`Invalid password for user with email: ${email}`);
-      return res.status(401).json({ message: "Invalid email or password." });
+      return {
+        status: 401,
+        body: { message: "Invalid email or password." },
+      };
     }
     console.log(`User ${user.name} logged in successfully.`);
 
@@ -32,15 +36,19 @@ export default async function loginUser(req, res) {
       expiresIn: "1h",
     });
 
-    res
-      .status(200)
-      .json({
-        message: "Login successful.",
-        user: { id: user.id, name: user.name, email: user.email },
-        token: token,
-      });
+    return {
+      status: 200,
+      body: {
+      message: "Login successful.",
+      user: { id: user.id, name: user.name, email: user.email },
+      token: token,
+      },
+    };
   } catch (error) {
     console.error("Error logging in user:", error);
-    res.status(500).json({ message: "Internal server error." });
+    return {
+      status: 500,
+      body: { message: "Internal server error." },
+    };
   }
 }

@@ -12,6 +12,6 @@ RUN chmod +x entrypoint.sh
 RUN npm rebuild
 RUN apk add --no-cache postgresql-client
 
-EXPOSE 5000
+EXPOSE 5001
 
 ENTRYPOINT [ "/bin/sh" , "entrypoint.sh" ]

@@ -17,10 +17,11 @@ export const useApiFetch = (
     options.headers.Authorization = `Bearer ${tokenCookie.value}`;
   }
 
-  console.log(config.public.baseURL);
+  console.log(config.public.BACKEND_URL);
+  console.log(options.headers);
 
   return $fetch(url, {
-    baseURL: config.public.baseURL,
+    baseURL: config.public.BACKEND_URL,
     ...options,
     headers: options.headers,
   });
