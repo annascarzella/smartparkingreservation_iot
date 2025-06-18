@@ -7,14 +7,14 @@ export async function fetchAll(req) {
     const locks = await Lock.findAll();
     return {
       status: 200,
-      data: {
+      body: {
         gateways,
         locks,
       },
     };
   } catch (error) {
     console.error("Error fetching data:", error);
-    return { status: 500, data: { message: "Internal server error." } };
+    return { status: 500, body: { message: "Internal server error." } };
   }
 }
 
@@ -23,12 +23,12 @@ export async function fetchByIdGateway(req) {
   try {
     const gateway = await Gateway.findByPk(id);
     if (!gateway) {
-      return { status: 404, data: { message: "Not found" } };
+      return { status: 404, body: { message: "Not found" } };
     }
-    return { status: 200, data: gateway };
+    return { status: 200, body: gateway };
   } catch (error) {
     console.error("Error fetching data:", error);
-    return { status: 500, data: { message: "Internal server error." } };
+    return { status: 500, body: { message: "Internal server error." } };
   }
 }
 
@@ -37,12 +37,12 @@ export async function fetchByIdLock(req) {
   try {
     const lock = await Lock.findByPk(id);
     if (!lock) {
-      return { status: 404, data: { message: "Not found" } };
+      return { status: 404, body: { message: "Not found" } };
     }
-    return { status: 200, data: lock };
+    return { status: 200, body: lock };
   } catch (error) {
     console.error("Error fetching data:", error);
-    return { status: 500, data: { message: "Internal server error." } };
+    return { status: 500, body: { message: "Internal server error." } };
   }
 }
 

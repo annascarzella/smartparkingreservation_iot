@@ -8,15 +8,15 @@ export async function addReservation(req) {
   const { lockId, startTime, endTime, plateNumber } = req.body;
 
   if (!lockId || !startTime || !endTime || !plateNumber) {
-    return { status: 400, message: "lockId, startTime, endTime, and plateNumber are required." };
+    return { status: 400, body: { message: "lockId, startTime, endTime, and plateNumber are required." } };
   }
 
   const lock = await Lock.findByPk(lockId);
   if (!lock) {
-    return { status: 404, message: "Lock not found." };
+    return { status: 404, body: { message: "Lock not found." } };
   }
   if (lock.status !== LockStatus.FREE) {
-    return { status: 400, message: "Lock is not available." };
+    return { status: 400, body: { message: "Lock is not available." } };
   }
 
   const existingReservation = await Reservation.findOne({
@@ -31,7 +31,7 @@ export async function addReservation(req) {
     },
   });
   if (existingReservation) {
-    return { status: 400, message: "Lock is already reserved." };
+    return { status: 400, body: { message: "Lock is already reserved." } };
   }
 
   const now = Date.now();
@@ -44,7 +44,7 @@ export async function addReservation(req) {
     },
   });
   if (alreadyhavereservation) {
-    return { status: 400, message: "You already have an active reservation." };
+    return { status: 400, body: { message: "You already have an active reservation." } };
   }
 
   let ack_arrived = false;
@@ -54,7 +54,7 @@ export async function addReservation(req) {
   });
   client.on("error", (err) => {
     console.error("MQTT connection error:", err);
-    return { status: 500, message: "MQTT connection error." };
+    return { status: 500, body: { message: "MQTT connection error." } };
   });
 
   try {
@@ -70,7 +70,7 @@ export async function addReservation(req) {
         if (err) {
           console.error(`Failed to publish message to ${lock.gatewayId}/down_link:`, err);
           client.end();
-          return { status: 500, message: "Failed to notify reservation." };
+          return { status: 500, body: { message: "Failed to notify reservation." } };
         }
         console.log(`Published reservation message to ${lock.gatewayId}/down_link`);
       }
@@ -80,7 +80,7 @@ export async function addReservation(req) {
       if (err) {
         console.error(`Failed to subscribe to ${lock.gatewayId}/down_link_ack:`, err);
         client.end();
-        return { status: 500, message: "Failed to subscribe for updates." };
+        return { status: 500, body: { message: "Failed to subscribe for updates." } };
       }
       console.log(`Subscribed to ${lock.gatewayId}/down_link_ack`);
     });
@@ -116,12 +116,12 @@ export async function addReservation(req) {
           }
           client.end();
         });
-        return { status: 504, message: "No acknowledgment received within 20 seconds." };
+        return { status: 504, body: { message: "No acknowledgment received within 20 seconds." } };
       }
     }, 20_000);
   } catch (error) {
     console.error("Error creating reservation:", error);
-    return { status: 500, message: "Internal server error." };
+    return { status: 500, body: { message: "Internal server error." } };
   }
 }
 
@@ -129,20 +129,20 @@ export async function extendReservation(req, res) {
   const { reservationId, newEndTime } = req.body;
 
   if (!reservationId || !newEndTime) {
-    return { status: 400, message: "reservationId and newEndTime are required." };
+    return { status: 400, body: { message: "reservationId and newEndTime are required." } };
   }
 
   const reservation = await Reservation.findByPk(reservationId);
   if (!reservation) {
-    return { status: 404, message: "Reservation not found." };
+    return { status: 404, body: { message: "Reservation not found." } };
   }
 
   const lock = await Lock.findByPk(reservation.lockId);
   if (!lock) {
-    return { status: 404, message: "Lock not found." };
+    return { status: 404, body: { message: "Lock not found." } };
   }
   if (lock.status !== LockStatus.RESERVED) {
-    return { status: 400, message: "Lock is not reserved." };
+    return { status: 400, body: { message: "Lock is not reserved." } };
   }
 
   const now = Date.now();
@@ -155,18 +155,18 @@ export async function extendReservation(req, res) {
     },
   });
   if (!activeReservation) {
-    return { status: 400, message: "No active reservation found." };
+    return { status: 400, body: { message: "No active reservation found." } };
   }
 
   if (new Date(newEndTime).getTime() <= now) {
-    return { status: 400, message: "New end time must be in the future." };
+    return { status: 400, body: { message: "New end time must be in the future." } };
   }
   if (new Date(newEndTime).getTime() <= reservation.endTime.getTime()) {
-    return { status: 400, message: "New end time must be later than the current end time." };
+    return { status: 400, body: { message: "New end time must be later than the current end time." } };
   }
 
   if (new Date(newEndTime).getTime() - reservation.startTime.getTime() > 3 * 60 * 60 * 1000) {
-    return { status: 400, message: "Reservation cannot be extended beyond 3 hours." };
+    return { status: 400, body: { message: "Reservation cannot be extended beyond 3 hours." } };
   }
 
   const client = mqtt.connect(wsmqttConfig);
@@ -175,7 +175,7 @@ export async function extendReservation(req, res) {
   });
   client.on("error", (err) => {
     console.error("MQTT connection error:", err);
-    return { status: 500, message: "MQTT connection error." };
+    return { status: 500, body: { message: "MQTT connection error." } };
   });
 
   try {
@@ -191,7 +191,7 @@ export async function extendReservation(req, res) {
         if (err) {
           console.error(`Failed to publish message to ${lock.gatewayId}/down_link:`, err);
           client.end();
-          return { status: 500, message: "Failed to notify reservation extension." };
+          return { status: 500, body: { message: "Failed to notify reservation extension." } };
         }
         console.log(`Published reservation extension message to ${lock.gatewayId}/down_link`);
       }
@@ -201,7 +201,7 @@ export async function extendReservation(req, res) {
       if (err) {
         console.error(`Failed to subscribe to ${lock.gatewayId}/down_link_ack:`, err);
         client.end();
-        return { status: 500, message: "Failed to subscribe for updates." };
+        return { status: 500, body: { message: "Failed to subscribe for updates." } };
       }
       console.log(`Subscribed to ${lock.gatewayId}/down_link_ack`);
     });
@@ -236,12 +236,12 @@ export async function extendReservation(req, res) {
           }
           client.end();
         });
-        return { status: 504, message: "No acknowledgment received within 20 seconds." };
+        return { status: 504, body: { message: "No acknowledgment received within 20 seconds." } };
       }
     }, 20_000);
   } catch (error) {
     console.error("Error extending reservation:", error);
-    return { status: 500, message: "Internal server error." };
+    return { status: 500, body: { message: "Internal server error." } };
   }
 }
 

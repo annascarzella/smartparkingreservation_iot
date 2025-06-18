@@ -8,25 +8,25 @@ export async function NotifyArrival(req) {
   const { reservationId } = req.body;
 
   if (!reservationId) {
-    return { status: 400, message: "reservationId is required." };
+    return { status: 400, body: { message: "reservationId is required." }};
   }
 
   try {
     const reservation = await Reservation.findByPk(reservationId);
     if (!reservation) {
-      return { status: 404, message: "Reservation not found." };
+      return { status: 404, body: { message: "Reservation not found." } };
     }
 
     if (reservation.user_id !== req.userId) {
       return {
         status: 403,
-        message: "You are not authorized to notify this reservation.",
+        body: { message: "You are not authorized to notify this reservation." },
       };
     }
 
     const lock = await Lock.findOne({ where: { id: reservation.lockId } });
     if (!lock) {
-      return { status: 404, message: "Lock not found." };
+      return { status: 404, body: { message: "Lock not found." } };
     }
 
     // Notify the MQTT broker about the arrival
@@ -44,14 +44,14 @@ export async function NotifyArrival(req) {
     });
     client.on("error", (err) => {
       console.error("MQTT connection error:", err);
-      return { status: 500, message: "MQTT connection error." };
+      return { status: 500, body: { message: "MQTT connection error." } };
     });
 
     client.publish(topic, message, (err) => {
       if (err) {
         console.error(`Failed to publish message to ${topic}:`, err);
         client.end();
-        return { status: 500, message: "Failed to notify arrival." };
+        return { status: 500, body: { message: "Failed to notify arrival." } };
       }
       console.log(`Published message to ${topic}:`, message);
 
@@ -62,7 +62,7 @@ export async function NotifyArrival(req) {
             err
           );
           client.end();
-          return { status: 500, message: "Failed to subscribe for updates." };
+          return { status: 500, body: { message: "Failed to subscribe for updates." } };
         }
         console.log(`Subscribed to ${lock.gatewayId}/down_link_ack`);
         setTimeout(() => {
@@ -82,7 +82,7 @@ export async function NotifyArrival(req) {
             });
             return {
               status: 504,
-              message: "No acknowledgment received within 20 seconds.",
+              body: { message: "No acknowledgment received within 20 seconds." },
             };
           }
         }, 20_000);
@@ -118,7 +118,7 @@ export async function NotifyArrival(req) {
               client.end();
             });
 
-            return { status: 200, message: "Arrival notification sent." };
+            return { status: 200, body: { message: "Arrival notification sent." } };
           } catch (err) {
             console.error("Failed to update lock status from ack:", err);
             client.end();
@@ -128,7 +128,7 @@ export async function NotifyArrival(req) {
     });
   } catch (error) {
     console.error("Error notifying arrival:", error);
-    return { status: 500, message: "Internal server error." };
+    return { status: 500, body: { message: "Internal server error." } };
   }
 }
 
