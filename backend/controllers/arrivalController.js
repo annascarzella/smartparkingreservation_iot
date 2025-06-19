@@ -30,7 +30,7 @@ export async function NotifyArrival(req) {
     }
 
     // Notify the MQTT broker about the arrival
-    const topic = `${lock.gatewayId}/down_link`;
+    const topic = `${lock.gateway_id}/down_link`;
     const message = JSON.stringify({
       command: "down",
       status: LockStatus.FREE,
@@ -55,27 +55,27 @@ export async function NotifyArrival(req) {
       }
       console.log(`Published message to ${topic}:`, message);
 
-      client.subscribe(`${lock.gatewayId}/down_link_ack`, (err) => {
+      client.subscribe(`${lock.gateway_id}/down_link_ack`, (err) => {
         if (err) {
           console.error(
-            `Failed to subscribe to ${lock.gatewayId}/down_link_ack:`,
+            `Failed to subscribe to ${lock.gateway_id}/down_link_ack:`,
             err
           );
           client.end();
           return { status: 500, body: { message: "Failed to subscribe for updates." } };
         }
-        console.log(`Subscribed to ${lock.gatewayId}/down_link_ack`);
+        console.log(`Subscribed to ${lock.gateway_id}/down_link_ack`);
         setTimeout(() => {
           if (!ack_arrived) {
-            client.unsubscribe(`${lock.gatewayId}/down_link_ack`, (err) => {
+            client.unsubscribe(`${lock.gateway_id}/down_link_ack`, (err) => {
               if (err) {
                 console.error(
-                  `Failed to unsubscribe from ${lock.gatewayId}/down_link_ack after timeout:`,
+                  `Failed to unsubscribe from ${lock.gateway_id}/down_link_ack after timeout:`,
                   err
                 );
               } else {
                 console.log(
-                  `Unsubscribed from ${lock.gatewayId}/down_link_ack after timeout`
+                  `Unsubscribed from ${lock.gateway_id}/down_link_ack after timeout`
                 );
               }
               client.end();
@@ -89,7 +89,7 @@ export async function NotifyArrival(req) {
       });
 
       client.on("message", async (topic, message) => {
-        if (topic === `${lock.gatewayId}/down_link_ack`) {
+        if (topic === `${lock.gateway_id}/down_link_ack`) {
           console.log(
             `Received acknowledgment for ${lock.id}:`,
             message.toString()
@@ -104,15 +104,15 @@ export async function NotifyArrival(req) {
                 { where: { id: ackData.lockId } }
               );
             }
-            client.unsubscribe(`${lock.gatewayId}/down_link_ack`, (err) => {
+            client.unsubscribe(`${lock.gateway_id}/down_link_ack`, (err) => {
               if (err) {
                 console.error(
-                  `Failed to unsubscribe from ${lock.gatewayId}/down_link_ack:`,
+                  `Failed to unsubscribe from ${lock.gateway_id}/down_link_ack:`,
                   err
                 );
               } else {
                 console.log(
-                  `Unsubscribed from ${lock.gatewayId}/down_link_ack`
+                  `Unsubscribed from ${lock.gateway_id}/down_link_ack`
                 );
               }
               client.end();

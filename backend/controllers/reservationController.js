@@ -78,7 +78,7 @@ export async function addReservation(req) {
 
   try {
     client.publish(
-      `${lock.gatewayId}/down_link`,
+      `${lock.gateway_id}/down_link`,
       JSON.stringify({
         command: "up",
         status: LockStatus.RESERVED,
@@ -88,7 +88,7 @@ export async function addReservation(req) {
       (err) => {
         if (err) {
           console.error(
-            `Failed to publish message to ${lock.gatewayId}/down_link:`,
+            `Failed to publish message to ${lock.gateway_id}/down_link:`,
             err
           );
           client.end();
@@ -98,15 +98,15 @@ export async function addReservation(req) {
           };
         }
         console.log(
-          `Published reservation message to ${lock.gatewayId}/down_link`
+          `Published reservation message to ${lock.gateway_id}/down_link`
         );
       }
     );
 
-    client.subscribe(`${lock.gatewayId}/down_link_ack`, (err) => {
+    client.subscribe(`${lock.gateway_id}/down_link_ack`, (err) => {
       if (err) {
         console.error(
-          `Failed to subscribe to ${lock.gatewayId}/down_link_ack:`,
+          `Failed to subscribe to ${lock.gateway_id}/down_link_ack:`,
           err
         );
         client.end();
@@ -115,11 +115,11 @@ export async function addReservation(req) {
           body: { message: "Failed to subscribe for updates." },
         };
       }
-      console.log(`Subscribed to ${lock.gatewayId}/down_link_ack`);
+      console.log(`Subscribed to ${lock.gateway_id}/down_link_ack`);
     });
 
     client.on("message", async (topic, message) => {
-      if (topic === `${lock.gatewayId}/down_link_ack`) {
+      if (topic === `${lock.gateway_id}/down_link_ack`) {
         const payload = JSON.parse(message.toString());
         if (
           payload.lockId === lock.id &&
@@ -131,7 +131,7 @@ export async function addReservation(req) {
           );
           lock.status = LockStatus.RESERVED;
           await lock.save();
-          client.unsubscribe(`${lock.gatewayId}/down_link_ack`);
+          client.unsubscribe(`${lock.gateway_id}/down_link_ack`);
           client.end();
           const newReservation = await Reservation.create({
             user_id: req.userId,
@@ -146,15 +146,15 @@ export async function addReservation(req) {
     });
     setTimeout(() => {
       if (!ack_arrived) {
-        client.unsubscribe(`${lock.gatewayId}/down_link_ack`, (err) => {
+        client.unsubscribe(`${lock.gateway_id}/down_link_ack`, (err) => {
           if (err) {
             console.error(
-              `Failed to unsubscribe from ${lock.gatewayId}/down_link_ack after timeout:`,
+              `Failed to unsubscribe from ${lock.gateway_id}/down_link_ack after timeout:`,
               err
             );
           } else {
             console.log(
-              `Unsubscribed from ${lock.gatewayId}/down_link_ack after timeout`
+              `Unsubscribed from ${lock.gateway_id}/down_link_ack after timeout`
             );
           }
           client.end();
@@ -244,7 +244,7 @@ export async function extendReservation(req, res) {
 
   try {
     client.publish(
-      `${lock.gatewayId}/down_link`,
+      `${lock.gateway_id}/down_link`,
       JSON.stringify({
         command: "up",
         status: LockStatus.RESERVED,
@@ -254,7 +254,7 @@ export async function extendReservation(req, res) {
       (err) => {
         if (err) {
           console.error(
-            `Failed to publish message to ${lock.gatewayId}/down_link:`,
+            `Failed to publish message to ${lock.gateway_id}/down_link:`,
             err
           );
           client.end();
@@ -264,15 +264,15 @@ export async function extendReservation(req, res) {
           };
         }
         console.log(
-          `Published reservation extension message to ${lock.gatewayId}/down_link`
+          `Published reservation extension message to ${lock.gateway_id}/down_link`
         );
       }
     );
 
-    client.subscribe(`${lock.gatewayId}/down_link_ack`, (err) => {
+    client.subscribe(`${lock.gateway_id}/down_link_ack`, (err) => {
       if (err) {
         console.error(
-          `Failed to subscribe to ${lock.gatewayId}/down_link_ack:`,
+          `Failed to subscribe to ${lock.gateway_id}/down_link_ack:`,
           err
         );
         client.end();
@@ -281,11 +281,11 @@ export async function extendReservation(req, res) {
           body: { message: "Failed to subscribe for updates." },
         };
       }
-      console.log(`Subscribed to ${lock.gatewayId}/down_link_ack`);
+      console.log(`Subscribed to ${lock.gateway_id}/down_link_ack`);
     });
     let ack_arrived = false;
     client.on("message", async (topic, message) => {
-      if (topic === `${lock.gatewayId}/down_link_ack`) {
+      if (topic === `${lock.gateway_id}/down_link_ack`) {
         const payload = JSON.parse(message.toString());
         if (
           payload.lockId === lock.id &&
@@ -298,7 +298,7 @@ export async function extendReservation(req, res) {
           );
           lock.status = LockStatus.RESERVED;
           await lock.save();
-          client.unsubscribe(`${lock.gatewayId}/down_link_ack`);
+          client.unsubscribe(`${lock.gateway_id}/down_link_ack`);
           client.end();
           reservation.end_time = newEndTime;
           await reservation.save();
@@ -308,15 +308,15 @@ export async function extendReservation(req, res) {
     });
     setTimeout(() => {
       if (!ack_arrived) {
-        client.unsubscribe(`${lock.gatewayId}/down_link_ack`, (err) => {
+        client.unsubscribe(`${lock.gateway_id}/down_link_ack`, (err) => {
           if (err) {
             console.error(
-              `Failed to unsubscribe from ${lock.gatewayId}/down_link_ack after timeout:`,
+              `Failed to unsubscribe from ${lock.gateway_id}/down_link_ack after timeout:`,
               err
             );
           } else {
             console.log(
-              `Unsubscribed from ${lock.gatewayId}/down_link_ack after timeout`
+              `Unsubscribed from ${lock.gateway_id}/down_link_ack after timeout`
             );
           }
           client.end();
