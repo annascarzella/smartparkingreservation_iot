@@ -1,4 +1,5 @@
 import Gateway from "./models/gateway.js";
+import Lock from "./models/lock.js";
 import mqtt from "mqtt";
 import { wsmqttConfig } from "./config/wsmqtt.js";
 
@@ -38,21 +39,47 @@ async function mqttClient() {
     }
   });
 
-  client.on("message", (topic, message) => {
+  client.on("message", async (topic, message) => {
     if (topic.endsWith("/up_link")) {
       const gatewayId = topic.split("/")[0];
       // funzione che mondifica lo stato del lock nel db
       const payload = JSON.parse(message.toString());
+      const lock = await Lock.findOne({ where: { id: payload.lockId } });
+      if (lock) {
+        lock.status = payload.status; // Update the lock status
+        await lock.save(); // Save the updated lock status to the database
+      } else {
+        console.error(`Lock with ID ${payload.lockId} not found.`);
+      }
       console.log(`Received up_link message on ${topic}:`, payload);
-      // Here you can handle the lock status updates
     } else if (topic.endsWith("/heartbeat")) {
       const gatewayId = topic.split("/")[0];
       const payload = JSON.parse(message.toString());
       console.log(`Received heartbeat message on ${topic}:`, payload);
-      // Here you can handle the gateway heartbeat updates
+      const gateway = await Gateway.findOne({ where: { id: gatewayId } });
+      if (gateway) {
+        gateway.status = payload.status; // Update the gateway status
+        await gateway.save(); // Save the updated gateway status to the database
+      } else {
+        console.error(`Gateway with ID ${gatewayId} not found.`);
+      }
+      if (Array.isArray(payload.locks)) {
+        payload.locks.forEach(async (lockData) => {
+          try {
+            const lock = await Lock.findOne({ where: { id: lockData.id } });
+            if (lock) {
+              lock.status = lockData.status;
+              await lock.save();
+            } else {
+              console.error(`Lock with ID ${lockData.id} not found.`);
+            }
+          } catch (err) {
+            console.error(`Error updating lock ${lockData.id}:`, err);
+          }
+        });
+      }
     }
   });
 }
 
-//module.exports = mqttClient;
 export default mqttClient;
