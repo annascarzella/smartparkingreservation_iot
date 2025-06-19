@@ -14,6 +14,7 @@ import Map from 'ol/Map'
 import View from 'ol/View'
 import TileLayer from 'ol/layer/Tile'
 import OSM from 'ol/source/OSM'
+import XYZ from 'ol/source/XYZ';
 import Feature from 'ol/Feature'
 import Point from 'ol/geom/Point'
 import VectorSource from 'ol/source/Vector'
@@ -46,16 +47,12 @@ onMounted(async () => {
 
   console.log("Response:", res.value);
 
-  const map = new Map({
-    target: 'map',
-    layers: [
-      new TileLayer({ source: new OSM() })
-    ],
-    view: new View({
-      center: fromLonLat([12.4924, 41.8902]), // Rome, default center
-      zoom: 14
-    })
+  const view = new View({
+    center: fromLonLat([12.4924, 41.8902]), // Default: Rome
+    zoom: 14
   });
+
+
 
   const statusColorMap = {
     reserved: 'yellow',
@@ -120,7 +117,21 @@ onMounted(async () => {
     }
   });
 
-  map.addLayer(clusterLayer);
+  const map = new Map({
+    target: 'map',
+    layers: [
+      new TileLayer({
+        source: new XYZ({
+          url: 'https://cartodb-basemaps-{a-c}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
+          // attributions: '© OpenStreetMap contributors, © CARTO',
+          // subdomains: ['a', 'b', 'c'],
+          maxZoom: 19
+        })
+      }),
+      clusterLayer
+    ],
+    view: view
+  });
 
   // Event click
   map.on('singleclick', function(evt) {
@@ -138,9 +149,63 @@ onMounted(async () => {
     });
   });
 
-  if (lockFeatures.length > 0) { // centrare mappa sui lock all' inizio
-    const extent = lockSource.getExtent();
-    map.getView().fit(extent, { padding: [50,50,50,50], maxZoom: 16 });
+// Geolocation prompt
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userLon = position.coords.longitude;
+        const userLat = position.coords.latitude;
+        const userLonLat = fromLonLat([userLon, userLat]);
+
+        // Create a feature for the user's position
+        const userLocationFeature = new Feature({
+          geometry: new Point(userLonLat),
+          name: 'Your Location'
+        });
+
+        // Style the user location with an icon or circle
+        userLocationFeature.setStyle(new Style({
+          image: new Icon({
+            src: 'https://cdn-icons-png.flaticon.com/512/64/64113.png', // Or use your own icon URL
+            scale: 0.05, // Adjust the scale as needed
+            anchor: [0.5, 1]
+          })
+        }));
+
+        // Create a vector source and layer
+        const userLocationSource = new VectorSource({
+          features: [userLocationFeature]
+        });
+
+        const userLocationLayer = new VectorLayer({
+          source: userLocationSource
+        });
+
+        // Add the layer to the map
+        map.addLayer(userLocationLayer);
+
+        // Center map on user
+        view.setCenter(userLonLat);
+        view.setZoom(16);
+
+      },
+      (error) => {
+        console.warn("Geolocation denied or failed:", error.message);
+        // fallback: fit to lock data
+        if (lockFeatures.length > 0) {
+          const extent = lockSource.getExtent();
+          map.getView().fit(extent, { padding: [50, 50, 50, 50], maxZoom: 16 });
+        }
+      }
+
+
+    );
+  } else {
+    console.warn("Geolocation not supported by this browser.");
+    if (lockFeatures.length > 0) {
+      const extent = lockSource.getExtent();
+      map.getView().fit(extent, { padding: [50, 50, 50, 50], maxZoom: 16 });
+    }
   }
 
 });
