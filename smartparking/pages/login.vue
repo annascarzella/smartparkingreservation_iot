@@ -6,7 +6,7 @@
       <input
         v-model="email"
         type="email"
-        placeholder="email"
+        placeholder="Email"
         class="w-full p-2 border mb-2"
       />
       <input
@@ -36,9 +36,7 @@ const password = ref("");
 const error = ref("");
 const router = useRouter();
 
-//
 const res = ref();
-
 const { login } = useUsers();
 
 const loginUser = async () => {

@@ -19,7 +19,7 @@ const Lock = sequelize.define(
       type: DataTypes.ENUM(...Object.values(SensorStatus)),
       defaultValue: SensorStatus.OFF,
     },
-    magnetic_sensor: {
+    magneticsensor: {
       type: DataTypes.ENUM(...Object.values(SensorStatus)),
       defaultValue: SensorStatus.OFF,
     },
