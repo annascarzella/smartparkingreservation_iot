@@ -5,6 +5,12 @@
       <div id="map" class="map"></div>
     </div>
   </div>
+  <ReservationDialog
+    :show="showDialog"
+    :lockId="selectedLockId"
+    @close="showDialog = false"
+    @submit="handleReservationSubmit"
+  />
 </template>
 
 <script setup>
@@ -143,7 +149,9 @@ onMounted(async () => {
       } else if (feats && feats.length === 1) {
         const single = feats[0];
         const lockId = single.get('lockId');
-        alert(`Lock ID: ${lockId}`);
+        // alert(`Lock ID: ${lockId}`);
+        openReservationDialog(lockId);
+
       }
       return true;
     });
@@ -209,4 +217,20 @@ onMounted(async () => {
   }
 
 });
+
+import ReservationDialog from '@/components/ui/ReservationDialog.vue'
+
+const showDialog = ref(false)
+const selectedLockId = ref(null)
+
+function openReservationDialog(lockId) {
+  selectedLockId.value = lockId
+  showDialog.value = true
+}
+
+function handleReservationSubmit(data) {
+  console.log('Reservation Submitted:', data)
+  // TODO: Add actual API call here
+}
+
 </script>
