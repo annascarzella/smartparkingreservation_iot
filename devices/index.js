@@ -24,28 +24,28 @@ client.on("connect", function () {
   }
 
   // sometimes update the status of locks randomly
-  setInterval(function () {
-    const lock = locks[Math.floor(Math.random() * locks.length)];
-    const lockstatuses = Object.values(Lock_Status);
-    if (lock) {
-      const newStatus =
-        lockstatuses[Math.floor(Math.random() * lockstatuses.length)];
-      lock.updateStatus(newStatus);
+  // setInterval(function () {
+  //   const lock = locks[Math.floor(Math.random() * locks.length)];
+  //   const lockstatuses = Object.values(Lock_Status);
+  //   if (lock) {
+  //     const newStatus =
+  //       lockstatuses[Math.floor(Math.random() * lockstatuses.length)];
+  //     lock.updateStatus(newStatus);
 
-      const gateway = gateways.find((g) => g.locks.includes(lock.id));
-      if (gateway) {
-        const payload = JSON.stringify({
-          lockId: lock.id,
-          status: lock.status,
-          timestamp: new Date().toISOString(),
-        });
-        console.log(
-          `Publishing random status update for lock ${lock.id} on gateway ${gateway.id}`
-        );
-        client.publish(`${gateway.id}/up_link`, payload);
-      }
-    }
-  }, 30_000);
+  //     const gateway = gateways.find((g) => g.locks.includes(lock.id));
+  //     if (gateway) {
+  //       const payload = JSON.stringify({
+  //         lockId: lock.id,
+  //         status: lock.status,
+  //         timestamp: new Date().toISOString(),
+  //       });
+  //       console.log(
+  //         `Publishing random status update for lock ${lock.id} on gateway ${gateway.id}`
+  //       );
+  //       client.publish(`${gateway.id}/up_link`, payload);
+  //     }
+  //   }
+  // }, 300_000);
 
   // Publish heartbeat messages for each gateway every 5 seconds
   setInterval(function () {
@@ -68,7 +68,7 @@ client.on("connect", function () {
 
 // on mqtt message received of topic down_link
 client.on("message", function (topic, message) {
-  if ("down_link" in topic) {
+  if (topic.endsWith("/down_link")) {
     let arrived = false;
     const gatewayId = topic.split("/")[0];
     console.log(`Received down_link message for gateway ${gatewayId}`);
@@ -79,7 +79,7 @@ client.on("message", function (topic, message) {
     }
     message = JSON.parse(message.toString());
     if (message.command === "up" || message.command === "down") {
-      const lock = locks.find((l) => l.id === message.lockId);
+      const lock = locks.find((l) => l.id === message.lock_id);
       if (lock) {
         lock.updateStatus(
           message.command === "up" ? Lock_Status.OCCUPIED : Lock_Status.FREE
@@ -120,7 +120,7 @@ client.on("message", function (topic, message) {
           }, msUntilEnd);
         }
       } else {
-        console.error(`Lock ${message.lockId} not found`);
+        console.error(`Lock ${message.lock_id} not found`);
       }
     } else {
       console.error(`Unknown command: ${message.command}`);

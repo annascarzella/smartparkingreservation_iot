@@ -1,7 +1,7 @@
 import Reservation from "../models/reservation.js";
 import Lock from "../models/lock.js";
 import mqtt from "mqtt";
-import { Op } from 'sequelize'
+import { Op } from "sequelize";
 import { wsmqttConfig } from "../config/wsmqtt.js";
 import { LockStatus } from "../models/enums.js";
 
@@ -121,10 +121,7 @@ export async function addReservation(req) {
     client.on("message", async (topic, message) => {
       if (topic === `${lock.gateway_id}/down_link_ack`) {
         const payload = JSON.parse(message.toString());
-        if (
-          payload.lockId === lock.id &&
-          payload.status === LockStatus.RESERVED
-        ) {
+        if (payload.lockId === lock.id) {
           ack_arrived = true;
           console.log(
             `Received reservation acknowledgment for lock ${lock.id}`
@@ -195,7 +192,7 @@ export async function extendReservation(req, res) {
   }
 
   const now = Date.now();
- 
+
   const activeReservation = await Reservation.findOne({
     where: {
       id: reservation.id,
@@ -333,7 +330,27 @@ export async function extendReservation(req, res) {
   }
 }
 
+export async function getCurrentReservation(req) {
+  const now = Date.now();
+  const reservation = await Reservation.findOne({
+    where: {
+      user_id: req.userId,
+      end_time: {
+        [Op.gt]: now,
+      },
+    },
+    include: [{ model: Lock }],
+  });
+
+  if (!reservation) {
+    return { status: 404, body: { message: "No active reservation found." } };
+  }
+
+  return { status: 200, data: reservation };
+}
+
 export default {
   addReservation,
   extendReservation,
+  getCurrentReservation,
 };

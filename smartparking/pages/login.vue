@@ -64,13 +64,13 @@ const loginUser = async () => {
   }
 };
 
-function handleLogin() {
+async function handleLogin() {
   if (!email.value || !password.value) {
     error.value = "Email and password are required.";
     return;
   }
 
   error.value = ""; // Clear previous errors
-  loginUser();
+  await loginUser();
 }
 </script>

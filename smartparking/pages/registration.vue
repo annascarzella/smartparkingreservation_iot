@@ -67,13 +67,13 @@ const insertUser = async () => {
   }
 };
 
-function handleRegistration() {
+async function handleRegistration() {
   if (!name.value || !email.value || !password.value) {
     error.value = "Name, Email and password are required.";
     return;
   }
 
   error.value = ""; // Clear previous errors
-  insertUser();
+  await insertUser();
 }
 </script>

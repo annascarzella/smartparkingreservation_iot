@@ -13,6 +13,9 @@
   <ReservationDialog
     :show="showDialog"
     :lockId="selectedLockId"
+    :lockStatus="selectedLockStatus"
+    :errorMessage="errorMessage"
+    :successMessage="successMessage"
     @close="showDialog = false"
     @submit="handleReservationSubmit"
   />
@@ -173,7 +176,14 @@ onMounted(async () => {
         const single = feats[0];
         const lockId = single.get("lockId");
         // alert(`Lock ID: ${lockId}`);
-        openReservationDialog(lockId);
+        let status;
+        res.value.locks.forEach((lock) => {
+          if (lock.id === lockId) {
+            console.log("Lock details:", lock);
+            status = lock.status;
+          }
+        });
+        openReservationDialog(lockId, status);
       }
       return true;
     });
@@ -240,9 +250,13 @@ onMounted(async () => {
 
 const showDialog = ref(false);
 const selectedLockId = ref(null);
+const selectedLockStatus = ref(null);
+const errorMessage = ref("");
+const successMessage = ref("");
 
-function openReservationDialog(lockId) {
+function openReservationDialog(lockId, status) {
   selectedLockId.value = lockId;
+  selectedLockStatus.value = status;
   showDialog.value = true;
 }
 
@@ -252,14 +266,19 @@ const insertReservation = async (payload) => {
   try {
     res2.value = await createReservation(payload);
     console.log("Reservation response:", res2);
+    successMessage.value =
+      "Reservation created successfully! the page will refresh in 5 seconds.";
+    setTimeout(() => {
+      window.location.reload();
+    }, 5000);
   } catch (e) {
     console.error("Error fetching:", e.response);
-    error.value =
+    errorMessage.value =
       e.response?._data?.message || "An error occurred during reservation.";
   }
 };
 
-function handleReservationSubmit(data) {
+async function handleReservationSubmit(data) {
   console.log("Reservation Submitted:", data);
 
   const payload = {
@@ -270,6 +289,6 @@ function handleReservationSubmit(data) {
   };
 
   error.value = ""; // Clear previous errors
-  insertReservation(payload);
+  await insertReservation(payload);
 }
 </script>
