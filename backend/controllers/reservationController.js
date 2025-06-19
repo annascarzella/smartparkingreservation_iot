@@ -8,7 +8,12 @@ export async function addReservation(req) {
   const { lockId, startTime, endTime, plateNumber } = req.body;
 
   if (!lockId || !startTime || !endTime || !plateNumber) {
-    return { status: 400, body: { message: "lockId, startTime, endTime, and plateNumber are required." } };
+    return {
+      status: 400,
+      body: {
+        message: "lockId, startTime, endTime, and plateNumber are required.",
+      },
+    };
   }
 
   const lock = await Lock.findByPk(lockId);
@@ -22,9 +27,6 @@ export async function addReservation(req) {
   const existingReservation = await Reservation.findOne({
     where: {
       lockId,
-      startTime: {
-        [Op.lt]: endTime,
-      },
       endTime: {
         [Op.gt]: startTime,
       },
@@ -32,6 +34,16 @@ export async function addReservation(req) {
   });
   if (existingReservation) {
     return { status: 400, body: { message: "Lock is already reserved." } };
+  }
+
+  if (
+    new Date(endTime).getTime() - new Date(startTime).getTime() >
+    3 * 60 * 60 * 1000
+  ) {
+    return {
+      status: 400,
+      body: { message: "Reservation cannot be longer than 3 hours." },
+    };
   }
 
   const now = Date.now();
@@ -44,7 +56,10 @@ export async function addReservation(req) {
     },
   });
   if (alreadyhavereservation) {
-    return { status: 400, body: { message: "You already have an active reservation." } };
+    return {
+      status: 400,
+      body: { message: "You already have an active reservation." },
+    };
   }
 
   let ack_arrived = false;
@@ -68,19 +83,33 @@ export async function addReservation(req) {
       }),
       (err) => {
         if (err) {
-          console.error(`Failed to publish message to ${lock.gatewayId}/down_link:`, err);
+          console.error(
+            `Failed to publish message to ${lock.gatewayId}/down_link:`,
+            err
+          );
           client.end();
-          return { status: 500, body: { message: "Failed to notify reservation." } };
+          return {
+            status: 500,
+            body: { message: "Failed to notify reservation." },
+          };
         }
-        console.log(`Published reservation message to ${lock.gatewayId}/down_link`);
+        console.log(
+          `Published reservation message to ${lock.gatewayId}/down_link`
+        );
       }
     );
 
     client.subscribe(`${lock.gatewayId}/down_link_ack`, (err) => {
       if (err) {
-        console.error(`Failed to subscribe to ${lock.gatewayId}/down_link_ack:`, err);
+        console.error(
+          `Failed to subscribe to ${lock.gatewayId}/down_link_ack:`,
+          err
+        );
         client.end();
-        return { status: 500, body: { message: "Failed to subscribe for updates." } };
+        return {
+          status: 500,
+          body: { message: "Failed to subscribe for updates." },
+        };
       }
       console.log(`Subscribed to ${lock.gatewayId}/down_link_ack`);
     });
@@ -88,9 +117,14 @@ export async function addReservation(req) {
     client.on("message", async (topic, message) => {
       if (topic === `${lock.gatewayId}/down_link_ack`) {
         const payload = JSON.parse(message.toString());
-        if (payload.lockId === lock.id && payload.status === LockStatus.RESERVED) {
+        if (
+          payload.lockId === lock.id &&
+          payload.status === LockStatus.RESERVED
+        ) {
           ack_arrived = true;
-          console.log(`Received reservation acknowledgment for lock ${lock.id}`);
+          console.log(
+            `Received reservation acknowledgment for lock ${lock.id}`
+          );
           lock.status = LockStatus.RESERVED;
           await lock.save();
           client.unsubscribe(`${lock.gatewayId}/down_link_ack`);
@@ -110,13 +144,21 @@ export async function addReservation(req) {
       if (!ack_arrived) {
         client.unsubscribe(`${lock.gatewayId}/down_link_ack`, (err) => {
           if (err) {
-            console.error(`Failed to unsubscribe from ${lock.gatewayId}/down_link_ack after timeout:`, err);
+            console.error(
+              `Failed to unsubscribe from ${lock.gatewayId}/down_link_ack after timeout:`,
+              err
+            );
           } else {
-            console.log(`Unsubscribed from ${lock.gatewayId}/down_link_ack after timeout`);
+            console.log(
+              `Unsubscribed from ${lock.gatewayId}/down_link_ack after timeout`
+            );
           }
           client.end();
         });
-        return { status: 504, body: { message: "No acknowledgment received within 20 seconds." } };
+        return {
+          status: 504,
+          body: { message: "No acknowledgment received within 20 seconds." },
+        };
       }
     }, 20_000);
   } catch (error) {
@@ -129,7 +171,10 @@ export async function extendReservation(req, res) {
   const { reservationId, newEndTime } = req.body;
 
   if (!reservationId || !newEndTime) {
-    return { status: 400, body: { message: "reservationId and newEndTime are required." } };
+    return {
+      status: 400,
+      body: { message: "reservationId and newEndTime are required." },
+    };
   }
 
   const reservation = await Reservation.findByPk(reservationId);
@@ -159,14 +204,28 @@ export async function extendReservation(req, res) {
   }
 
   if (new Date(newEndTime).getTime() <= now) {
-    return { status: 400, body: { message: "New end time must be in the future." } };
+    return {
+      status: 400,
+      body: { message: "New end time must be in the future." },
+    };
   }
   if (new Date(newEndTime).getTime() <= reservation.endTime.getTime()) {
-    return { status: 400, body: { message: "New end time must be later than the current end time." } };
+    return {
+      status: 400,
+      body: {
+        message: "New end time must be later than the current end time.",
+      },
+    };
   }
 
-  if (new Date(newEndTime).getTime() - reservation.startTime.getTime() > 3 * 60 * 60 * 1000) {
-    return { status: 400, body: { message: "Reservation cannot be extended beyond 3 hours." } };
+  if (
+    new Date(newEndTime).getTime() - reservation.startTime.getTime() >
+    3 * 60 * 60 * 1000
+  ) {
+    return {
+      status: 400,
+      body: { message: "Reservation cannot be extended beyond 3 hours." },
+    };
   }
 
   const client = mqtt.connect(wsmqttConfig);
@@ -189,19 +248,33 @@ export async function extendReservation(req, res) {
       }),
       (err) => {
         if (err) {
-          console.error(`Failed to publish message to ${lock.gatewayId}/down_link:`, err);
+          console.error(
+            `Failed to publish message to ${lock.gatewayId}/down_link:`,
+            err
+          );
           client.end();
-          return { status: 500, body: { message: "Failed to notify reservation extension." } };
+          return {
+            status: 500,
+            body: { message: "Failed to notify reservation extension." },
+          };
         }
-        console.log(`Published reservation extension message to ${lock.gatewayId}/down_link`);
+        console.log(
+          `Published reservation extension message to ${lock.gatewayId}/down_link`
+        );
       }
     );
 
     client.subscribe(`${lock.gatewayId}/down_link_ack`, (err) => {
       if (err) {
-        console.error(`Failed to subscribe to ${lock.gatewayId}/down_link_ack:`, err);
+        console.error(
+          `Failed to subscribe to ${lock.gatewayId}/down_link_ack:`,
+          err
+        );
         client.end();
-        return { status: 500, body: { message: "Failed to subscribe for updates." } };
+        return {
+          status: 500,
+          body: { message: "Failed to subscribe for updates." },
+        };
       }
       console.log(`Subscribed to ${lock.gatewayId}/down_link_ack`);
     });
@@ -215,7 +288,9 @@ export async function extendReservation(req, res) {
           payload.newEndTime === newEndTime
         ) {
           ack_arrived = true;
-          console.log(`Received reservation extension acknowledgment for lock ${lock.id}`);
+          console.log(
+            `Received reservation extension acknowledgment for lock ${lock.id}`
+          );
           lock.status = LockStatus.RESERVED;
           await lock.save();
           client.unsubscribe(`${lock.gatewayId}/down_link_ack`);
@@ -230,13 +305,21 @@ export async function extendReservation(req, res) {
       if (!ack_arrived) {
         client.unsubscribe(`${lock.gatewayId}/down_link_ack`, (err) => {
           if (err) {
-            console.error(`Failed to unsubscribe from ${lock.gatewayId}/down_link_ack after timeout:`, err);
+            console.error(
+              `Failed to unsubscribe from ${lock.gatewayId}/down_link_ack after timeout:`,
+              err
+            );
           } else {
-            console.log(`Unsubscribed from ${lock.gatewayId}/down_link_ack after timeout`);
+            console.log(
+              `Unsubscribed from ${lock.gatewayId}/down_link_ack after timeout`
+            );
           }
           client.end();
         });
-        return { status: 504, body: { message: "No acknowledgment received within 20 seconds." } };
+        return {
+          status: 504,
+          body: { message: "No acknowledgment received within 20 seconds." },
+        };
       }
     }, 20_000);
   } catch (error) {
