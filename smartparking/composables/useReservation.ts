@@ -27,7 +27,23 @@ export function useReservation() {
     }
   }
 
+  async function getCurrentReservation() {
+    try {
+      isError.value = false;
+      isLoading.value = true;
+      const response = await useApiFetch("/getcurrent", {
+        method: "GET",
+      });
+      return response;
+    } catch (error) {
+      isError.value = true;
+      throw error;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   return {
-    createReservation,
+    createReservation, getCurrentReservation
   };
 }

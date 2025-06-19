@@ -82,7 +82,7 @@ client.on("message", function (topic, message) {
       const lock = locks.find((l) => l.id === message.lock_id);
       if (lock) {
         lock.updateStatus(
-          message.command === "up" ? Lock_Status.OCCUPIED : Lock_Status.FREE
+          message.command === "up" ? Lock_Status.RESERVED : Lock_Status.FREE
         );
         console.log(`Lock ${lock.id} status updated to ${message.status}`);
 

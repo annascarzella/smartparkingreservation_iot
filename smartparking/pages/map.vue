@@ -9,6 +9,10 @@
     <div class="map-box">
       <div id="map" class="map"></div>
     </div>
+    <div v-if="boolReservation" class="reservation-info">
+      <h2 class="text-xl font-semibold mb-4">Informazioni sulla prenotazione attuale</h2>
+      <p><strong>ciao hai una prenotazione</strong></p>
+    </div>
   </div>
   <ReservationDialog
     :show="showDialog"
@@ -56,9 +60,11 @@ const res = ref();
 const router = useRouter();
 
 const res2 = ref();
+const resCurrentReserv = ref();
+const boolReservation = ref(false);
 const error = ref("");
 
-const { createReservation } = useReservation();
+const { createReservation, getCurrentReservation } = useReservation();
 
 onMounted(async () => {
   if (!useCookie("access_token").value) {
@@ -75,6 +81,14 @@ onMounted(async () => {
   }
 
   console.log("Response:", res.value);
+
+  try {
+    resCurrentReserv.value = await getCurrentReservation();
+    boolReservation.value = true;
+    console.log("Current Reservation:", resCurrentReserv.value);
+  } catch (e) {
+    
+  }
 
   const view = new View({
     center: fromLonLat([12.4924, 41.8902]), // Default: Rome
