@@ -2,7 +2,7 @@ import express from "express";
 import {
   addReservation,
   extendReservation,
-  getCurrentReservation,
+  getCurrentReservation
 } from "../controllers/reservationController.js";
 import { asyncWrapper } from "../middleware/wrapper.js";
 

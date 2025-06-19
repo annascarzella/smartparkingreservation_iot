@@ -339,7 +339,6 @@ export async function getCurrentReservation(req) {
         [Op.gt]: now,
       },
     },
-    include: [{ model: Lock }],
   });
 
   if (!reservation) {

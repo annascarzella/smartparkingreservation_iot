@@ -31,7 +31,7 @@ export function useReservation() {
     try {
       isError.value = false;
       isLoading.value = true;
-      const response = await useApiFetch("/getcurrent", {
+      const response = await useApiFetch("/reservation/getcurrent", {
         method: "GET",
       });
       return response;
@@ -44,6 +44,7 @@ export function useReservation() {
   }
 
   return {
-    createReservation, getCurrentReservation
+    createReservation, 
+    getCurrentReservation
   };
 }

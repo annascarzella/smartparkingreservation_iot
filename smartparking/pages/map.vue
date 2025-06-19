@@ -10,8 +10,17 @@
       <div id="map" class="map"></div>
     </div>
     <div v-if="boolReservation" class="reservation-info">
-      <h2 class="text-xl font-semibold mb-4">Informazioni sulla prenotazione attuale</h2>
-      <p><strong>ciao hai una prenotazione</strong></p>
+      <h2 class="p-6 text-xl font-semibold mb-4">
+        Current Reservation Information
+      </h2>
+      <p><strong>Lock ID:</strong> {{ resCurrentReserv.lock_id }}</p>
+      <p><strong>Start Time:</strong> {{ formatDate(resCurrentReserv.start_time) }}</p>
+      <p><strong>End Time:</strong> {{ formatDate(resCurrentReserv.end_time) }}</p>
+      <p><strong>Plate Number:</strong> {{ resCurrentReserv.plate_number }}</p>
+      <p>
+        <strong>Expires in:</strong>
+        {{ Math.round((new Date(resCurrentReserv.end_time) - new Date()) / 60000) }} minutes
+      </p>
     </div>
   </div>
   <ReservationDialog
@@ -83,11 +92,12 @@ onMounted(async () => {
   console.log("Response:", res.value);
 
   try {
-    resCurrentReserv.value = await getCurrentReservation();
+    const response = await getCurrentReservation();
+    resCurrentReserv.value = response.data;
     boolReservation.value = true;
     console.log("Current Reservation:", resCurrentReserv.value);
   } catch (e) {
-    
+    console.log("No current reservation found.");
   }
 
   const view = new View({
@@ -305,4 +315,10 @@ async function handleReservationSubmit(data) {
   error.value = ""; // Clear previous errors
   await insertReservation(payload);
 }
+
+function formatDate(isoString) {
+  const date = new Date(isoString);
+  return date.toLocaleString(); // oppure usa .toLocaleDateString() se vuoi solo la data
+}
+
 </script>
