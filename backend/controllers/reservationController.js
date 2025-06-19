@@ -1,6 +1,7 @@
 import Reservation from "../models/reservation.js";
 import Lock from "../models/lock.js";
 import mqtt from "mqtt";
+import { Op } from 'sequelize'
 import { wsmqttConfig } from "../config/wsmqtt.js";
 import { LockStatus } from "../models/enums.js";
 
@@ -16,6 +17,9 @@ export async function addReservation(req) {
     };
   }
 
+  const start_time = startTime;
+  const end_time = endTime;
+
   const lock = await Lock.findByPk(lockId);
   if (!lock) {
     return { status: 404, body: { message: "Lock not found." } };
@@ -26,8 +30,8 @@ export async function addReservation(req) {
 
   const existingReservation = await Reservation.findOne({
     where: {
-      lockId,
-      endTime: {
+      lock_id: lockId,
+      end_time: {
         [Op.gt]: startTime,
       },
     },
@@ -50,7 +54,7 @@ export async function addReservation(req) {
   const alreadyhavereservation = await Reservation.findOne({
     where: {
       user_id: req.userId,
-      endTime: {
+      end_time: {
         [Op.gt]: now,
       },
     },
@@ -78,7 +82,7 @@ export async function addReservation(req) {
       JSON.stringify({
         command: "up",
         status: LockStatus.RESERVED,
-        lockId: lock.id,
+        lock_id: lock.id,
         endTime,
       }),
       (err) => {
@@ -131,10 +135,10 @@ export async function addReservation(req) {
           client.end();
           const newReservation = await Reservation.create({
             user_id: req.userId,
-            lockId,
-            startTime,
-            endTime,
-            plateNumber,
+            lock_id: lockId,
+            start_time,
+            end_time,
+            plate_number: plateNumber,
           });
           return { status: 201, data: newReservation };
         }
@@ -182,7 +186,7 @@ export async function extendReservation(req, res) {
     return { status: 404, body: { message: "Reservation not found." } };
   }
 
-  const lock = await Lock.findByPk(reservation.lockId);
+  const lock = await Lock.findByPk(reservation.lock_id);
   if (!lock) {
     return { status: 404, body: { message: "Lock not found." } };
   }
@@ -191,10 +195,11 @@ export async function extendReservation(req, res) {
   }
 
   const now = Date.now();
+ 
   const activeReservation = await Reservation.findOne({
     where: {
       id: reservation.id,
-      endTime: {
+      end_time: {
         [Op.gt]: now,
       },
     },
@@ -209,7 +214,7 @@ export async function extendReservation(req, res) {
       body: { message: "New end time must be in the future." },
     };
   }
-  if (new Date(newEndTime).getTime() <= reservation.endTime.getTime()) {
+  if (new Date(newEndTime).getTime() <= reservation.end_time.getTime()) {
     return {
       status: 400,
       body: {
@@ -219,7 +224,7 @@ export async function extendReservation(req, res) {
   }
 
   if (
-    new Date(newEndTime).getTime() - reservation.startTime.getTime() >
+    new Date(newEndTime).getTime() - reservation.start_time.getTime() >
     3 * 60 * 60 * 1000
   ) {
     return {
@@ -295,7 +300,7 @@ export async function extendReservation(req, res) {
           await lock.save();
           client.unsubscribe(`${lock.gatewayId}/down_link_ack`);
           client.end();
-          reservation.endTime = newEndTime;
+          reservation.end_time = newEndTime;
           await reservation.save();
           return { status: 200, data: reservation };
         }

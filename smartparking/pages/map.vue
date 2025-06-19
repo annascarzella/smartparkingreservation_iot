@@ -1,6 +1,11 @@
 <template>
   <div class="p-8 max-w-4xl mx-auto">
-    <h1 class="text-3xl font-semibold text-center mb-6" aria-label="Mappa con OpenStreetMap">🗺️ Mappa</h1>
+    <h1
+      class="text-3xl font-semibold text-center mb-6"
+      aria-label="Mappa con OpenStreetMap"
+    >
+      🗺️ Mappa
+    </h1>
     <div class="map-box">
       <div id="map" class="map"></div>
     </div>
@@ -14,28 +19,43 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import 'ol/ol.css'
-import Map from 'ol/Map'
-import View from 'ol/View'
-import TileLayer from 'ol/layer/Tile'
-import OSM from 'ol/source/OSM'
-import XYZ from 'ol/source/XYZ';
-import Feature from 'ol/Feature'
-import Point from 'ol/geom/Point'
-import VectorSource from 'ol/source/Vector'
-import Cluster from 'ol/source/Cluster'
-import VectorLayer from 'ol/layer/Vector'
-import { Style, Icon, Circle as CircleStyle, Fill, Stroke, Text } from 'ol/style'
-import { fromLonLat } from 'ol/proj'
-import '@/assets/css/map.css'
+import { onMounted, ref } from "vue";
+import "ol/ol.css";
+import Map from "ol/Map";
+import View from "ol/View";
+import TileLayer from "ol/layer/Tile";
+import OSM from "ol/source/OSM";
+import XYZ from "ol/source/XYZ";
+import Feature from "ol/Feature";
+import Point from "ol/geom/Point";
+import VectorSource from "ol/source/Vector";
+import Cluster from "ol/source/Cluster";
+import VectorLayer from "ol/layer/Vector";
+import {
+  Style,
+  Icon,
+  Circle as CircleStyle,
+  Fill,
+  Stroke,
+  Text,
+} from "ol/style";
+import { fromLonLat } from "ol/proj";
+import "@/assets/css/map.css";
 import { useGateway } from "@/composables/useGateway";
 import { useCookie } from "#app";
 import { useRouter } from "#imports";
 
+import ReservationDialog from "@/components/ui/ReservationDialog.vue";
+import { useReservation } from "@/composables/useReservation";
+
 const { fetchAll } = useGateway();
 const res = ref();
 const router = useRouter();
+
+const res2 = ref();
+const error = ref("");
+
+const { createReservation } = useReservation();
 
 onMounted(async () => {
   if (!useCookie("access_token").value) {
@@ -55,109 +75,111 @@ onMounted(async () => {
 
   const view = new View({
     center: fromLonLat([12.4924, 41.8902]), // Default: Rome
-    zoom: 14
+    zoom: 14,
   });
 
-
-
   const statusColorMap = {
-    reserved: 'yellow',
-    occupied: 'red',
-    free: 'green',
-    out_of_order: 'gray'
+    reserved: "yellow",
+    occupied: "red",
+    free: "green",
+    out_of_order: "gray",
   };
 
   const lockFeatures = [];
   if (res.value.locks && Array.isArray(res.value.locks)) {
-    res.value.locks.forEach(lock => {
+    res.value.locks.forEach((lock) => {
       const lat = parseFloat(lock.latitude);
       const lon = parseFloat(lock.longitude);
       if (isNaN(lat) || isNaN(lon)) return;
       const feat = new Feature({
         geometry: new Point(fromLonLat([lon, lat])),
         lockId: lock.id,
-        lockStatus: lock.status
+        lockStatus: lock.status,
       });
-      const color = statusColorMap[lock.status] || 'blue';  // Cluster color
-      feat.setStyle(new Style({
-        image: new CircleStyle({
-          radius: 8,
-          fill: new Fill({ color }),
-          stroke: new Stroke({ color: '#fff', width: 2 })
+      const color = statusColorMap[lock.status] || "blue"; // Cluster color
+      feat.setStyle(
+        new Style({
+          image: new CircleStyle({
+            radius: 8,
+            fill: new Fill({ color }),
+            stroke: new Stroke({ color: "#fff", width: 2 }),
+          }),
         })
-      }));
+      );
       lockFeatures.push(feat);
     });
   }
 
-  const lockSource = new VectorSource({ // VectorSource per i lock
-    features: lockFeatures
+  const lockSource = new VectorSource({
+    // VectorSource per i lock
+    features: lockFeatures,
   });
 
-  const clusterSource = new Cluster({  // Distanza in pixel
+  const clusterSource = new Cluster({
+    // Distanza in pixel
     distance: 40,
-    source: lockSource
+    source: lockSource,
   });
 
   const clusterLayer = new VectorLayer({
     source: clusterSource,
-    style: function(feature) {
-      const features = feature.get('features');
+    style: function (feature) {
+      const features = feature.get("features");
       if (features.length > 1) {
-        return new Style({ // cluster, cerchio con numero
+        return new Style({
+          // cluster, cerchio con numero
           image: new CircleStyle({
             radius: 15,
-            fill: new Fill({ color: 'rgba(0, 153, 255, 0.9)' }),
-            stroke: new Stroke({ color: '#fff', width: 2 })
+            fill: new Fill({ color: "rgba(0, 153, 255, 0.9)" }),
+            stroke: new Stroke({ color: "#fff", width: 2 }),
           }),
           text: new Text({
             text: String(features.length),
-            fill: new Fill({ color: '#000' }),
-            stroke: new Stroke({ color: '#fff', width: 2 }),
-            font: '12px sans-serif'
-          })
+            fill: new Fill({ color: "#000" }),
+            stroke: new Stroke({ color: "#fff", width: 2 }),
+            font: "12px sans-serif",
+          }),
         });
       } else {
         return features[0].getStyle(); // riusa lo style già assegnato alla sotto-feature
       }
-    }
+    },
   });
 
   const map = new Map({
-    target: 'map',
+    target: "map",
     layers: [
       new TileLayer({
         source: new XYZ({
-          url: 'https://cartodb-basemaps-{a-c}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
+          url: "https://cartodb-basemaps-{a-c}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
           // attributions: '© OpenStreetMap contributors, © CARTO',
           // subdomains: ['a', 'b', 'c'],
-          maxZoom: 19
-        })
+          maxZoom: 19,
+        }),
       }),
-      clusterLayer
+      clusterLayer,
     ],
-    view: view
+    view: view,
   });
 
   // Event click
-  map.on('singleclick', function(evt) {
-    map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
-      const feats = feature.get('features');
+  map.on("singleclick", function (evt) {
+    map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+      const feats = feature.get("features");
       if (feats && feats.length > 1) {
         const extent = feature.getGeometry().getExtent(); // zoom in per cluster
         map.getView().fit(extent, { duration: 500, maxZoom: 18 });
       } else if (feats && feats.length === 1) {
         const single = feats[0];
-        const lockId = single.get('lockId');
+        const lockId = single.get("lockId");
         // alert(`Lock ID: ${lockId}`);
         openReservationDialog(lockId);
-
       }
       return true;
     });
   });
 
-// Geolocation prompt
+  // Geolocation prompt
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -168,25 +190,27 @@ onMounted(async () => {
         // Create a feature for the user's position
         const userLocationFeature = new Feature({
           geometry: new Point(userLonLat),
-          name: 'Your Location'
+          name: "Your Location",
         });
 
         // Style the user location with an icon or circle
-        userLocationFeature.setStyle(new Style({
-          image: new Icon({
-            src: 'https://cdn-icons-png.flaticon.com/512/64/64113.png', // Or use your own icon URL
-            scale: 0.05, // Adjust the scale as needed
-            anchor: [0.5, 1]
+        userLocationFeature.setStyle(
+          new Style({
+            image: new Icon({
+              src: "https://cdn-icons-png.flaticon.com/512/64/64113.png", // Or use your own icon URL
+              scale: 0.05, // Adjust the scale as needed
+              anchor: [0.5, 1],
+            }),
           })
-        }));
+        );
 
         // Create a vector source and layer
         const userLocationSource = new VectorSource({
-          features: [userLocationFeature]
+          features: [userLocationFeature],
         });
 
         const userLocationLayer = new VectorLayer({
-          source: userLocationSource
+          source: userLocationSource,
         });
 
         // Add the layer to the map
@@ -195,7 +219,6 @@ onMounted(async () => {
         // Center map on user
         view.setCenter(userLonLat);
         view.setZoom(16);
-
       },
       (error) => {
         console.warn("Geolocation denied or failed:", error.message);
@@ -205,8 +228,6 @@ onMounted(async () => {
           map.getView().fit(extent, { padding: [50, 50, 50, 50], maxZoom: 16 });
         }
       }
-
-
     );
   } else {
     console.warn("Geolocation not supported by this browser.");
@@ -215,22 +236,40 @@ onMounted(async () => {
       map.getView().fit(extent, { padding: [50, 50, 50, 50], maxZoom: 16 });
     }
   }
-
 });
 
-import ReservationDialog from '@/components/ui/ReservationDialog.vue'
-
-const showDialog = ref(false)
-const selectedLockId = ref(null)
+const showDialog = ref(false);
+const selectedLockId = ref(null);
 
 function openReservationDialog(lockId) {
-  selectedLockId.value = lockId
-  showDialog.value = true
+  selectedLockId.value = lockId;
+  showDialog.value = true;
 }
+
+const insertReservation = async (payload) => {
+  console.log("Payload for submission:", payload);
+
+  try {
+    res2.value = await createReservation(payload);
+    console.log("Reservation response:", res2);
+  } catch (e) {
+    console.error("Error fetching:", e.response);
+    error.value =
+      e.response?._data?.message || "An error occurred during reservation.";
+  }
+};
 
 function handleReservationSubmit(data) {
-  console.log('Reservation Submitted:', data)
-  // TODO: Add actual API call here
-}
+  console.log("Reservation Submitted:", data);
 
+  const payload = {
+    lockId: data.lockId,
+    startTime: Date.now(),
+    endTime: Date.now() + data.duration * 60000, // Convert minutes to milliseconds
+    plateNumber: data.plate,
+  };
+
+  error.value = ""; // Clear previous errors
+  insertReservation(payload);
+}
 </script>
