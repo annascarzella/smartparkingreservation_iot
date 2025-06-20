@@ -8,7 +8,7 @@ export async function NotifyArrival(req) {
   const { reservationId } = req.body;
 
   if (!reservationId) {
-    return { status: 400, body: { message: "reservationId is required." }};
+    return { status: 400, body: { message: "reservationId is required." } };
   }
 
   try {
@@ -34,7 +34,7 @@ export async function NotifyArrival(req) {
     const message = JSON.stringify({
       command: "down",
       status: LockStatus.FREE,
-      lockId: lock.id,
+      lock_id: lock.id,
     });
 
     let ack_arrived = false;
@@ -62,7 +62,10 @@ export async function NotifyArrival(req) {
             err
           );
           client.end();
-          return { status: 500, body: { message: "Failed to subscribe for updates." } };
+          return {
+            status: 500,
+            body: { message: "Failed to subscribe for updates." },
+          };
         }
         console.log(`Subscribed to ${lock.gateway_id}/down_link_ack`);
         setTimeout(() => {
@@ -82,7 +85,9 @@ export async function NotifyArrival(req) {
             });
             return {
               status: 504,
-              body: { message: "No acknowledgment received within 20 seconds." },
+              body: {
+                message: "No acknowledgment received within 20 seconds.",
+              },
             };
           }
         }, 20_000);
@@ -118,7 +123,14 @@ export async function NotifyArrival(req) {
               client.end();
             });
 
-            return { status: 200, body: { message: "Arrival notification sent." } };
+            await Reservation.update(
+              { end_time: new Date() },
+              { where: { id: reservation.id } }
+            );
+            return {
+              status: 200,
+              body: { message: "Arrival notification sent." },
+            };
           } catch (err) {
             console.error("Failed to update lock status from ack:", err);
             client.end();
