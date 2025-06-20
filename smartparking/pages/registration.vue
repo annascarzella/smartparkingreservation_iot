@@ -24,6 +24,10 @@
       <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">
         Register
       </button>
+      <p class="mt-2">
+        Already have an account? 
+        <router-link to="/" class="text-blue-600">Login</router-link>
+      </p>
     </form>
 
     <p v-if="error" class="text-red-500 mt-2">{{ error }}</p>
@@ -31,7 +35,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 import { useUsers } from "@/composables/useUsers";
@@ -46,6 +50,13 @@ const router = useRouter();
 const res = ref();
 
 const { register } = useUsers();
+
+onMounted(() => {
+  if (useCookie("access_token").value) {
+    router.push("/map");
+    return;
+  }
+});
 
 const insertUser = async () => {
   const payload = {

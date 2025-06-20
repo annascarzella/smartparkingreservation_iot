@@ -138,7 +138,7 @@ const { createReservation, getCurrentReservation, extendReservation } = useReser
 onMounted(async () => {
   if (!useCookie("access_token").value) {
     console.error("No access token found in cookies.");
-    router.push("/login");
+    router.push("/");
     return;
   }
 
