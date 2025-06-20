@@ -75,6 +75,33 @@
       <template v-if="successExtend">
         <p class="text-green-500 mt-2">{{ successExtend }}</p>
       </template>
+      <button
+        @click="openGoogleMaps"
+        class="mt-4 bg-green-600 text-white px-4 py-2 rounded"
+      >
+        Open on Google Maps
+      </button>
+      <div>
+        <AlertDialog>
+          <AlertDialogTrigger as-child>
+            <Button class="px-4 py-2 bg-blue-600 text-white rounded">
+              Notify arrival
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Sei arrivato?</AlertDialogTitle>
+              <!-- <AlertDialogDescription>
+                Sei arrivato?
+              </AlertDialogDescription> -->
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>No</AlertDialogCancel>
+              <AlertDialogAction @click="handleArrival">Siii</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
     </div>
   </div>
   <ReservationDialog
@@ -117,6 +144,18 @@ import { useRouter } from "#imports";
 
 import ReservationDialog from "@/components/ui/ReservationDialog.vue";
 import { useReservation } from "@/composables/useReservation";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
 
 const { fetchAll } = useGateway();
 const res = ref();
@@ -133,7 +172,7 @@ const successExtend = ref("");
 const errorExtend = ref("");
 const duration = ref(5);
 
-const { createReservation, getCurrentReservation, extendReservation } = useReservation();
+const { createReservation, getCurrentReservation, extendReservation, notifyArrival } = useReservation();
 
 onMounted(async () => {
   if (!useCookie("access_token").value) {
@@ -414,4 +453,30 @@ function decreaseDuration() {
     duration.value -= 5;
   }
 }
+
+
+function openGoogleMaps() {
+  const lock = res.value?.locks?.find(
+    (lock) => lock.id === resCurrentReserv.value?.lock_id
+  );
+  if (lock) {
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${lock.latitude},${lock.longitude}`;
+    window.open(url, "_blank");
+  } else {
+    error.value = "No reserved lock found.";
+  }
+}
+
+async function handleArrival() {
+  try {
+    await notifyArrival({
+      reservationId: resCurrentReserv.value.id,
+    });
+    successExtend.value = "Arrival notified successfully!";
+  } catch (e) {
+    errorExtend.value =
+      e.response?._data?.message || "An error occurred while notifying arrival.";
+  }
+}
+
 </script>

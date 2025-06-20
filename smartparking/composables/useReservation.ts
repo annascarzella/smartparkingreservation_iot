@@ -63,11 +63,29 @@ export function useReservation() {
     }
   }
 
-
+  async function notifyArrival(payload: {
+    reservationId: number;
+  }) {
+    try {
+      isError.value = false;
+      isLoading.value = true;
+      const response = await useApiFetch("/arrival", {
+        method: "POST",
+        body: payload,
+      });
+      return response;
+    } catch (error) {
+      isError.value = true;
+      throw error;
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
   return {
     createReservation, 
     getCurrentReservation,
-    extendReservation
+    extendReservation,
+    notifyArrival
   };
 }

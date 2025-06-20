@@ -24,7 +24,7 @@ export async function NotifyArrival(req) {
       };
     }
 
-    const lock = await Lock.findOne({ where: { id: reservation.lockId } });
+    const lock = await Lock.findByPk(reservation.lock_id);
     if (!lock) {
       return { status: 404, body: { message: "Lock not found." } };
     }
