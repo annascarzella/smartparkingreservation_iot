@@ -168,7 +168,7 @@ export async function addReservation(req) {
   }
 }
 
-export async function extendReservation(req, res) {
+export async function extendReservation(req) {
   const { reservationId, newEndTime } = req.body;
 
   if (!reservationId || !newEndTime) {
@@ -245,7 +245,7 @@ export async function extendReservation(req, res) {
       JSON.stringify({
         command: "up",
         status: LockStatus.RESERVED,
-        lockId: lock.id,
+        lock_id: lock.id,
         endTime: newEndTime,
       }),
       (err) => {
@@ -286,8 +286,7 @@ export async function extendReservation(req, res) {
         const payload = JSON.parse(message.toString());
         if (
           payload.lockId === lock.id &&
-          payload.status === LockStatus.RESERVED &&
-          payload.newEndTime === newEndTime
+          payload.status === LockStatus.RESERVED
         ) {
           ack_arrived = true;
           console.log(

@@ -111,7 +111,8 @@ client.on("message", function (topic, message) {
 
         const msUntilEnd = new Date(message.endTime).getTime() - Date.now();
         if (msUntilEnd > 0) {
-          const int = setTimeout((lock) => {
+          const int = setTimeout(() => {
+            console.log(`Lock ${lock.id} reservation ended at ${new Date().toISOString()}`);
             if (!lockArrivals[lock.id]) {
               lock.updateStatus(Lock_Status.FREE);
               console.log(

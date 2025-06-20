@@ -43,8 +43,31 @@ export function useReservation() {
     }
   }
 
+  async function extendReservation(payload: {
+    reservationId: number;
+    newEndTime: number;
+  }) {
+    try {
+      isError.value = false;
+      isLoading.value = true;
+      const response = await useApiFetch("/reservation/extend", {
+        method: "POST",
+        body: payload,
+      });
+      return response;
+    } catch (error) {
+      isError.value = true;
+      throw error;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+
+
   return {
     createReservation, 
-    getCurrentReservation
+    getCurrentReservation,
+    extendReservation
   };
 }

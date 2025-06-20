@@ -14,13 +14,67 @@
         Current Reservation Information
       </h2>
       <p><strong>Lock ID:</strong> {{ resCurrentReserv.lock_id }}</p>
-      <p><strong>Start Time:</strong> {{ formatDate(resCurrentReserv.start_time) }}</p>
-      <p><strong>End Time:</strong> {{ formatDate(resCurrentReserv.end_time) }}</p>
+      <p>
+        <strong>Start Time:</strong>
+        {{ formatDate(resCurrentReserv.start_time) }}
+      </p>
+      <p>
+        <strong>End Time:</strong> {{ formatDate(resCurrentReserv.end_time) }}
+      </p>
       <p><strong>Plate Number:</strong> {{ resCurrentReserv.plate_number }}</p>
       <p>
         <strong>Expires in:</strong>
-        {{ Math.round((new Date(resCurrentReserv.end_time) - new Date()) / 60000) }} minutes
+        {{
+          Math.round((new Date(resCurrentReserv.end_time) - new Date()) / 60000)
+        }}
+        minutes
       </p>
+      <div class="flex space-x-2">
+        <button
+          type="button"
+          @click="decreaseDuration"
+          class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+          :disabled="duration <= 5"
+        >
+          −
+        </button>
+
+        <input
+          id="duration"
+          type="number"
+          v-model.number="duration"
+          class="border rounded px-3 py-2 text-center"
+          min="5"
+          max="180"
+          step="5"
+          readonly
+        />
+
+        <button
+          type="button"
+          @click="increaseDuration"
+          class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+          :disabled="duration >= 180"
+        >
+          +
+        </button>
+
+        <span class="text-gray-600 px-3 py-2">minutes</span>
+
+        <button
+          type="button"
+          @click="handleSubmit"
+          class="px-4 py-2 bg-blue-600 text-white rounded"
+        >
+          Extend
+        </button>
+      </div>
+      <template v-if="errorExtend">
+        <p class="text-red-500 mt-2">{{ errorExtend }}</p>
+      </template>
+      <template v-if="successExtend">
+        <p class="text-green-500 mt-2">{{ successExtend }}</p>
+      </template>
     </div>
   </div>
   <ReservationDialog
@@ -73,7 +127,13 @@ const resCurrentReserv = ref();
 const boolReservation = ref(false);
 const error = ref("");
 
-const { createReservation, getCurrentReservation } = useReservation();
+
+const res3 = ref();
+const successExtend = ref("");
+const errorExtend = ref("");
+const duration = ref(5);
+
+const { createReservation, getCurrentReservation, extendReservation } = useReservation();
 
 onMounted(async () => {
   if (!useCookie("access_token").value) {
@@ -321,4 +381,37 @@ function formatDate(isoString) {
   return date.toLocaleString(); // oppure usa .toLocaleDateString() se vuoi solo la data
 }
 
+async function handleSubmit() {
+  const payload = {
+    reservationId: resCurrentReserv.value.id,
+    newEndTime: new Date(
+      new Date(resCurrentReserv.value.end_time).getTime() + duration.value * 60000)
+  }
+  errorExtend.value = ""; // Clear previous errors
+  try {
+    res3.value = await extendReservation(payload);
+    console.log("Reservation extend response:", res3);
+    successExtend.value =
+      "Reservation extended successfully! the page will refresh in 5 seconds.";
+    setTimeout(() => {
+      window.location.reload();
+    }, 5000);
+  } catch (e) {
+    console.error("Error fetching:", e.response);
+    errorExtend.value =
+      e.response?._data?.message || "An error occurred during reservation.";
+  }
+}
+
+function increaseDuration() {
+  if (duration.value < 180) {
+    duration.value += 5;
+  }
+}
+
+function decreaseDuration() {
+  if (duration.value > 5) {
+    duration.value -= 5;
+  }
+}
 </script>
