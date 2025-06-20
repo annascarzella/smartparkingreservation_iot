@@ -9,6 +9,10 @@ var client = mqtt.connect(process.env.WSMQTT);
 const locks = await getAllLocks();
 const gateways = await getAllGateways();
 
+// dictionary to map lock IDs to intervals of reservations
+const lockReservations = {};
+const lockArrivals = {};
+
 client.on("connect", function () {
   console.log("Connected");
 
@@ -69,7 +73,7 @@ client.on("connect", function () {
 // on mqtt message received of topic down_link
 client.on("message", function (topic, message) {
   if (topic.endsWith("/down_link")) {
-    let arrived = false;
+  
     const gatewayId = topic.split("/")[0];
     console.log(`Received down_link message for gateway ${gatewayId}`);
     const gateway = getGatewayById(gatewayId);
@@ -86,6 +90,7 @@ client.on("message", function (topic, message) {
         );
         console.log(`Lock ${lock.id} status updated to ${message.status}`);
 
+        
         // Publish the acknowledgment back to the gateway
         client.publish(
           `${gatewayId}/down_link_ack`,
@@ -97,13 +102,17 @@ client.on("message", function (topic, message) {
         );
 
         if (message.command === "down") {
-          arrived = true;
+          // Add true to lockArrivals to indicate the lock has arrived
+          lockArrivals[lock.id] = true;
+        }
+        else {
+          lockArrivals[lock.id] = false;
         }
 
         const msUntilEnd = new Date(message.endTime).getTime() - Date.now();
         if (msUntilEnd > 0) {
-          setTimeout(() => {
-            if (!arrived) {
+          const int = setTimeout((lock) => {
+            if (!lockArrivals[lock.id]) {
               lock.updateStatus(Lock_Status.FREE);
               console.log(
                 `Lock ${lock.id} status automatically set to FREE after endtime`
@@ -118,6 +127,15 @@ client.on("message", function (topic, message) {
               );
             }
           }, msUntilEnd);
+          // Store the interval in the lockReservations dictionary
+          if (!lockReservations[lock.id]) {
+            lockReservations[lock.id] = int;
+          }
+          else {
+            // Clear the previous interval if it exists
+            clearTimeout(lockReservations[lock.id]);
+            lockReservations[lock.id] = int;
+          }
         }
       } else {
         console.error(`Lock ${message.lock_id} not found`);
