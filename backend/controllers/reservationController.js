@@ -118,50 +118,60 @@ export async function addReservation(req) {
       console.log(`Subscribed to ${lock.gateway_id}/down_link_ack`);
     });
 
-    client.on("message", async (topic, message) => {
-      if (topic === `${lock.gateway_id}/down_link_ack`) {
-        const payload = JSON.parse(message.toString());
-        if (payload.lockId === lock.id) {
-          ack_arrived = true;
-          console.log(
-            `Received reservation acknowledgment for lock ${lock.id}`
-          );
-          lock.status = LockStatus.RESERVED;
-          await lock.save();
-          client.unsubscribe(`${lock.gateway_id}/down_link_ack`);
-          client.end();
-          const newReservation = await Reservation.create({
-            user_id: req.userId,
-            lock_id: lockId,
-            start_time,
-            end_time,
-            plate_number: plateNumber,
+    // Wait for MQTT acknowledgment or timeout (10 seconds)
+    await new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        if (!ack_arrived) {
+          client.unsubscribe(`${lock.gateway_id}/down_link_ack`, (err) => {
+            if (err) {
+              console.error(
+                `Failed to unsubscribe from ${lock.gateway_id}/down_link_ack after timeout:`,
+                err
+              );
+            } else {
+              console.log(
+                `Unsubscribed from ${lock.gateway_id}/down_link_ack after timeout`
+              );
+            }
+            client.end();
           });
-          return { status: 201, data: newReservation };
+          reject({
+            status: 504,
+            body: { message: "No acknowledgment received within 20 seconds." },
+          });
         }
-      }
-    });
-    setTimeout(() => {
-      if (!ack_arrived) {
-        client.unsubscribe(`${lock.gateway_id}/down_link_ack`, (err) => {
-          if (err) {
-            console.error(
-              `Failed to unsubscribe from ${lock.gateway_id}/down_link_ack after timeout:`,
-              err
-            );
-          } else {
+      }, 10_000);
+
+      client.on("message", async (topic, message) => {
+        if (topic === `${lock.gateway_id}/down_link_ack`) {
+          const payload = JSON.parse(message.toString());
+          if (payload.lockId === lock.id) {
+            ack_arrived = true;
+            clearTimeout(timeout);
             console.log(
-              `Unsubscribed from ${lock.gateway_id}/down_link_ack after timeout`
+              `Received reservation acknowledgment for lock ${lock.id}`
             );
+            lock.status = LockStatus.RESERVED;
+            await lock.save();
+            client.unsubscribe(`${lock.gateway_id}/down_link_ack`);
+            client.end();
+            const newReservation = await Reservation.create({
+              user_id: req.userId,
+              lock_id: lockId,
+              start_time,
+              end_time,
+              plate_number: plateNumber,
+            });
+            resolve({
+              status: 201,
+              data: newReservation,
+            });
           }
-          client.end();
-        });
-        return {
-          status: 504,
-          body: { message: "No acknowledgment received within 20 seconds." },
-        };
-      }
-    }, 20_000);
+        }
+      });
+    }).catch((result) => {
+      throw result;
+    });
   } catch (error) {
     console.error("Error creating reservation:", error);
     return { status: 500, body: { message: "Internal server error." } };
@@ -281,48 +291,56 @@ export async function extendReservation(req) {
       console.log(`Subscribed to ${lock.gateway_id}/down_link_ack`);
     });
     let ack_arrived = false;
-    client.on("message", async (topic, message) => {
-      if (topic === `${lock.gateway_id}/down_link_ack`) {
-        const payload = JSON.parse(message.toString());
-        if (
-          payload.lockId === lock.id &&
-          payload.status === LockStatus.RESERVED
-        ) {
-          ack_arrived = true;
-          console.log(
-            `Received reservation extension acknowledgment for lock ${lock.id}`
-          );
-          lock.status = LockStatus.RESERVED;
-          await lock.save();
-          client.unsubscribe(`${lock.gateway_id}/down_link_ack`);
-          client.end();
-          reservation.end_time = newEndTime;
-          await reservation.save();
-          return { status: 200, data: reservation };
+
+    // Wait for MQTT acknowledgment or timeout (10 seconds)
+    await new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        if (!ack_arrived) {
+          client.unsubscribe(`${lock.gateway_id}/down_link_ack`, (err) => {
+            if (err) {
+              console.error(
+                `Failed to unsubscribe from ${lock.gateway_id}/down_link_ack after timeout:`,
+                err
+              );
+            } else {
+              console.log(
+                `Unsubscribed from ${lock.gateway_id}/down_link_ack after timeout`
+              );
+            }
+            client.end();
+          });
+          reject({
+            status: 504,
+            body: { message: "No acknowledgment received within 10 seconds." },
+          });
         }
-      }
-    });
-    setTimeout(() => {
-      if (!ack_arrived) {
-        client.unsubscribe(`${lock.gateway_id}/down_link_ack`, (err) => {
-          if (err) {
-            console.error(
-              `Failed to unsubscribe from ${lock.gateway_id}/down_link_ack after timeout:`,
-              err
-            );
-          } else {
+      }, 10_000);
+
+      client.on("message", async (topic, message) => {
+        if (topic === `${lock.gateway_id}/down_link_ack`) {
+          const payload = JSON.parse(message.toString());
+          if (
+            payload.lockId === lock.id &&
+            payload.status === LockStatus.RESERVED
+          ) {
+            ack_arrived = true;
+            clearTimeout(timeout);
             console.log(
-              `Unsubscribed from ${lock.gateway_id}/down_link_ack after timeout`
+              `Received reservation extension acknowledgment for lock ${lock.id}`
             );
+            lock.status = LockStatus.RESERVED;
+            await lock.save();
+            client.unsubscribe(`${lock.gateway_id}/down_link_ack`);
+            client.end();
+            reservation.end_time = newEndTime;
+            await reservation.save();
+            resolve({ status: 200, data: reservation });
           }
-          client.end();
-        });
-        return {
-          status: 504,
-          body: { message: "No acknowledgment received within 20 seconds." },
-        };
-      }
-    }, 20_000);
+        }
+      });
+    }).catch((result) => {
+      throw result;
+    });
   } catch (error) {
     console.error("Error extending reservation:", error);
     return { status: 500, body: { message: "Internal server error." } };

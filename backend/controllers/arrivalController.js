@@ -47,95 +47,111 @@ export async function NotifyArrival(req) {
       return { status: 500, body: { message: "MQTT connection error." } };
     });
 
-    client.publish(topic, message, (err) => {
-      if (err) {
-        console.error(`Failed to publish message to ${topic}:`, err);
-        client.end();
-        return { status: 500, body: { message: "Failed to notify arrival." } };
-      }
-      console.log(`Published message to ${topic}:`, message);
-
-      client.subscribe(`${lock.gateway_id}/down_link_ack`, (err) => {
+    return new Promise((resolve, reject) => {
+      client.publish(topic, message, (err) => {
         if (err) {
-          console.error(
-            `Failed to subscribe to ${lock.gateway_id}/down_link_ack:`,
-            err
-          );
+          console.error(`Failed to publish message to ${topic}:`, err);
           client.end();
-          return {
+          resolve({
             status: 500,
-            body: { message: "Failed to subscribe for updates." },
-          };
+            body: { message: "Failed to notify arrival." },
+          });
+          return;
         }
-        console.log(`Subscribed to ${lock.gateway_id}/down_link_ack`);
-        setTimeout(() => {
-          if (!ack_arrived) {
-            client.unsubscribe(`${lock.gateway_id}/down_link_ack`, (err) => {
-              if (err) {
-                console.error(
-                  `Failed to unsubscribe from ${lock.gateway_id}/down_link_ack after timeout:`,
-                  err
-                );
-              } else {
-                console.log(
-                  `Unsubscribed from ${lock.gateway_id}/down_link_ack after timeout`
-                );
-              }
-              client.end();
-            });
-            return {
-              status: 504,
-              body: {
-                message: "No acknowledgment received within 20 seconds.",
-              },
-            };
-          }
-        }, 20_000);
-      });
+        console.log(`Published message to ${topic}:`, message);
 
-      client.on("message", async (topic, message) => {
-        if (topic === `${lock.gateway_id}/down_link_ack`) {
-          console.log(
-            `Received acknowledgment for ${lock.id}:`,
-            message.toString()
-          );
-          ack_arrived = true;
-
-          try {
-            const ackData = JSON.parse(message.toString());
-            if (ackData.lockId && ackData.status) {
-              await Lock.update(
-                { status: ackData.status },
-                { where: { id: ackData.lockId } }
-              );
-            }
-            client.unsubscribe(`${lock.gateway_id}/down_link_ack`, (err) => {
-              if (err) {
-                console.error(
-                  `Failed to unsubscribe from ${lock.gateway_id}/down_link_ack:`,
-                  err
-                );
-              } else {
-                console.log(
-                  `Unsubscribed from ${lock.gateway_id}/down_link_ack`
-                );
-              }
-              client.end();
-            });
-
-            await Reservation.update(
-              { end_time: new Date() },
-              { where: { id: reservation.id } }
+        client.subscribe(`${lock.gateway_id}/down_link_ack`, (err) => {
+          if (err) {
+            console.error(
+              `Failed to subscribe to ${lock.gateway_id}/down_link_ack:`,
+              err
             );
-            return {
-              status: 200,
-              body: { message: "Arrival notification sent." },
-            };
-          } catch (err) {
-            console.error("Failed to update lock status from ack:", err);
             client.end();
+            resolve({
+              status: 500,
+              body: { message: "Failed to subscribe for updates." },
+            });
+            return;
           }
-        }
+          console.log(`Subscribed to ${lock.gateway_id}/down_link_ack`);
+
+          const timeout = setTimeout(() => {
+            if (!ack_arrived) {
+              client.unsubscribe(`${lock.gateway_id}/down_link_ack`, (err) => {
+                if (err) {
+                  console.error(
+                    `Failed to unsubscribe from ${lock.gateway_id}/down_link_ack after timeout:`,
+                    err
+                  );
+                } else {
+                  console.log(
+                    `Unsubscribed from ${lock.gateway_id}/down_link_ack after timeout`
+                  );
+                }
+                client.end();
+              });
+              resolve({
+                status: 504,
+                body: {
+                  message: "No acknowledgment received within 20 seconds.",
+                },
+              });
+            }
+          }, 10_000);
+
+          client.on("message", async (topic, message) => {
+            if (topic === `${lock.gateway_id}/down_link_ack`) {
+              console.log(
+                `Received acknowledgment for ${lock.id}:`,
+                message.toString()
+              );
+              ack_arrived = true;
+              clearTimeout(timeout);
+
+              try {
+                const ackData = JSON.parse(message.toString());
+                if (ackData.lockId && ackData.status) {
+                  await Lock.update(
+                    { status: ackData.status },
+                    { where: { id: ackData.lockId } }
+                  );
+                }
+                client.unsubscribe(
+                  `${lock.gateway_id}/down_link_ack`,
+                  (err) => {
+                    if (err) {
+                      console.error(
+                        `Failed to unsubscribe from ${lock.gateway_id}/down_link_ack:`,
+                        err
+                      );
+                    } else {
+                      console.log(
+                        `Unsubscribed from ${lock.gateway_id}/down_link_ack`
+                      );
+                    }
+                    client.end();
+                  }
+                );
+
+                await Reservation.update(
+                  { end_time: new Date() },
+                  { where: { id: reservation.id } }
+                );
+                resolve({
+                  status: 200,
+                  body: { message: "Arrival notification sent." },
+                });
+              } catch (err) {
+                console.error("Failed to update lock status from ack:", err);
+                client.end();
+                resolve({
+                  status: 500,
+                  body: { message: "Failed to update lock status from ack." },
+                });
+              }
+            }
+          });
+        });
       });
     });
   } catch (error) {

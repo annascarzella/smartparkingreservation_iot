@@ -39,6 +39,15 @@ const Lock = sequelize.define(
       type: DataTypes.FLOAT,
       allowNull: false,
     },
+    hearthbeatReceived: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return this.getDataValue("hearthbeatReceived") ?? false;
+      },
+      set(value) {
+        this.setDataValue("hearthbeatReceived", !!value); //always boolean
+      },
+    },
   },
   {
     tableName: "lock",

@@ -1,5 +1,6 @@
 import Gateway from "./models/gateway.js";
 import Lock from "./models/lock.js";
+import LockStatus from "./models/enums.js";
 import mqtt from "mqtt";
 import { wsmqttConfig } from "./config/wsmqtt.js";
 
@@ -68,7 +69,74 @@ async function mqttClient() {
           try {
             const lock = await Lock.findOne({ where: { id: lockData.id } });
             if (lock) {
-              lock.status = lockData.status;
+              lock.hearthbeatReceived(true); // Update heartbeat received status
+              if (lock.status == LockStatus.OUT_OF_ORDER) {
+                if (lockData.status != LockStatus.OCCUPIED) {
+                  client.publish(
+                    `${gatewayId}/down_link`,
+                    JSON.stringify({
+                      command: "down",
+                      status: LockStatus.FREE,
+                      lock_id: lock.id,
+                      endTime: null,
+                    })
+                  );
+
+                  client.subscribe(`${gatewayId}/down_link_ack`, (err) => {
+                    if (err) {
+                      console.error(
+                        `Failed to subscribe to ${gatewayId}/down_link_ack:`,
+                        err
+                      );
+                    } else {
+                      console.log(`Subscribed to ${gatewayId}/down_link_ack`);
+                    }
+                  });
+
+                  client.on("message", async (topic, message) => {
+                    if (topic === `${gatewayId}/down_link_ack`) {
+                      client.unsubscribe(
+                        `${gatewayId}/down_link_ack`,
+                        (err) => {
+                          if (err) {
+                            console.error(
+                              `Failed to unsubscribe from ${gatewayId}/down_link_ack:`,
+                              err
+                            );
+                          } else {
+                            console.log(
+                              `Unsubscribed from ${gatewayId}/down_link_ack`
+                            );
+                          }
+                        }
+                      );
+                      console.log(
+                        `Received acknowledgment for ${lock.id}:`,
+                        message.toString()
+                      );
+                      lock.status = LockStatus.FREE; // era up dobbiamo metterlo down
+                    }
+                  });
+
+                  setTimeout(() => {
+                    client.unsubscribe(`${gatewayId}/down_link_ack`, (err) => {
+                      if (err) {
+                        console.error(
+                          `Failed to unsubscribe from ${gatewayId}/down_link_ack after timeout:`,
+                          err
+                        );
+                      } else {
+                        console.log(
+                          `Unsubscribed from ${gatewayId}/down_link_ack after timeout`
+                        );
+                      }
+                    });
+                  }, 10_000);
+                }
+              } else {
+                lock.status = lockData.status;
+              }
+
               await lock.save();
             } else {
               console.error(`Lock with ID ${lockData.id} not found.`);
@@ -80,6 +148,23 @@ async function mqttClient() {
       }
     }
   });
+
+  setInterval(() => {
+    //check if every lock has sent a heartbeat in the last 120 seconds
+    Lock.findAll().then((locks) => {
+      locks.forEach(async (lock) => {
+        const lastHeartbeat = lock.hearthbeatReceived;
+        if (!lastHeartbeat && lock.status != LockStatus.OUT_OF_ORDER) {
+          console.warn(
+            `Lock ${lock.id} has not received a heartbeat in the last 120 seconds.`
+          );
+          lock.status = LockStatus.OUT_OF_ORDER; // Set status to OUT_OF_ORDER
+          await lock.save();
+        }
+        lock.hearthbeatReceived = false; // Reset heartbeat received status
+      });
+    });
+  }, 120_000);
 }
 
 export default mqttClient;

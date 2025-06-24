@@ -15,3 +15,9 @@ export const SensorStatus = {
   ON: "on",
   OFF: "off",
 };
+
+export default {
+  GatewayStatus,
+  LockStatus,
+  SensorStatus,
+};

@@ -1,3 +1,4 @@
+"use strict";
 import { Lock_Status, Lock_Alarm, Lock_MagneticSensor } from "./enum.js";
 
 export default class Lock {

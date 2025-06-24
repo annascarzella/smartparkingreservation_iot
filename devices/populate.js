@@ -1,3 +1,4 @@
+"use strict";
 import Lock from "./models/lock.js";
 import Gateway from "./models/gateway.js";
 import {
@@ -34,7 +35,7 @@ const gateways = [
   new Gateway(
     1,
     "Gateway 1",
-    [1, 2],
+    [locks[0], locks[1]],
     45.4642,
     9.19,
     Gateway_Status.CONNECTED
@@ -42,7 +43,7 @@ const gateways = [
   new Gateway(
     2,
     "Gateway 2",
-    [3],
+    [locks[2]],
     45.467,
     9.195,
     Gateway_Status.NOT_CONNECTED
@@ -50,7 +51,7 @@ const gateways = [
   new Gateway(
     3,
     "Gateway 3",
-    [4],
+    [locks[3]],
     45.463,
     9.188,
     Gateway_Status.UNKNOWN
@@ -78,6 +79,8 @@ export async function getGatewayById(id) {
 
 export async function getLocksByGatewayId(gatewayId) {
   const gateway = gatewayMap.get(gatewayId);
-  if (!gateway) return [];
-  return gateway.locks.map((lockId) => lockMap.get(lockId)).filter(Boolean);
+  if (!gateway) {
+    return [];
+  }
+  return gateway.locks.map((lock) => lockMap.get(lock.id)).filter(Boolean);
 }
