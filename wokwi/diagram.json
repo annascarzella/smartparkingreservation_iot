@@ -10,7 +10,13 @@
       "left": -446.36,
       "attrs": {}
     },
-    { "type": "wokwi-servo", "id": "servo1", "top": -69.2, "left": 9.6, "attrs": {"hornColor": "#000088"} },
+    {
+      "type": "wokwi-servo",
+      "id": "servo1",
+      "top": -69.2,
+      "left": 9.6,
+      "attrs": { "hornColor": "#000088" }
+    },
     {
       "type": "wokwi-led",
       "id": "led1",
