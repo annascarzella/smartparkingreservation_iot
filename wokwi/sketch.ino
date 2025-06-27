@@ -14,10 +14,17 @@
 #define LOCK1_HCTRIGGER 17
 #define LOCK1_HCECHO 16
 
+#define LOCK2_SERVO 26
+#define LOCK2_LEDRED 14
+#define LOCK2_LEDGREEN 27
+#define LOCK2_BUZZER 32
+#define LOCK2_HCTRIGGER 25
+#define LOCK2_HCECHO 33
+
 // const definitions
 #define ID 1
-#define UP 0
-#define DOWN 90
+#define UP 90
+#define DOWN 0
 #define FREE 0
 #define OCCUPIED 1
 #define RESERVED 2
@@ -26,21 +33,16 @@
 #define PASSWORD ""
 #define MQTT_SERVER "mqtt.eclipseprojects.io"
 #define MQTT_PORT 1883
-#define NUM_LOCKS 1
-
+#define NUM_LOCKS 2
 
 // Global variables
-int lock_status[NUM_LOCKS + 1] = {FREE};
-bool lock_arrived[NUM_LOCKS + 1] = {false};
-unsigned long lock_endtime[NUM_LOCKS + 1] = {0};
+int lock_status[NUM_LOCKS + 1] = {FREE, FREE};
+bool lock_arrived[NUM_LOCKS + 1] = {false, false};
+unsigned long lock_endtime[NUM_LOCKS + 1] = {0, 0};
 unsigned long lastHeartbeat = 0;
 const unsigned long HEARTBEAT_INTERVAL = 60000; // 60 secondi
 
-
-
 // Device objects
-Servo lock1_servo;
-MKL_HCSR04 lock1_hc(LOCK1_HCTRIGGER, LOCK1_HCECHO);
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
 WiFiUDP ntpUDP;
@@ -60,8 +62,6 @@ struct Lock {
 
 Lock locks[NUM_LOCKS + 1];
 
-
-
 unsigned long long get_current_millis() {
   return static_cast<unsigned long long>(timeClient.getEpochTime()) * 1000ULL;
 }
@@ -79,7 +79,7 @@ void set_status(int lock, int status) {
 
 
 void toggle_alarm(int lock) {
-  tone(locks[lock].pinBuzzer, 50);
+  tone(locks[lock].pinBuzzer, 262);
 }
 
 
@@ -95,7 +95,7 @@ float get_proximity(int lock) {
 
 void is_occupied(int lock){
   float distance = get_proximity(lock);
-  Serial.println("Distance: " + String(distance));
+  //Serial.println("Distance: " + String(distance));
   bool occupied = distance <= 50;
 
   if (occupied && lock_status[lock] != OCCUPIED) {
@@ -111,7 +111,8 @@ void is_occupied(int lock){
     char buffer[256];
     serializeJson(doc, buffer);
     Serial.println("Publishing occupied status for lock " + String(locks[lock].id) + ": " + buffer);
-    client.publish("1/up_link", buffer);
+    String topic = String(ID) + "/up_link";
+    client.publish(topic.c_str(), buffer);
   } else if (!occupied && lock_status[lock] == OCCUPIED) {
     lock_status[lock] = FREE;
     set_status(lock, FREE);
@@ -124,7 +125,8 @@ void is_occupied(int lock){
     char buffer[256];
     serializeJson(doc, buffer);
     Serial.println("Publishing free status for lock " + String(locks[lock].id) + ": " + buffer);
-    client.publish("1/up_link", buffer);
+    String topic = String(ID) + "/up_link";
+    client.publish(topic.c_str(), buffer);
   }
 }
 
@@ -175,7 +177,8 @@ void send_heartbeat() {
   serializeJson(doc, buffer);
 
   Serial.println("Sending aggregated heartbeat: " + String(buffer));
-  client.publish("1/heartbeat", buffer);
+  String topic = String(ID) + "/heartbeat";
+  client.publish(topic.c_str(), buffer);
 }
 
 
@@ -193,8 +196,10 @@ void on_message(char *topic, byte *payload, unsigned int length){
 
   const char* command = doc["command"];
   int lock_id = doc["lock_id"];
+  lock_id = lock_id - 1;
   unsigned long endTime = doc["endTime"]==nullptr? 0 : doc["endTime"]; // endTime è un numero (timestamp)
 
+  toggle_alarm(lock_id);
   if (strcmp(command, "up") == 0) {
     set_servo(lock_id, UP);
     set_status(lock_id, RESERVED);
@@ -209,16 +214,19 @@ void on_message(char *topic, byte *payload, unsigned int length){
     Serial.println("Unknown command");
     return;
   }
+  delay(1000);
+  untoggle_alarm(lock_id);
 
   // Ack
   StaticJsonDocument<256> ack;
-  ack["lockId"] = lock_id;
+  ack["lockId"] = lock_id + 1;
   ack["status"] = command;
   ack["timestamp"] = get_current_millis();
 
   char buffer[256];
   serializeJson(ack, buffer);
-  client.publish("1/down_link_ack", buffer);
+  String topicack = String(ID) + "/down_link_ack";
+  client.publish(topicack.c_str(), buffer);
 
   // Programma timeout se c'è endTime
   if (endTime > 0) {
@@ -233,8 +241,6 @@ void setup() {
    // Initialize Serial
   Serial.begin(9600);
   
-
-
   // Lock 1
   locks[0] = {
     .id = 1,
@@ -246,21 +252,32 @@ void setup() {
     .pinEcho = LOCK1_HCECHO
   };
 
-  locks[0].servo.attach(locks[0].pinServo);
-  locks[0].hc = new MKL_HCSR04(locks[0].pinTrigger, locks[0].pinEcho);
+  // Lock 2
+  locks[1] = {
+    .id = 2,
+    .pinServo = LOCK2_SERVO,
+    .pinLedRed = LOCK2_LEDRED,
+    .pinLedGreen = LOCK2_LEDGREEN,
+    .pinBuzzer = LOCK2_BUZZER,
+    .pinTrigger = LOCK2_HCTRIGGER,
+    .pinEcho = LOCK2_HCECHO
+  };
 
-  pinMode(locks[0].pinLedRed, OUTPUT);
-  pinMode(locks[0].pinLedGreen, OUTPUT);
-  pinMode(locks[0].pinBuzzer, OUTPUT);
-  pinMode(locks[0].pinServo, OUTPUT);
+  for(int i = 0; i < NUM_LOCKS; i++){
+    locks[i].servo.attach(locks[i].pinServo);
+    locks[i].hc = new MKL_HCSR04(locks[i].pinTrigger, locks[i].pinEcho);
 
-  digitalWrite(locks[0].pinLedRed, LOW);
-  digitalWrite(locks[0].pinLedGreen, LOW);
+    pinMode(locks[i].pinLedRed, OUTPUT);
+    pinMode(locks[i].pinLedGreen, OUTPUT);
+    pinMode(locks[i].pinBuzzer, OUTPUT);
+    pinMode(locks[i].pinServo, OUTPUT);
 
-  set_servo(0, DOWN);
-  set_status(0, FREE);
+    digitalWrite(locks[i].pinLedRed, LOW);
+    digitalWrite(locks[i].pinLedGreen, LOW);
 
-
+    set_servo(i, UP);
+    set_status(i, FREE);
+  }
 
   // Connect to Wi-Fi
   WiFi.begin(SSID, PASSWORD);
@@ -279,7 +296,8 @@ void setup() {
   client.setCallback(on_message);
 
   connect();
-  client.subscribe("1/down_link");
+  String topic = String(ID) + "/down_link";
+  client.subscribe(topic.c_str());
 }
 
 void loop() {
@@ -308,7 +326,8 @@ void loop() {
 
         char buffer[256];
         serializeJson(doc, buffer);
-        client.publish("1/up_link", buffer);
+        String topic = String(ID) + "/up_link";
+        client.publish(topic.c_str(), buffer);
       }
       lock_endtime[i] = 0; // reset
     }

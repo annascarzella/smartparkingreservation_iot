@@ -69,7 +69,6 @@ services:
       - "5001:5001"
     depends_on:
       - database-migrations
-      - mqtt
     environment:
       NODE_ENV: development
       DB_URL: ${DB_URL:-postgres://postgres:password@postgres:5432/postgres}

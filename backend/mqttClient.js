@@ -69,7 +69,7 @@ async function mqttClient() {
           try {
             const lock = await Lock.findOne({ where: { id: lockData.id } });
             if (lock) {
-              lock.hearthbeatReceived(true); // Update heartbeat received status
+              lock.hearthbeatReceived = true; // Update heartbeat received status
               if (lock.status == LockStatus.OUT_OF_ORDER) {
                 if (lockData.status != LockStatus.OCCUPIED) {
                   client.publish(

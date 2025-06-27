@@ -140,7 +140,7 @@ export async function addReservation(req) {
             body: { message: "No acknowledgment received within 20 seconds." },
           });
         }
-      }, 10_000);
+      }, 20_000);
 
       client.on("message", async (topic, message) => {
         if (topic === `${lock.gateway_id}/down_link_ack`) {
@@ -311,10 +311,10 @@ export async function extendReservation(req) {
           });
           reject({
             status: 504,
-            body: { message: "No acknowledgment received within 10 seconds." },
+            body: { message: "No acknowledgment received within 20 seconds." },
           });
         }
-      }, 10_000);
+      }, 20_000);
 
       client.on("message", async (topic, message) => {
         if (topic === `${lock.gateway_id}/down_link_ack`) {
