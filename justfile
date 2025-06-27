@@ -10,8 +10,6 @@ down:
     docker compose down --remove-orphans
     docker volume prune -f
     docker network prune -f
-    docker system prune -f
-    docker builder prune -f
     docker image prune -f
     docker container prune -f
 
@@ -45,3 +43,7 @@ backend:
 
 nuxt:
     cd smartparking && npm i && npm run dev
+
+wokwi:
+    docker compose build wokwi
+    docker compose up wokwi

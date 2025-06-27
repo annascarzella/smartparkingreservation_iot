@@ -79,3 +79,10 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-postgres}
       JWT_SECRET: ${JWT_SECRET:-changeme}
       BACKEND_PORT: ${BACKEND_PORT:-5001}
+
+  wokwi:
+    build: 
+      context: ./wokwi
+      dockerfile: Dockerfile
+    volumes:
+      - ./wokwi:/wokwi
