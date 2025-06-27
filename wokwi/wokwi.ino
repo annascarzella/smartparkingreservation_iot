@@ -7,7 +7,7 @@
 #include <WiFiUdp.h>
 
 // Pin1 definitions
-#define LOCK1_SERVO 0
+#define LOCK1_SERVO 4
 #define LOCK1_LEDRED 19
 #define LOCK1_LEDGREEN 18
 #define LOCK1_BUZZER 5
@@ -23,8 +23,8 @@
 
 // const definitions
 #define ID 1
-#define UP 90
-#define DOWN 0
+#define UP 0
+#define DOWN 90
 #define FREE 0
 #define OCCUPIED 1
 #define RESERVED 2
@@ -264,7 +264,7 @@ void setup() {
   };
 
   for(int i = 0; i < NUM_LOCKS; i++){
-    locks[i].servo.attach(locks[i].pinServo);
+    locks[i].servo.attach(locks[i].pinServo, 500, 2400);
     locks[i].hc = new MKL_HCSR04(locks[i].pinTrigger, locks[i].pinEcho);
 
     pinMode(locks[i].pinLedRed, OUTPUT);
