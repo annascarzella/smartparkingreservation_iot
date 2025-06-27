@@ -3,6 +3,8 @@
 #include <ArduinoJson.h>
 #include <ESP32Servo.h>
 #include <MKL_HCSR04.h>
+#include <NTPClient.h>
+#include <WiFiUdp.h>
 
 // Pin1 definitions
 #define LOCK1_SERVO 0
@@ -41,6 +43,13 @@ Servo lock1_servo;
 MKL_HCSR04 lock1_hc(LOCK1_HCTRIGGER, LOCK1_HCECHO);
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, "pool.ntp.org", 0, 60000);
+
+
+unsigned long long get_current_millis() {
+  return static_cast<unsigned long long>(timeClient.getEpochTime()) * 1000ULL;
+}
 
 
 void set_servo(int lock, int pos){
@@ -109,7 +118,7 @@ void is_occupied(int lock){
     StaticJsonDocument<256> doc;
     doc["lockId"] = lock;
     doc["status"] = "occupied";
-    doc["timestamp"] = millis();
+    doc["timestamp"] = get_current_millis();
 
     char buffer[256];
     serializeJson(doc, buffer);
@@ -122,7 +131,7 @@ void is_occupied(int lock){
     StaticJsonDocument<256> doc;
     doc["lockId"] = lock;
     doc["status"] = "free";
-    doc["timestamp"] = millis();
+    doc["timestamp"] = get_current_millis();
 
     char buffer[256];
     serializeJson(doc, buffer);
@@ -163,7 +172,7 @@ void reconnect() {
 
 void send_heartbeat(int lock) {
   StaticJsonDocument<256> doc;
-  doc["timestamp"] = millis();
+  doc["timestamp"] = get_current_millis();
   doc["lockId"] = lock;
   doc["status"] = lock_status[lock] == OCCUPIED ? "occupied" : (lock_status[lock] == FREE ? "free" : "reserved");
 
@@ -172,8 +181,6 @@ void send_heartbeat(int lock) {
   Serial.println("Sending heartbeat for lock " + String(lock) + ": " + buffer);
   client.publish("1/heartbeat", buffer);
 }
-
-
 
 void on_message(char *topic, byte *payload, unsigned int length){
   payload[length] = '\0'; // null terminate
@@ -210,7 +217,7 @@ void on_message(char *topic, byte *payload, unsigned int length){
   StaticJsonDocument<256> ack;
   ack["lockId"] = lock_id;
   ack["status"] = command;
-  ack["timestamp"] = millis();
+  ack["timestamp"] = get_current_millis();
 
   char buffer[256];
   serializeJson(ack, buffer);
@@ -223,9 +230,12 @@ void on_message(char *topic, byte *payload, unsigned int length){
 }
 
 
+
+
 void setup() {
    // Initialize Serial
   Serial.begin(9600);
+  
 
 
   pinMode(LOCK1_LEDRED, OUTPUT);
@@ -252,6 +262,8 @@ void setup() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 
+  timeClient.begin();
+
   // Set up MQTT
   client.setServer(MQTT_SERVER, MQTT_PORT);
   client.setCallback(on_message);
@@ -261,10 +273,11 @@ void setup() {
 }
 
 void loop() {
+  timeClient.update();
   client.loop();
   reconnect();
 
-  unsigned long now = millis();
+  unsigned long now = get_current_millis();
 
   if (now - lastHeartbeat >= HEARTBEAT_INTERVAL) {
     for (int i = 1; i <= NUM_LOCKS; i++) {
