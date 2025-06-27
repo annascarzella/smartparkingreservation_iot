@@ -189,7 +189,7 @@ void on_message(char *topic, byte *payload, unsigned int length){
 
   const char* command = doc["command"];
   int lock_id = doc["lock_id"];
-  unsigned long endTime = doc["endTime"]; // endTime è un numero (timestamp)
+  unsigned long endTime = doc["endTime"]==nullptr? 0 : doc["endTime"]; // endTime è un numero (timestamp)
 
   if (strcmp(command, "up") == 0) {
     set_servo(lock_id, UP);
