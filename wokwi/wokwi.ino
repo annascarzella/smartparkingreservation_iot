@@ -270,12 +270,12 @@ void setup() {
     pinMode(locks[i].pinLedRed, OUTPUT);
     pinMode(locks[i].pinLedGreen, OUTPUT);
     pinMode(locks[i].pinBuzzer, OUTPUT);
-    pinMode(locks[i].pinServo, OUTPUT);
+    //pinMode(locks[i].pinServo, OUTPUT);
 
     digitalWrite(locks[i].pinLedRed, LOW);
     digitalWrite(locks[i].pinLedGreen, LOW);
 
-    set_servo(i, UP);
+    set_servo(i, DOWN);
     set_status(i, FREE);
   }
 
