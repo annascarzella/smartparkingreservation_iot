@@ -1,0 +1,45 @@
+0 verbose cli /usr/local/bin/node /usr/local/bin/npm
+1 info using npm@10.8.2
+2 info using node@v20.19.0
+3 silly config load:file:/usr/local/lib/node_modules/npm/npmrc
+4 silly config load:file:/data/.npmrc
+5 silly config load:file:/usr/src/node-red/.npmrc
+6 silly config load:file:/usr/local/etc/npmrc
+7 verbose title npm install node-red-contrib-sqlitedb@1.5.1
+8 verbose argv "install" "--no-audit" "--no-update-notifier" "--no-fund" "--save" "--save-prefix" "~" "--omit" "dev" "--engine-strict" "node-red-contrib-sqlitedb@1.5.1"
+9 verbose logfile logs-max:10 dir:/data/.npm/_logs/2025-06-30T10_32_55_700Z-
+10 verbose logfile /data/.npm/_logs/2025-06-30T10_32_55_700Z-debug-0.log
+11 silly packumentCache heap:2105016320 maxSize:526254080 maxEntrySize:263127040
+12 silly logfile done cleaning log files
+13 silly idealTree buildDeps
+14 silly fetch manifest node-red-contrib-sqlitedb@1.5.1
+15 silly packumentCache full:https://registry.npmjs.org/node-red-contrib-sqlitedb cache-miss
+16 http fetch GET 200 https://registry.npmjs.org/node-red-contrib-sqlitedb 855ms (cache miss)
+17 silly packumentCache full:https://registry.npmjs.org/node-red-contrib-sqlitedb set size:undefined disposed:false
+18 silly placeDep ROOT node-red-contrib-sqlitedb@1.5.1 OK for: node-red-project@0.0.1 want: 1.5.1
+19 silly fetch manifest axios@^0.24.0
+20 silly packumentCache full:https://registry.npmjs.org/axios cache-miss
+21 http fetch GET 200 https://registry.npmjs.org/axios 67ms (cache miss)
+22 silly packumentCache full:https://registry.npmjs.org/axios set size:undefined disposed:false
+23 silly placeDep ROOT axios@0.24.0 OK for: node-red-contrib-sqlitedb@1.5.1 want: ^0.24.0
+24 silly fetch manifest follow-redirects@^1.14.4
+25 silly packumentCache full:https://registry.npmjs.org/follow-redirects cache-miss
+26 http fetch GET 200 https://registry.npmjs.org/follow-redirects 38ms (cache miss)
+27 silly packumentCache full:https://registry.npmjs.org/follow-redirects set size:undefined disposed:false
+28 silly placeDep ROOT follow-redirects@1.15.9 OK for: axios@0.24.0 want: ^1.14.4
+29 silly reify moves {}
+30 silly tarball no local data for follow-redirects@https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.9.tgz. Extracting by manifest.
+31 silly tarball no local data for axios@https://registry.npmjs.org/axios/-/axios-0.24.0.tgz. Extracting by manifest.
+32 silly tarball no local data for node-red-contrib-sqlitedb@https://registry.npmjs.org/node-red-contrib-sqlitedb/-/node-red-contrib-sqlitedb-1.5.1.tgz. Extracting by manifest.
+33 http fetch GET 200 https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.9.tgz 47ms (cache miss)
+34 http fetch GET 200 https://registry.npmjs.org/node-red-contrib-sqlitedb/-/node-red-contrib-sqlitedb-1.5.1.tgz 93ms (cache miss)
+35 http fetch GET 200 https://registry.npmjs.org/axios/-/axios-0.24.0.tgz 128ms (cache miss)
+36 silly ADD node_modules/follow-redirects
+37 silly ADD node_modules/axios
+38 silly ADD node_modules/node-red-contrib-sqlitedb
+39 verbose cwd /data
+40 verbose os Linux 6.12.5-linuxkit
+41 verbose node v20.19.0
+42 verbose npm  v10.8.2
+43 verbose exit 0
+44 info ok

@@ -1,0 +1,31 @@
+0 verbose cli /usr/local/bin/node /usr/local/bin/npm
+1 info using npm@10.8.2
+2 info using node@v20.19.0
+3 silly config load:file:/usr/local/lib/node_modules/npm/npmrc
+4 silly config load:file:/data/.npmrc
+5 silly config load:file:/usr/src/node-red/.npmrc
+6 silly config load:file:/usr/local/etc/npmrc
+7 verbose title npm remove node-red-contrib-sqlitedb
+8 verbose argv "remove" "--no-audit" "--no-update-notifier" "--no-fund" "--save" "node-red-contrib-sqlitedb"
+9 verbose logfile logs-max:10 dir:/data/.npm/_logs/2025-06-30T10_33_31_313Z-
+10 verbose logfile /data/.npm/_logs/2025-06-30T10_33_31_313Z-debug-0.log
+11 silly packumentCache heap:2105016320 maxSize:526254080 maxEntrySize:263127040
+12 silly logfile done cleaning log files
+13 silly idealTree buildDeps
+14 silly reify mark retired [ '/data/node_modules/axios' ]
+15 silly reify mark retired [ '/data/node_modules/follow-redirects' ]
+16 silly reify mark retired [ '/data/node_modules/node-red-contrib-sqlitedb' ]
+17 silly reify moves {
+17 silly reify   '/data/node_modules/axios': '/data/node_modules/.axios-zQJ0VzMj',
+17 silly reify   '/data/node_modules/follow-redirects': '/data/node_modules/.follow-redirects-A0Z0RHjx',
+17 silly reify   '/data/node_modules/node-red-contrib-sqlitedb': '/data/node_modules/.node-red-contrib-sqlitedb-0IOQ0eJC'
+17 silly reify }
+18 silly REMOVE node_modules/node-red-contrib-sqlitedb
+19 silly REMOVE node_modules/follow-redirects
+20 silly REMOVE node_modules/axios
+21 verbose cwd /data
+22 verbose os Linux 6.12.5-linuxkit
+23 verbose node v20.19.0
+24 verbose npm  v10.8.2
+25 verbose exit 0
+26 info ok

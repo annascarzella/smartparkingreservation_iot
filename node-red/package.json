@@ -5,7 +5,9 @@
     "private": true,
     "dependencies": {
         "node-red-contrib-aedes": "~0.13.0",
+        "node-red-contrib-postgresql": "~0.14.2",
         "node-red-contrib-web-worldmap-cn": "~4.8.2",
-        "node-red-dashboard": "~3.6.5"
+        "node-red-dashboard": "~3.6.5",
+        "node-red-node-sqlite": "~1.1.0"
     }
 }

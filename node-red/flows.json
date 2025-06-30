@@ -1,35 +1,78 @@
 [
     {
-        "id": "03e10e9aa75d8466",
-        "type": "tab",
-        "label": "Flow 1",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
-        "id": "4d557c6e03ed11a6",
-        "type": "tab",
-        "label": "Flow 2",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
-        "id": "7c8db23661c1552d",
-        "type": "tab",
-        "label": "Data  flow",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
         "id": "834b73d92d2d0f01",
         "type": "tab",
         "label": "Flow 3",
         "disabled": false,
         "info": "",
         "env": []
+    },
+    {
+        "id": "9c7b55ced3f7365d",
+        "type": "tab",
+        "label": "Flow 4",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "dcd841fbaba3184b",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "test.mosquitto.org",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "ab4256557d4a6aac",
+        "type": "mqtt-broker",
+        "name": "provolone",
+        "broker": "ws://mqtt:8000",
+        "port": "8000",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
     },
     {
         "id": "1a3cd9b708133f3a",
@@ -137,34 +180,6 @@
         }
     },
     {
-        "id": "dcd841fbaba3184b",
-        "type": "mqtt-broker",
-        "name": "",
-        "broker": "test.mosquitto.org",
-        "port": "1883",
-        "clientid": "",
-        "autoConnect": true,
-        "usetls": false,
-        "protocolVersion": "4",
-        "keepalive": "60",
-        "cleansession": true,
-        "autoUnsubscribe": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthPayload": "",
-        "birthMsg": {},
-        "closeTopic": "",
-        "closeQos": "0",
-        "closePayload": "",
-        "closeMsg": {},
-        "willTopic": "",
-        "willQos": "0",
-        "willPayload": "",
-        "willMsg": {},
-        "userProps": "",
-        "sessionExpiry": ""
-    },
-    {
         "id": "7a6e4a7151544774",
         "type": "ui_tab",
         "name": "Home",
@@ -206,16 +221,41 @@
         "className": ""
     },
     {
-        "id": "ab4256557d4a6aac",
+        "id": "c51a91cb42a5ee81",
+        "type": "postgreSQLConfig",
+        "name": "",
+        "host": "postgres",
+        "hostFieldType": "str",
+        "port": 5432,
+        "portFieldType": "num",
+        "database": "smartparking",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": 10,
+        "maxFieldType": "num",
+        "idle": 1000,
+        "idleFieldType": "num",
+        "connectionTimeout": 10000,
+        "connectionTimeoutFieldType": "num",
+        "user": "admin",
+        "userFieldType": "str",
+        "password": "passwordsupersegretissima1!",
+        "passwordFieldType": "str"
+    },
+    {
+        "id": "93b2eeaeb22ea01c",
         "type": "mqtt-broker",
-        "name": "provolone",
-        "broker": "ws://mqtt:8000",
-        "port": "8000",
+        "name": "EclipseMQTT",
+        "broker": "mqtt://mqtt.eclipseprojects.io/",
+        "port": "1883",
         "clientid": "",
         "autoConnect": true,
         "usetls": false,
-        "protocolVersion": 4,
-        "keepalive": 60,
+        "protocolVersion": "3",
+        "keepalive": "60",
         "cleansession": true,
         "autoUnsubscribe": true,
         "birthTopic": "",
@@ -237,546 +277,108 @@
         "sessionExpiry": ""
     },
     {
-        "id": "197302fdc942412f",
-        "type": "inject",
-        "z": "03e10e9aa75d8466",
-        "name": "first",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "pizza",
-        "payload": "object",
-        "payloadType": "date",
-        "x": 290,
-        "y": 240,
-        "wires": [
-            [
-                "614fa339d00299a8"
-            ]
-        ]
-    },
-    {
-        "id": "c177299495c16bf5",
-        "type": "debug",
-        "z": "03e10e9aa75d8466",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 840,
-        "y": 160,
-        "wires": []
-    },
-    {
-        "id": "614fa339d00299a8",
-        "type": "function",
-        "z": "03e10e9aa75d8466",
-        "name": "function 1",
-        "func": "// Create a Date object from the payload\nvar date = new Date(msg.payload);\n// Change the payload to be a formatted Date string\nmsg.payload = date.toString();\n// Return the message so it can be sent on\n\n\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 580,
-        "y": 280,
-        "wires": [
-            [
-                "c177299495c16bf5"
-            ]
-        ]
-    },
-    {
-        "id": "a7e578d3415a4298",
-        "type": "http request",
-        "z": "4d557c6e03ed11a6",
-        "name": "",
-        "method": "GET",
-        "ret": "txt",
-        "paytoqs": "ignore",
-        "url": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.csv",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 350,
-        "y": 200,
-        "wires": [
-            [
-                "bef8d68a1d07a4aa"
-            ]
-        ]
-    },
-    {
-        "id": "bef8d68a1d07a4aa",
-        "type": "csv",
-        "z": "4d557c6e03ed11a6",
-        "name": "",
-        "spec": "rfc",
-        "sep": ",",
-        "hdrin": true,
-        "hdrout": "none",
-        "multi": "one",
-        "ret": "\\r\\n",
-        "temp": "",
-        "skip": "0",
-        "strings": true,
-        "include_empty_strings": "",
-        "include_null_values": "",
-        "x": 590,
-        "y": 280,
-        "wires": [
-            [
-                "1fb28b8bec757a59",
-                "020f09cd9775b056"
-            ]
-        ]
-    },
-    {
-        "id": "1fb28b8bec757a59",
-        "type": "debug",
-        "z": "4d557c6e03ed11a6",
-        "name": "debug 2",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1000,
-        "y": 240,
-        "wires": []
-    },
-    {
-        "id": "020f09cd9775b056",
-        "type": "switch",
-        "z": "4d557c6e03ed11a6",
-        "name": "",
-        "property": "payload.mag",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "gte",
-                "v": "6",
-                "vt": "num"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 1,
-        "x": 680,
-        "y": 460,
-        "wires": [
-            [
-                "6dd1f828ea13b8cd"
-            ]
-        ]
-    },
-    {
-        "id": "6dd1f828ea13b8cd",
-        "type": "change",
-        "z": "4d557c6e03ed11a6",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "PANIC!",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 960,
-        "y": 460,
-        "wires": [
-            [
-                "279415351bd091d3"
-            ]
-        ]
-    },
-    {
-        "id": "279415351bd091d3",
-        "type": "debug",
-        "z": "4d557c6e03ed11a6",
-        "name": "debug 3",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1200,
-        "y": 400,
-        "wires": []
-    },
-    {
-        "id": "78f4eddb8c191b75",
-        "type": "inject",
-        "z": "4d557c6e03ed11a6",
-        "name": "csv",
-        "props": [
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "300",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 170,
-        "y": 160,
-        "wires": [
-            [
-                "a7e578d3415a4298"
-            ]
-        ]
-    },
-    {
-        "id": "367e4ca7b6813d1f",
-        "type": "mqtt in",
-        "z": "7c8db23661c1552d",
-        "name": "",
-        "topic": "dibris/iomt",
-        "qos": "0",
-        "datatype": "auto-detect",
-        "broker": "",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 100,
-        "y": 140,
-        "wires": [
-            [
-                "5d6dcd64d7529b48",
-                "0c632d75adf47ae7"
-            ]
-        ]
-    },
-    {
-        "id": "7b5e16bfcda9a1ec",
-        "type": "debug",
-        "z": "7c8db23661c1552d",
-        "name": "debug 3",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 820,
-        "y": 320,
-        "wires": []
-    },
-    {
-        "id": "0248f5d63f1ec2e2",
-        "type": "worldmap",
-        "z": "7c8db23661c1552d",
-        "name": "Map",
-        "lat": "44.403423",
-        "lon": "8.958433",
-        "zoom": "18",
-        "layer": "OSMG",
-        "cluster": "",
-        "maxage": "60",
-        "usermenu": "show",
-        "layers": "show",
-        "panit": "false",
-        "panlock": "false",
-        "zoomlock": "false",
-        "hiderightclick": "false",
-        "coords": "none",
-        "showgrid": "false",
-        "showruler": "false",
-        "allowFileDrop": "false",
-        "path": "/worldmap",
-        "overlist": "DR,CO,RA,DN",
-        "maplist": "OSMG,OSMC,EsriC,EsriS,UKOS",
-        "mapname": "",
-        "mapurl": "",
-        "mapopt": "",
-        "mapwms": false,
-        "x": 810,
-        "y": 140,
-        "wires": []
-    },
-    {
-        "id": "e0f236f764d23686",
-        "type": "function",
-        "z": "7c8db23661c1552d",
-        "name": "prepare marker",
-        "func": "let id = msg.payload.ID;\nlet temp = msg.payload.t;\n\nmsg.payload = {\n    \"name\": id,\n    \"temperature\" : temp,\n    \"lat\": 44.403423,\n    \"lon\": 8.958433\n};\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 540,
-        "y": 40,
-        "wires": [
-            [
-                "0248f5d63f1ec2e2",
-                "7b5e16bfcda9a1ec"
-            ]
-        ]
-    },
-    {
-        "id": "1546f44585fe12e5",
-        "type": "ui_template",
-        "z": "7c8db23661c1552d",
-        "group": "5e317bd49bd8242f",
-        "name": "Site",
-        "order": 0,
-        "width": 0,
-        "height": 0,
-        "format": "<iframe src=\"http://127.0.0.1:1880/worldmap\" \ntitle=\"Map\" \nheight=400 \nwidth=300>\n</iframe>",
-        "storeOutMessages": true,
-        "fwdInMessages": true,
-        "resendOnRefresh": true,
-        "templateScope": "local",
-        "className": "",
-        "x": 810,
-        "y": 40,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "b17271e3dbaa88ec",
-        "type": "ui_chart",
-        "z": "7c8db23661c1552d",
-        "name": "",
-        "group": "85621b31f330f358",
+        "id": "c51a1d005da8c5eb",
+        "type": "ui_tab",
+        "name": "Graph",
+        "icon": "dashboard",
         "order": 1,
-        "width": 0,
-        "height": 0,
-        "label": "User 1",
-        "chartType": "line",
-        "legend": "false",
-        "xformat": "HH:mm:ss",
-        "interpolate": "linear",
-        "nodata": "",
-        "dot": false,
-        "ymin": "",
-        "ymax": "",
-        "removeOlder": 1,
-        "removeOlderPoints": "",
-        "removeOlderUnit": "3600",
-        "cutout": 0,
-        "useOneColor": false,
-        "useUTC": false,
-        "colors": [
-            "#1f77b4",
-            "#aec7e8",
-            "#ff7f0e",
-            "#2ca02c",
-            "#98df8a",
-            "#d62728",
-            "#ff9896",
-            "#9467bd",
-            "#c5b0d5"
-        ],
-        "outputs": 1,
-        "useDifferentColor": false,
-        "className": "",
-        "x": 810,
-        "y": 80,
-        "wires": [
-            []
-        ]
+        "disabled": false,
+        "hidden": false
     },
     {
-        "id": "1458ec4adf735082",
-        "type": "function",
-        "z": "7c8db23661c1552d",
-        "name": "prepare data",
-        "func": "let id = msg.payload.ID;\nlet temp = msg.payload.t;\n\nmsg.payload = temp;\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 530,
-        "y": 100,
-        "wires": [
-            [
-                "b17271e3dbaa88ec"
-            ]
-        ]
+        "id": "75945688ffe5ab41",
+        "type": "ui_tab",
+        "name": "Table",
+        "icon": "dashboard",
+        "order": 3,
+        "disabled": false,
+        "hidden": false
     },
     {
-        "id": "5d6dcd64d7529b48",
-        "type": "switch",
-        "z": "7c8db23661c1552d",
-        "name": "",
-        "property": "payload.ID",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "1",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "2",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "3",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 3,
-        "x": 270,
-        "y": 240,
-        "wires": [
-            [
-                "1458ec4adf735082",
-                "e0f236f764d23686"
-            ],
-            [
-                "4e16452761362153",
-                "9afdb1365bbc7540"
-            ],
-            []
-        ]
+        "id": "839f3c1732480203",
+        "type": "ui_tab",
+        "name": "Monitor",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
     },
     {
-        "id": "4e16452761362153",
-        "type": "function",
-        "z": "7c8db23661c1552d",
-        "name": "prepare data",
-        "func": "let id = msg.payload.ID;\nlet temp = msg.payload.t;\n\nmsg.payload = temp;\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 530,
-        "y": 340,
-        "wires": [
-            [
-                "841d2d5ffb1307a1"
-            ]
-        ]
+        "id": "76afe1f198cf9cf8",
+        "type": "ui_tab",
+        "name": "Threshold",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
     },
     {
-        "id": "841d2d5ffb1307a1",
-        "type": "ui_chart",
-        "z": "7c8db23661c1552d",
-        "name": "",
-        "group": "85621b31f330f358",
+        "id": "74c5bb2a042bdbb5",
+        "type": "ui_group",
+        "name": "Graphs",
+        "tab": "c51a1d005da8c5eb",
         "order": 1,
-        "width": 0,
-        "height": 0,
-        "label": "User 2",
-        "chartType": "line",
-        "legend": "false",
-        "xformat": "HH:mm:ss",
-        "interpolate": "linear",
-        "nodata": "",
-        "dot": false,
-        "ymin": "",
-        "ymax": "",
-        "removeOlder": 1,
-        "removeOlderPoints": "",
-        "removeOlderUnit": "3600",
-        "cutout": 0,
-        "useOneColor": false,
-        "useUTC": false,
-        "colors": [
-            "#1f77b4",
-            "#aec7e8",
-            "#ff7f0e",
-            "#2ca02c",
-            "#98df8a",
-            "#d62728",
-            "#ff9896",
-            "#9467bd",
-            "#c5b0d5"
-        ],
-        "outputs": 1,
-        "useDifferentColor": false,
-        "className": "",
-        "x": 810,
-        "y": 260,
-        "wires": [
-            []
-        ]
+        "disp": true,
+        "width": "29",
+        "collapse": false,
+        "className": ""
     },
     {
-        "id": "9afdb1365bbc7540",
-        "type": "function",
-        "z": "7c8db23661c1552d",
-        "name": "prepare marker",
-        "func": "let id = msg.payload.ID;\nlet temp = msg.payload.t;\n\nmsg.payload = {\n    \"name\": id,\n    \"temperature\" : temp,\n    \"lat\": 44.403001,\n    \"lon\": 8.958208\n};\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 520,
-        "y": 260,
-        "wires": [
-            [
-                "7b5e16bfcda9a1ec",
-                "0248f5d63f1ec2e2"
-            ]
-        ]
+        "id": "74ac322ea7a587ec",
+        "type": "ui_group",
+        "name": "Table",
+        "tab": "75945688ffe5ab41",
+        "order": 1,
+        "disp": true,
+        "width": 30,
+        "collapse": false,
+        "className": ""
     },
     {
-        "id": "0c632d75adf47ae7",
-        "type": "debug",
-        "z": "7c8db23661c1552d",
-        "name": "debug 4",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 220,
-        "y": 380,
-        "wires": []
+        "id": "f4059bd43bd8074b",
+        "type": "ui_group",
+        "name": "Monitor",
+        "tab": "839f3c1732480203",
+        "order": 1,
+        "disp": true,
+        "width": 28,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "8aba1e57f64933b1",
+        "type": "ui_group",
+        "name": "Thresholds",
+        "tab": "76afe1f198cf9cf8",
+        "order": 1,
+        "disp": true,
+        "width": 30,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "d68488966d4e4189",
+        "type": "ui_tab",
+        "name": "Smart Parking",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "3466174b0640b450",
+        "type": "ui_group",
+        "name": "Test",
+        "tab": "d68488966d4e4189",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "06a6106d492f6497",
+        "type": "sqlitedb",
+        "db": "/home/skalla/GitHub/Aprus/dashboard/data.db",
+        "mode": "RWC"
     },
     {
         "id": "b0a8e3b3b43f1010",
@@ -917,6 +519,175 @@
         "wires": [
             [
                 "a1f30bb30f2edf9e"
+            ]
+        ]
+    },
+    {
+        "id": "272c2be8da5ee20a",
+        "type": "postgresql",
+        "z": "9c7b55ced3f7365d",
+        "name": "",
+        "query": "SET search_path TO smartparking;\nSELECT * FROM gateway;",
+        "postgreSQLConfig": "c51a91cb42a5ee81",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 490,
+        "y": 460,
+        "wires": [
+            [
+                "90ef55b0e5736b11",
+                "10297d4e36b138d9",
+                "15aa592140f761c1"
+            ]
+        ]
+    },
+    {
+        "id": "90ef55b0e5736b11",
+        "type": "debug",
+        "z": "9c7b55ced3f7365d",
+        "name": "debug 6",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "f8ed7c24a6716043",
+        "type": "inject",
+        "z": "9c7b55ced3f7365d",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 260,
+        "y": 460,
+        "wires": [
+            [
+                "272c2be8da5ee20a"
+            ]
+        ]
+    },
+    {
+        "id": "5028fa06fc0846c2",
+        "type": "ui_chart",
+        "z": "9c7b55ced3f7365d",
+        "name": "",
+        "group": "3466174b0640b450",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "label",
+        "chartType": "pie",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1090,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "10297d4e36b138d9",
+        "type": "function",
+        "z": "9c7b55ced3f7365d",
+        "name": "Connected ",
+        "func": "// number of connected gateways\nmsg.payload = 50\nmsg.topic = \"Connected\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 300,
+        "wires": [
+            [
+                "5028fa06fc0846c2",
+                "2339dd5863b82e3b"
+            ]
+        ]
+    },
+    {
+        "id": "2339dd5863b82e3b",
+        "type": "debug",
+        "z": "9c7b55ced3f7365d",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1060,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "15aa592140f761c1",
+        "type": "function",
+        "z": "9c7b55ced3f7365d",
+        "name": "Disconnected",
+        "func": "// number of disconnected gateways\nmsg.payload = 50\nmsg.topic = \"Disconnected\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 360,
+        "wires": [
+            [
+                "5028fa06fc0846c2",
+                "2339dd5863b82e3b"
             ]
         ]
     }
