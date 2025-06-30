@@ -310,7 +310,7 @@ void loop() {
   reconnect();
 
   unsigned long long now = get_current_millis();
-  Serial.println("Current time: " + String(now));
+  //Serial.println("Current time: " + String(now));
 
   if (now - lastHeartbeat >= HEARTBEAT_INTERVAL) {
     send_heartbeat();

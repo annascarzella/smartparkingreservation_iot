@@ -158,8 +158,8 @@
         "id": "afedeeb17f3a368a",
         "type": "mqtt-broker",
         "name": "mqttBroker",
-        "broker": "mqtt.eclipseprojects.io/mqtt",
-        "port": "80",
+        "broker": "test.mosquitto.org",
+        "port": "1883",
         "clientid": "",
         "autoConnect": true,
         "usetls": false,
@@ -654,7 +654,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 90,
-        "y": 640,
+        "y": 520,
         "wires": [
             [
                 "aa16cb1e945e8f12"
@@ -679,65 +679,6 @@
             [
                 "b3d6f18e32e15be3"
             ]
-        ]
-    },
-    {
-        "id": "b3d6f18e32e15be3",
-        "type": "ui_table",
-        "z": "9c7b55ced3f7365d",
-        "group": "6869e3162bd84b1f",
-        "name": "Lock Table",
-        "order": 1,
-        "width": 24,
-        "height": 10,
-        "columns": [
-            {
-                "field": "gateway",
-                "title": "Gateway ID",
-                "width": "25%",
-                "align": "left",
-                "formatter": "plaintext",
-                "formatterParams": {
-                    "target": "_blank"
-                }
-            },
-            {
-                "field": "lockId",
-                "title": "Lock ID",
-                "width": "25%",
-                "align": "left",
-                "formatter": "plaintext",
-                "formatterParams": {
-                    "target": "_blank"
-                }
-            },
-            {
-                "field": "lockStatus",
-                "title": "Status",
-                "width": "25%",
-                "align": "left",
-                "formatter": "plaintext",
-                "formatterParams": {
-                    "target": "_blank"
-                }
-            },
-            {
-                "field": "timestamp",
-                "title": "Timestamp",
-                "width": "25%",
-                "align": "left",
-                "formatter": "plaintext",
-                "formatterParams": {
-                    "target": "_blank"
-                }
-            }
-        ],
-        "outputs": 1,
-        "cts": true,
-        "x": 650,
-        "y": 640,
-        "wires": [
-            []
         ]
     },
     {
@@ -962,22 +903,60 @@
         ]
     },
     {
-        "id": "05a292854e1d8b34",
-        "type": "ui_template",
+        "id": "b3d6f18e32e15be3",
+        "type": "ui_table",
         "z": "9c7b55ced3f7365d",
-        "group": "3466174b0640b450",
-        "name": "Active reservation",
-        "order": 8,
-        "width": 14,
+        "group": "6869e3162bd84b1f",
+        "name": "Lock Table",
+        "order": 1,
+        "width": 24,
         "height": 10,
-        "format": "<div>\n  <div ng-if=\"msg.payload && msg.payload.length > 0\">\n    <table class=\"nr-dashboard-table\" style=\"width: 100%; border-collapse: collapse;\">\n      <thead>\n        <tr>\n          <th>User ID</th>\n          <th>Lock ID</th>\n          <th>Start Time</th>\n          <th>End Time</th>\n          <th>Plate Number</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr ng-repeat=\"res in msg.payload\">\n          <td>{{res.user_id}}</td>\n          <td>{{res.lock_id}}</td>\n          <td>{{res.start_time}}</td>\n          <td>{{res.end_time}}</td>\n          <td>{{res.plate_number}}</td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n\n  <div ng-if=\"!msg.payload || msg.payload.length === 0\" style=\"font-style: italic; text-align: center;\">\n    No active reservations at the moment\n  </div>\n</div>",
-        "storeOutMessages": true,
-        "fwdInMessages": true,
-        "resendOnRefresh": true,
-        "templateScope": "local",
-        "className": "",
-        "x": 1090,
-        "y": 460,
+        "columns": [
+            {
+                "field": "gateway",
+                "title": "Gateway ID",
+                "width": "25%",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "lockId",
+                "title": "Lock ID",
+                "width": "25%",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "lockStatus",
+                "title": "Status",
+                "width": "25%",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "timestamp",
+                "title": "Timestamp",
+                "width": "25%",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            }
+        ],
+        "outputs": 1,
+        "cts": true,
+        "x": 650,
+        "y": 640,
         "wires": [
             []
         ]
@@ -1049,6 +1028,48 @@
         "y": 520,
         "wires": [
             []
+        ]
+    },
+    {
+        "id": "337eb42c26a90ab9",
+        "type": "mqtt in",
+        "z": "9c7b55ced3f7365d",
+        "name": "",
+        "topic": "2/heartbeat",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "afedeeb17f3a368a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 90,
+        "y": 580,
+        "wires": [
+            [
+                "aa16cb1e945e8f12"
+            ]
+        ]
+    },
+    {
+        "id": "d7c4f42b3389323e",
+        "type": "mqtt in",
+        "z": "9c7b55ced3f7365d",
+        "name": "",
+        "topic": "3/heartbeat",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "afedeeb17f3a368a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 90,
+        "y": 640,
+        "wires": [
+            [
+                "aa16cb1e945e8f12"
+            ]
         ]
     }
 ]
