@@ -427,26 +427,6 @@
             }
         }
     },
-    "node-red-contrib-postgresql": {
-        "name": "node-red-contrib-postgresql",
-        "version": "0.14.2",
-        "local": true,
-        "user": true,
-        "nodes": {
-            "postgresql": {
-                "name": "postgresql",
-                "types": [
-                    "postgreSQLConfig",
-                    "postgresql"
-                ],
-                "enabled": true,
-                "local": true,
-                "user": false,
-                "module": "node-red-contrib-postgresql",
-                "file": "/data/node_modules/node-red-contrib-postgresql/postgresql.js"
-            }
-        }
-    },
     "node-red-contrib-aedes": {
         "name": "node-red-contrib-aedes",
         "version": "0.13.0",
@@ -728,6 +708,26 @@
             }
         }
     },
+    "node-red-contrib-postgresql": {
+        "name": "node-red-contrib-postgresql",
+        "version": "0.14.2",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "postgresql": {
+                "name": "postgresql",
+                "types": [
+                    "postgreSQLConfig",
+                    "postgresql"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-postgresql",
+                "file": "/data/node_modules/node-red-contrib-postgresql/postgresql.js"
+            }
+        }
+    },
     "node-red-node-sqlite": {
         "name": "node-red-node-sqlite",
         "version": "1.1.0",
@@ -745,6 +745,25 @@
                 "user": false,
                 "module": "node-red-node-sqlite",
                 "file": "/data/node_modules/node-red-node-sqlite/sqlite.js"
+            }
+        }
+    },
+    "node-red-node-ui-table": {
+        "name": "node-red-node-ui-table",
+        "version": "0.4.4",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "ui_table": {
+                "name": "ui_table",
+                "types": [
+                    "ui_table"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-node-ui-table",
+                "file": "/data/node_modules/node-red-node-ui-table/node.js"
             }
         }
     }

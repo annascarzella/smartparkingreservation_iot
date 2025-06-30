@@ -38,9 +38,9 @@
 // Global variables
 int lock_status[NUM_LOCKS + 1] = {FREE, FREE};
 bool lock_arrived[NUM_LOCKS + 1] = {false, false};
-unsigned long lock_endtime[NUM_LOCKS + 1] = {0, 0};
-unsigned long lastHeartbeat = 0;
-const unsigned long HEARTBEAT_INTERVAL = 60000; // 60 secondi
+unsigned long long lock_endtime[NUM_LOCKS + 1] = {0, 0};
+unsigned long long lastHeartbeat = 0;
+const unsigned long long HEARTBEAT_INTERVAL = 60000; // 60 secondi
 
 // Device objects
 WiFiClient wifiClient;
@@ -136,6 +136,8 @@ void connect(){
     Serial.println("Connecting to MQTT...");
     if (client.connect(CLIENT_ID)) {
       Serial.println("connected");
+      String topic = String(ID) + "/down_link";
+      client.subscribe(topic.c_str());
     } else {
       Serial.print("failed with state ");
       Serial.print(client.state());
@@ -151,6 +153,8 @@ void reconnect() {
     Serial.println("Attempting MQTT connection...");
     if (client.connect(CLIENT_ID)) {
       Serial.println("connected");
+      String topic = String(ID) + "/down_link";
+      client.subscribe(topic.c_str());
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -183,12 +187,13 @@ void send_heartbeat() {
 
 
 void on_message(char *topic, byte *payload, unsigned int length){
-  payload[length] = '\0'; // null terminate
-  String msg = String((char *)payload);
+  String msg = String((char *)payload).substring(0, length);
+  
   Serial.println("Message arrived: " + msg);
 
   StaticJsonDocument<512> doc;
-  DeserializationError err = deserializeJson(doc, payload);
+  DeserializationError err = deserializeJson(doc, msg);
+  
   if (err) {
     Serial.println("JSON parse error");
     return;
@@ -197,7 +202,7 @@ void on_message(char *topic, byte *payload, unsigned int length){
   const char* command = doc["command"];
   int lock_id = doc["lock_id"];
   lock_id = lock_id - 1;
-  unsigned long endTime = doc["endTime"]==nullptr? 0 : doc["endTime"]; // endTime è un numero (timestamp)
+  unsigned long long endTime = doc["endTime"]; // endTime è un numero (timestamp)
 
   toggle_alarm(lock_id);
   if (strcmp(command, "up") == 0) {
@@ -220,7 +225,8 @@ void on_message(char *topic, byte *payload, unsigned int length){
   // Ack
   StaticJsonDocument<256> ack;
   ack["lockId"] = lock_id + 1;
-  ack["status"] = command;
+  ack["status"] = lock_status[lock_id] == OCCUPIED ? "occupied" : 
+                  (lock_status[lock_id] == FREE ? "free" : "reserved");
   ack["timestamp"] = get_current_millis();
 
   char buffer[256];
@@ -229,12 +235,12 @@ void on_message(char *topic, byte *payload, unsigned int length){
   client.publish(topicack.c_str(), buffer);
 
   // Programma timeout se c'è endTime
+  Serial.println("Timeout " + String(endTime));
   if (endTime > 0) {
     lock_endtime[lock_id] = endTime;
+    Serial.println("Lock " + String(lock_id + 1) + " set to timeout at " + String(endTime));
   }
 }
-
-
 
 
 void setup() {
@@ -296,8 +302,6 @@ void setup() {
   client.setCallback(on_message);
 
   connect();
-  String topic = String(ID) + "/down_link";
-  client.subscribe(topic.c_str());
 }
 
 void loop() {
@@ -305,7 +309,8 @@ void loop() {
   client.loop();
   reconnect();
 
-  unsigned long now = get_current_millis();
+  unsigned long long now = get_current_millis();
+  Serial.println("Current time: " + String(now));
 
   if (now - lastHeartbeat >= HEARTBEAT_INTERVAL) {
     send_heartbeat();
@@ -313,7 +318,7 @@ void loop() {
   }
 
   for (int i = 0; i < NUM_LOCKS; i++) {
-    if (lock_endtime[i] > 0 && now >= lock_endtime[i]) {
+    if (now >= lock_endtime[i] && lock_endtime[i] > 0) {
       if (!lock_arrived[i]) {
         set_servo(i, DOWN);
         set_status(i, FREE);
@@ -328,8 +333,10 @@ void loop() {
         serializeJson(doc, buffer);
         String topic = String(ID) + "/up_link";
         client.publish(topic.c_str(), buffer);
+        Serial.println("Lock " + String(locks[i].id) + " automatically set to FREE after timeout.");
       }
       lock_endtime[i] = 0; // reset
+      lock_arrived[i] = false; // reset
     }
 
     is_occupied(i);

@@ -78,7 +78,7 @@ async function mqttClient() {
                       command: "down",
                       status: LockStatus.FREE,
                       lock_id: lock.id,
-                      endTime: null,
+                      endTime: 0,
                     })
                   );
 

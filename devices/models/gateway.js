@@ -90,7 +90,7 @@ export default class Gateway {
               })
             );
 
-            if (message.endTime == null) {
+            if (message.endTime == 0) {
               return;
             }
 

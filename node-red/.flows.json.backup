@@ -1,86 +1,11 @@
 [
     {
-        "id": "834b73d92d2d0f01",
-        "type": "tab",
-        "label": "Flow 3",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
         "id": "9c7b55ced3f7365d",
         "type": "tab",
-        "label": "Flow 4",
+        "label": "Smartparking flow",
         "disabled": false,
         "info": "",
         "env": []
-    },
-    {
-        "id": "dcd841fbaba3184b",
-        "type": "mqtt-broker",
-        "name": "",
-        "broker": "test.mosquitto.org",
-        "port": "1883",
-        "clientid": "",
-        "autoConnect": true,
-        "usetls": false,
-        "protocolVersion": "4",
-        "keepalive": "60",
-        "cleansession": true,
-        "autoUnsubscribe": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthPayload": "",
-        "birthMsg": {},
-        "closeTopic": "",
-        "closeQos": "0",
-        "closePayload": "",
-        "closeMsg": {},
-        "willTopic": "",
-        "willQos": "0",
-        "willPayload": "",
-        "willMsg": {},
-        "userProps": "",
-        "sessionExpiry": ""
-    },
-    {
-        "id": "ab4256557d4a6aac",
-        "type": "mqtt-broker",
-        "name": "provolone",
-        "broker": "ws://mqtt:8000",
-        "port": "8000",
-        "clientid": "",
-        "autoConnect": true,
-        "usetls": false,
-        "protocolVersion": 4,
-        "keepalive": 60,
-        "cleansession": true,
-        "autoUnsubscribe": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthRetain": "false",
-        "birthPayload": "",
-        "birthMsg": {},
-        "closeTopic": "",
-        "closeQos": "0",
-        "closeRetain": "false",
-        "closePayload": "",
-        "closeMsg": {},
-        "willTopic": "",
-        "willQos": "0",
-        "willRetain": "false",
-        "willPayload": "",
-        "willMsg": {},
-        "userProps": "",
-        "sessionExpiry": ""
-    },
-    {
-        "id": "1a3cd9b708133f3a",
-        "type": "ui_tab",
-        "name": "Home",
-        "icon": "dashboard",
-        "disabled": false,
-        "hidden": false
     },
     {
         "id": "ac45a6a93184702e",
@@ -180,43 +105,21 @@
         }
     },
     {
-        "id": "7a6e4a7151544774",
+        "id": "d68488966d4e4189",
         "type": "ui_tab",
-        "name": "Home",
+        "name": "Smart_Parking",
         "icon": "dashboard",
         "disabled": false,
         "hidden": false
     },
     {
-        "id": "5e317bd49bd8242f",
+        "id": "3466174b0640b450",
         "type": "ui_group",
-        "name": "Locatization",
-        "tab": "7a6e4a7151544774",
-        "order": 1,
-        "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "85621b31f330f358",
-        "type": "ui_group",
-        "name": "Charts",
-        "tab": "7a6e4a7151544774",
+        "name": "Statuses",
+        "tab": "d68488966d4e4189",
         "order": 2,
         "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "3183d960bb512fc5",
-        "type": "ui_group",
-        "name": "Default",
-        "tab": "1a3cd9b708133f3a",
-        "order": 1,
-        "disp": true,
-        "width": 6,
+        "width": "14",
         "collapse": false,
         "className": ""
     },
@@ -246,7 +149,44 @@
         "passwordFieldType": "str"
     },
     {
-        "id": "93b2eeaeb22ea01c",
+        "id": "06a6106d492f6497",
+        "type": "sqlitedb",
+        "db": "/home/skalla/GitHub/Aprus/dashboard/data.db",
+        "mode": "RWC"
+    },
+    {
+        "id": "afedeeb17f3a368a",
+        "type": "mqtt-broker",
+        "name": "mqttBroker",
+        "broker": "mqtt.eclipseprojects.io/mqtt",
+        "port": "80",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "beed039f8ad2bf02",
         "type": "mqtt-broker",
         "name": "EclipseMQTT",
         "broker": "mqtt://mqtt.eclipseprojects.io/",
@@ -277,96 +217,62 @@
         "sessionExpiry": ""
     },
     {
-        "id": "c51a1d005da8c5eb",
-        "type": "ui_tab",
-        "name": "Graph",
-        "icon": "dashboard",
-        "order": 1,
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "75945688ffe5ab41",
-        "type": "ui_tab",
-        "name": "Table",
-        "icon": "dashboard",
+        "id": "6869e3162bd84b1f",
+        "type": "ui_group",
+        "name": "Heartbeats",
+        "tab": "d68488966d4e4189",
         "order": 3,
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "839f3c1732480203",
-        "type": "ui_tab",
-        "name": "Monitor",
-        "icon": "dashboard",
-        "order": 2,
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "76afe1f198cf9cf8",
-        "type": "ui_tab",
-        "name": "Threshold",
-        "icon": "dashboard",
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "74c5bb2a042bdbb5",
-        "type": "ui_group",
-        "name": "Graphs",
-        "tab": "c51a1d005da8c5eb",
-        "order": 1,
         "disp": true,
-        "width": "29",
+        "width": "24",
         "collapse": false,
         "className": ""
     },
     {
-        "id": "74ac322ea7a587ec",
-        "type": "ui_group",
-        "name": "Table",
-        "tab": "75945688ffe5ab41",
-        "order": 1,
-        "disp": true,
-        "width": 30,
-        "collapse": false,
-        "className": ""
+        "id": "658eebe47cdd958e",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "server.crt",
+        "servername": "",
+        "verifyservercert": false,
+        "alpnprotocol": ""
     },
     {
-        "id": "f4059bd43bd8074b",
-        "type": "ui_group",
-        "name": "Monitor",
-        "tab": "839f3c1732480203",
-        "order": 1,
-        "disp": true,
-        "width": 28,
-        "collapse": false,
-        "className": ""
+        "id": "a4f9146b0ef61071",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": "1883",
+        "tls": "658eebe47cdd958e",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
     },
     {
-        "id": "8aba1e57f64933b1",
+        "id": "f0e03eefbb533ef8",
         "type": "ui_group",
-        "name": "Thresholds",
-        "tab": "76afe1f198cf9cf8",
-        "order": 1,
-        "disp": true,
-        "width": 30,
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "d68488966d4e4189",
-        "type": "ui_tab",
-        "name": "Smart Parking",
-        "icon": "dashboard",
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "3466174b0640b450",
-        "type": "ui_group",
-        "name": "Test",
+        "name": "Control",
         "tab": "d68488966d4e4189",
         "order": 1,
         "disp": true,
@@ -375,217 +281,95 @@
         "className": ""
     },
     {
-        "id": "06a6106d492f6497",
-        "type": "sqlitedb",
-        "db": "/home/skalla/GitHub/Aprus/dashboard/data.db",
-        "mode": "RWC"
+        "id": "f797450dbcbb9e26",
+        "type": "ui_group",
+        "name": "ActiveReservation",
+        "tab": "d68488966d4e4189",
+        "order": 4,
+        "disp": true,
+        "width": "24",
+        "collapse": false,
+        "className": ""
     },
     {
-        "id": "b0a8e3b3b43f1010",
-        "type": "mqtt in",
-        "z": "834b73d92d2d0f01",
-        "name": "",
-        "topic": "gateway-1/heartbeat",
-        "qos": "2",
-        "datatype": "auto-detect",
-        "broker": "ab4256557d4a6aac",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 310,
-        "y": 180,
-        "wires": [
-            [
-                "a1f30bb30f2edf9e"
-            ]
-        ]
-    },
-    {
-        "id": "a1f30bb30f2edf9e",
-        "type": "debug",
-        "z": "834b73d92d2d0f01",
-        "name": "debug 5",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1040,
-        "y": 280,
-        "wires": []
-    },
-    {
-        "id": "2203b360efd12625",
-        "type": "mqtt in",
-        "z": "834b73d92d2d0f01",
-        "name": "",
-        "topic": "gateway-2/heartbeat",
-        "qos": "2",
-        "datatype": "auto-detect",
-        "broker": "ab4256557d4a6aac",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 310,
-        "y": 300,
-        "wires": [
-            [
-                "a1f30bb30f2edf9e"
-            ]
-        ]
-    },
-    {
-        "id": "c58060a98ffdd37b",
-        "type": "mqtt in",
-        "z": "834b73d92d2d0f01",
-        "name": "",
-        "topic": "gateway-3/heartbeat",
-        "qos": "2",
-        "datatype": "auto-detect",
-        "broker": "ab4256557d4a6aac",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 310,
-        "y": 420,
-        "wires": [
-            [
-                "a1f30bb30f2edf9e"
-            ]
-        ]
-    },
-    {
-        "id": "e03094effb7903c1",
-        "type": "mqtt in",
-        "z": "834b73d92d2d0f01",
-        "name": "",
-        "topic": "gateway-1/up_link",
-        "qos": "2",
-        "datatype": "auto-detect",
-        "broker": "ab4256557d4a6aac",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 570,
-        "y": 520,
-        "wires": [
-            [
-                "a1f30bb30f2edf9e"
-            ]
-        ]
-    },
-    {
-        "id": "b49dbd345230accd",
-        "type": "mqtt in",
-        "z": "834b73d92d2d0f01",
-        "name": "",
-        "topic": "gateway-2/up_link",
-        "qos": "2",
-        "datatype": "auto-detect",
-        "broker": "ab4256557d4a6aac",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 570,
-        "y": 640,
-        "wires": [
-            [
-                "a1f30bb30f2edf9e"
-            ]
-        ]
-    },
-    {
-        "id": "50e0ff3c8ccec022",
-        "type": "mqtt in",
-        "z": "834b73d92d2d0f01",
-        "name": "",
-        "topic": "gateway-3/up_link",
-        "qos": "2",
-        "datatype": "auto-detect",
-        "broker": "ab4256557d4a6aac",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 570,
-        "y": 760,
-        "wires": [
-            [
-                "a1f30bb30f2edf9e"
-            ]
-        ]
-    },
-    {
-        "id": "272c2be8da5ee20a",
-        "type": "postgresql",
+        "id": "15fb2d262139bc4b",
+        "type": "ui_spacer",
         "z": "9c7b55ced3f7365d",
-        "name": "",
-        "query": "SET search_path TO smartparking;\nSELECT * FROM gateway;",
-        "postgreSQLConfig": "c51a91cb42a5ee81",
-        "split": false,
-        "rowsPerMsg": 1,
-        "outputs": 1,
-        "x": 490,
-        "y": 460,
-        "wires": [
-            [
-                "90ef55b0e5736b11",
-                "10297d4e36b138d9"
-            ]
-        ]
+        "name": "spacer",
+        "group": "3466174b0640b450",
+        "order": 2,
+        "width": 2,
+        "height": 1
     },
     {
-        "id": "90ef55b0e5736b11",
-        "type": "debug",
+        "id": "7da1c26d5077c7a7",
+        "type": "ui_spacer",
         "z": "9c7b55ced3f7365d",
-        "name": "debug 6",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 680,
-        "y": 460,
-        "wires": []
+        "name": "spacer",
+        "group": "3466174b0640b450",
+        "order": 4,
+        "width": 2,
+        "height": 1
     },
     {
-        "id": "f8ed7c24a6716043",
-        "type": "inject",
+        "id": "eadf54cfb8bfb960",
+        "type": "ui_spacer",
         "z": "9c7b55ced3f7365d",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 260,
-        "y": 460,
-        "wires": [
-            [
-                "272c2be8da5ee20a"
-            ]
-        ]
+        "name": "spacer",
+        "group": "3466174b0640b450",
+        "order": 5,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "fafcb7e2f21d3b48",
+        "type": "ui_spacer",
+        "z": "9c7b55ced3f7365d",
+        "name": "spacer",
+        "group": "3466174b0640b450",
+        "order": 6,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "f7c903708b30f540",
+        "type": "ui_spacer",
+        "z": "9c7b55ced3f7365d",
+        "name": "spacer",
+        "group": "3466174b0640b450",
+        "order": 7,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "560b74d6300ade6b",
+        "type": "ui_spacer",
+        "z": "9c7b55ced3f7365d",
+        "name": "spacer",
+        "group": "6869e3162bd84b1f",
+        "order": 2,
+        "width": 24,
+        "height": 1
+    },
+    {
+        "id": "918399c40d595bd7",
+        "type": "ui_spacer",
+        "z": "9c7b55ced3f7365d",
+        "name": "spacer",
+        "group": "6869e3162bd84b1f",
+        "order": 3,
+        "width": 9,
+        "height": 1
+    },
+    {
+        "id": "e8e9a895ae73f63a",
+        "type": "ui_spacer",
+        "z": "9c7b55ced3f7365d",
+        "name": "spacer",
+        "group": "6869e3162bd84b1f",
+        "order": 5,
+        "width": 9,
+        "height": 1
     },
     {
         "id": "5028fa06fc0846c2",
@@ -593,10 +377,10 @@
         "z": "9c7b55ced3f7365d",
         "name": "",
         "group": "3466174b0640b450",
-        "order": 0,
-        "width": 0,
-        "height": 0,
-        "label": "label",
+        "order": 1,
+        "width": 6,
+        "height": 5,
+        "label": "Gateways status",
         "chartType": "pie",
         "legend": "true",
         "xformat": "HH:mm:ss",
@@ -625,8 +409,8 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 1090,
-        "y": 360,
+        "x": 1110,
+        "y": 180,
         "wires": [
             []
         ]
@@ -635,8 +419,48 @@
         "id": "10297d4e36b138d9",
         "type": "function",
         "z": "9c7b55ced3f7365d",
-        "name": "function 2",
-        "func": "msg.payload = 50\nmsg.topic = \"Status\"\nreturn msg;",
+        "name": "Connected ",
+        "func": "// number of connected gateways\nmsg.payload = msg.payload.filter(item => item.status === \"connected\").length;\nmsg.topic = \"Connected\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 160,
+        "wires": [
+            [
+                "5028fa06fc0846c2"
+            ]
+        ]
+    },
+    {
+        "id": "272c2be8da5ee20a",
+        "type": "postgresql",
+        "z": "9c7b55ced3f7365d",
+        "name": "",
+        "query": "SET search_path TO smartparking;\nSELECT status FROM gateway;",
+        "postgreSQLConfig": "c51a91cb42a5ee81",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 450,
+        "y": 220,
+        "wires": [
+            [
+                "10297d4e36b138d9",
+                "1bbac37a549e6a88",
+                "15aa592140f761c1"
+            ]
+        ]
+    },
+    {
+        "id": "1bbac37a549e6a88",
+        "type": "function",
+        "z": "9c7b55ced3f7365d",
+        "name": "Unknown",
+        "func": "// number of Unknown gateways\nmsg.payload = msg.payload.filter(item => item.status === \"unknown\").length;\nmsg.topic = \"Unknown\"\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -644,29 +468,587 @@
         "finalize": "",
         "libs": [],
         "x": 780,
-        "y": 300,
+        "y": 240,
         "wires": [
             [
-                "5028fa06fc0846c2",
-                "2339dd5863b82e3b"
+                "5028fa06fc0846c2"
             ]
         ]
     },
     {
-        "id": "2339dd5863b82e3b",
-        "type": "debug",
+        "id": "15aa592140f761c1",
+        "type": "function",
         "z": "9c7b55ced3f7365d",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1060,
-        "y": 260,
-        "wires": []
+        "name": "Disconnected",
+        "func": "// number of disconnected gateways\nmsg.payload = msg.payload.filter(item => item.status === \"not_connected\").length;\nmsg.topic = \"Disconnected\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 200,
+        "wires": [
+            [
+                "5028fa06fc0846c2"
+            ]
+        ]
+    },
+    {
+        "id": "a3c022a763312f13",
+        "type": "function",
+        "z": "9c7b55ced3f7365d",
+        "name": "Reserved",
+        "func": "// number of reserved lock\nmsg.payload = msg.payload.filter(item => item.status === \"reserved\").length;\nmsg.topic = \"Reserved\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 320,
+        "wires": [
+            [
+                "7b729c45ed0461b2"
+            ]
+        ]
+    },
+    {
+        "id": "e5cdec0fbaab2454",
+        "type": "function",
+        "z": "9c7b55ced3f7365d",
+        "name": "Free",
+        "func": "// number of free gateways\nmsg.payload = msg.payload.filter(item => item.status === \"free\").length;\nmsg.topic = \"Free\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 400,
+        "wires": [
+            [
+                "7b729c45ed0461b2"
+            ]
+        ]
+    },
+    {
+        "id": "5bd224e31ac24fe3",
+        "type": "function",
+        "z": "9c7b55ced3f7365d",
+        "name": "Occupied",
+        "func": "// number of occupied lock\nmsg.payload = msg.payload.filter(item => item.status === \"occupied\").length;\nmsg.topic = \"Occupied\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 360,
+        "wires": [
+            [
+                "7b729c45ed0461b2"
+            ]
+        ]
+    },
+    {
+        "id": "eae48066c573b857",
+        "type": "postgresql",
+        "z": "9c7b55ced3f7365d",
+        "name": "",
+        "query": "SET search_path TO smartparking;\nSELECT status FROM lock;",
+        "postgreSQLConfig": "c51a91cb42a5ee81",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 450,
+        "y": 320,
+        "wires": [
+            [
+                "a3c022a763312f13",
+                "5bd224e31ac24fe3",
+                "e5cdec0fbaab2454",
+                "0d6be335e4d0891a"
+            ]
+        ]
+    },
+    {
+        "id": "7b729c45ed0461b2",
+        "type": "ui_chart",
+        "z": "9c7b55ced3f7365d",
+        "name": "",
+        "group": "3466174b0640b450",
+        "order": 3,
+        "width": 6,
+        "height": 5,
+        "label": "Locks status",
+        "chartType": "pie",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1110,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0d6be335e4d0891a",
+        "type": "function",
+        "z": "9c7b55ced3f7365d",
+        "name": "Out of order",
+        "func": "// number of out_of_order gateways\nmsg.payload = msg.payload.filter(item => item.status === \"out_of_order\").length;\nmsg.topic = \"Out of order\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 440,
+        "wires": [
+            [
+                "7b729c45ed0461b2"
+            ]
+        ]
+    },
+    {
+        "id": "df3e80af28a725dd",
+        "type": "mqtt in",
+        "z": "9c7b55ced3f7365d",
+        "name": "",
+        "topic": "1/heartbeat",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "afedeeb17f3a368a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 90,
+        "y": 640,
+        "wires": [
+            [
+                "aa16cb1e945e8f12"
+            ]
+        ]
+    },
+    {
+        "id": "aa16cb1e945e8f12",
+        "type": "function",
+        "z": "9c7b55ced3f7365d",
+        "name": "Format locks",
+        "func": "// Estrai gateway ID dal topic\nconst gatewayId = msg.topic.split(\"/\")[0] || \"Unknown\";\n\nconst ts = msg.timestamp || new Date().toISOString();\n\nconst rows = msg.payload.locks.map(lock => ({\n    gateway: gatewayId,\n    lockId: lock.id,\n    lockStatus: lock.status,\n    timestamp: ts\n}));\n\nconst msgs = rows.map(row => ({\n    payload: {\n        command: \"addRow\",\n        arguments: [row]\n    }\n}));\n\nreturn [msgs];\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 640,
+        "wires": [
+            [
+                "b3d6f18e32e15be3"
+            ]
+        ]
+    },
+    {
+        "id": "b3d6f18e32e15be3",
+        "type": "ui_table",
+        "z": "9c7b55ced3f7365d",
+        "group": "6869e3162bd84b1f",
+        "name": "Lock Table",
+        "order": 1,
+        "width": 24,
+        "height": 10,
+        "columns": [
+            {
+                "field": "gateway",
+                "title": "Gateway ID",
+                "width": "25%",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "lockId",
+                "title": "Lock ID",
+                "width": "25%",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "lockStatus",
+                "title": "Status",
+                "width": "25%",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "timestamp",
+                "title": "Timestamp",
+                "width": "25%",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            }
+        ],
+        "outputs": 1,
+        "cts": true,
+        "x": 650,
+        "y": 640,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e1ad6721c64dbf13",
+        "type": "ui_button",
+        "z": "9c7b55ced3f7365d",
+        "name": "",
+        "group": "6869e3162bd84b1f",
+        "order": 4,
+        "width": 6,
+        "height": 1,
+        "passthru": false,
+        "label": "Clear button",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 210,
+        "y": 700,
+        "wires": [
+            [
+                "46afff36656bb200"
+            ]
+        ]
+    },
+    {
+        "id": "46afff36656bb200",
+        "type": "function",
+        "z": "9c7b55ced3f7365d",
+        "name": "clear table function",
+        "func": "msg.payload = {\n    command: \"clearData\"\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 700,
+        "wires": [
+            [
+                "b3d6f18e32e15be3"
+            ]
+        ]
+    },
+    {
+        "id": "c4688e53755fca98",
+        "type": "inject",
+        "z": "9c7b55ced3f7365d",
+        "name": "Refresh 5 sec ",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 240,
+        "y": 280,
+        "wires": [
+            [
+                "272c2be8da5ee20a",
+                "eae48066c573b857",
+                "90e8615ba7fa7d14"
+            ]
+        ]
+    },
+    {
+        "id": "fbbd9718c3bb9e05",
+        "type": "ui_dropdown",
+        "z": "9c7b55ced3f7365d",
+        "name": "",
+        "label": "",
+        "tooltip": "",
+        "place": "Select option",
+        "group": "f0e03eefbb533ef8",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "",
+                "value": "Statuses",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "Heartbeats",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "ActiveReservation",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "topic",
+        "topicType": "msg",
+        "className": "",
+        "x": 100,
+        "y": 80,
+        "wires": [
+            [
+                "23cc690e9c789e0e"
+            ]
+        ]
+    },
+    {
+        "id": "23cc690e9c789e0e",
+        "type": "function",
+        "z": "9c7b55ced3f7365d",
+        "name": "show item",
+        "func": "const hide = [\n    'Smart_Parking_Heartbeats',\n    'Smart_Parking_Statuses',\n    'Smart_Parking_ActiveReservation'\n];\nconst shown = `Smart_Parking_${msg.payload}`;\nconst show = [shown];\nhide.forEach((value,index,arr)=>{if(value===shown)arr.splice(index,1);});\nmsg.payload = {group: {hide,show}}\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 80,
+        "wires": [
+            [
+                "dbf5b85b59d98add"
+            ]
+        ]
+    },
+    {
+        "id": "dbf5b85b59d98add",
+        "type": "ui_ui_control",
+        "z": "9c7b55ced3f7365d",
+        "name": "",
+        "events": "all",
+        "x": 420,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "372f6c4f743670e9",
+        "type": "inject",
+        "z": "9c7b55ced3f7365d",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0",
+        "topic": "",
+        "payload": "{\"group\":{\"hide\":[\"Smart_Parking_Heartbeats\",\"Smart_Parking_ActiveReservation\"],\"show\":[\"Smart_Parking_Control\",\"Smart_Parking_Statuses\"]}}",
+        "payloadType": "json",
+        "x": 410,
+        "y": 140,
+        "wires": [
+            [
+                "dbf5b85b59d98add"
+            ]
+        ]
+    },
+    {
+        "id": "90e8615ba7fa7d14",
+        "type": "postgresql",
+        "z": "9c7b55ced3f7365d",
+        "name": "",
+        "query": "SET search_path TO smartparking;\nSELECT * FROM reservation\nWHERE start_time <= NOW()\nAND end_time >= NOW();\n",
+        "postgreSQLConfig": "c51a91cb42a5ee81",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 470,
+        "y": 440,
+        "wires": [
+            [
+                "fbb20370d68a2627"
+            ]
+        ]
+    },
+    {
+        "id": "fbb20370d68a2627",
+        "type": "function",
+        "z": "9c7b55ced3f7365d",
+        "name": "Active reservation",
+        "func": "let reservations = msg.payload;\n\nreservations = reservations.map(res => ({\n    id: res.id,\n    user_id: res.user_id,\n    lock_id: res.lock_id,\n    start_time: new Date(res.start_time).toLocaleString(),\n    end_time: new Date(res.end_time).toLocaleString(),\n    plate_number: res.plate_number\n}));\n\nmsg.payload = reservations;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 500,
+        "wires": [
+            [
+                "d6ceaeee7222d2d3"
+            ]
+        ]
+    },
+    {
+        "id": "05a292854e1d8b34",
+        "type": "ui_template",
+        "z": "9c7b55ced3f7365d",
+        "group": "3466174b0640b450",
+        "name": "Active reservation",
+        "order": 8,
+        "width": 14,
+        "height": 10,
+        "format": "<div>\n  <div ng-if=\"msg.payload && msg.payload.length > 0\">\n    <table class=\"nr-dashboard-table\" style=\"width: 100%; border-collapse: collapse;\">\n      <thead>\n        <tr>\n          <th>User ID</th>\n          <th>Lock ID</th>\n          <th>Start Time</th>\n          <th>End Time</th>\n          <th>Plate Number</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr ng-repeat=\"res in msg.payload\">\n          <td>{{res.user_id}}</td>\n          <td>{{res.lock_id}}</td>\n          <td>{{res.start_time}}</td>\n          <td>{{res.end_time}}</td>\n          <td>{{res.plate_number}}</td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n\n  <div ng-if=\"!msg.payload || msg.payload.length === 0\" style=\"font-style: italic; text-align: center;\">\n    No active reservations at the moment\n  </div>\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 1090,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d6ceaeee7222d2d3",
+        "type": "ui_table",
+        "z": "9c7b55ced3f7365d",
+        "group": "f797450dbcbb9e26",
+        "name": "Active Reservation Table",
+        "order": 1,
+        "width": 24,
+        "height": 10,
+        "columns": [
+            {
+                "field": "user_id",
+                "title": "User ID",
+                "width": "10%",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "lock_id",
+                "title": "Lock ID",
+                "width": "10%",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "start_time",
+                "title": "Start Time",
+                "width": "25%",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "end_time",
+                "title": "End Time",
+                "width": "25%",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "plate_number",
+                "title": "Plate Number",
+                "width": "10%",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            }
+        ],
+        "outputs": 1,
+        "cts": true,
+        "x": 1110,
+        "y": 520,
+        "wires": [
+            []
+        ]
     }
 ]

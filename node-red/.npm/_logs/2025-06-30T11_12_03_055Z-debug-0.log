@@ -1,0 +1,171 @@
+0 verbose cli /usr/local/bin/node /usr/local/bin/npm
+1 info using npm@10.8.2
+2 info using node@v20.19.0
+3 silly config load:file:/usr/local/lib/node_modules/npm/npmrc
+4 silly config load:file:/data/.npmrc
+5 silly config load:file:/usr/src/node-red/.npmrc
+6 silly config load:file:/usr/local/etc/npmrc
+7 verbose title npm install node-red-contrib-postgresql@0.14.2
+8 verbose argv "install" "--no-audit" "--no-update-notifier" "--no-fund" "--save" "--save-prefix" "~" "--omit" "dev" "--engine-strict" "node-red-contrib-postgresql@0.14.2"
+9 verbose logfile logs-max:10 dir:/data/.npm/_logs/2025-06-30T11_12_03_055Z-
+10 verbose logfile /data/.npm/_logs/2025-06-30T11_12_03_055Z-debug-0.log
+11 silly packumentCache heap:4345298944 maxSize:1086324736 maxEntrySize:543162368
+12 silly logfile done cleaning log files
+13 silly idealTree buildDeps
+14 silly fetch manifest node-red-contrib-postgresql@0.14.2
+15 silly packumentCache full:https://registry.npmjs.org/node-red-contrib-postgresql cache-miss
+16 http fetch GET 200 https://registry.npmjs.org/node-red-contrib-postgresql 408ms (cache revalidated)
+17 silly packumentCache full:https://registry.npmjs.org/node-red-contrib-postgresql set size:70914 disposed:false
+18 silly placeDep ROOT node-red-contrib-postgresql@0.14.2 REPLACE for: node-red-project@0.0.1 want: 0.14.2
+19 silly reify moves {}
+20 warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+21 warn deprecated @npmcli/move-file@1.1.2: This functionality has been moved to @npmcli/fs
+22 warn deprecated npmlog@6.0.2: This package is no longer supported.
+23 warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+24 warn deprecated are-we-there-yet@3.0.1: This package is no longer supported.
+25 warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+26 warn deprecated gauge@4.0.4: This package is no longer supported.
+27 info run sqlite3@5.1.7 install node_modules/sqlite3 prebuild-install -r napi || node-gyp rebuild
+28 info run sqlite3@5.1.7 install { code: 0, signal: null }
+29 silly ADD node_modules/node-red-contrib-postgresql
+30 silly ADD node_modules/yallist
+31 silly ADD node_modules/wide-align
+32 silly ADD node_modules/which
+33 silly ADD node_modules/unique-slug
+34 silly ADD node_modules/unique-filename
+35 silly ADD node_modules/tunnel-agent
+36 silly ADD node_modules/tar-stream
+37 silly ADD node_modules/tar-stream/node_modules/readable-stream
+38 silly ADD node_modules/tar-stream/node_modules/bl
+39 silly ADD node_modules/tar-fs
+40 silly ADD node_modules/tar-fs/node_modules/chownr
+41 silly ADD node_modules/tar
+42 silly ADD node_modules/tar/node_modules/minipass
+43 silly ADD node_modules/strip-json-comments
+44 silly ADD node_modules/strip-ansi
+45 silly ADD node_modules/string-width
+46 silly ADD node_modules/ssri
+47 silly ADD node_modules/sqlite3
+48 silly ADD node_modules/sprintf-js
+49 silly ADD node_modules/split2
+50 silly ADD node_modules/socks-proxy-agent
+51 silly ADD node_modules/socks-proxy-agent/node_modules/ms
+52 silly ADD node_modules/socks-proxy-agent/node_modules/debug
+53 silly ADD node_modules/socks
+54 silly ADD node_modules/smart-buffer
+55 silly ADD node_modules/simple-get
+56 silly ADD node_modules/simple-concat
+57 silly ADD node_modules/signal-exit
+58 silly ADD node_modules/set-blocking
+59 silly ADD node_modules/semver
+60 silly ADD node_modules/safer-buffer
+61 silly ADD node_modules/rimraf
+62 silly ADD node_modules/retry
+63 silly ADD node_modules/rc
+64 silly ADD node_modules/pump
+65 silly ADD node_modules/promise-retry
+66 silly ADD node_modules/promise-inflight
+67 silly ADD node_modules/prebuild-install
+68 silly ADD node_modules/postgres-interval
+69 silly ADD node_modules/postgres-date
+70 silly ADD node_modules/postgres-bytea
+71 silly ADD node_modules/postgres-array
+72 silly ADD node_modules/pgpass
+73 silly ADD node_modules/pg-types
+74 silly ADD node_modules/pg-protocol
+75 silly ADD node_modules/pg-pool
+76 silly ADD node_modules/pg-int8
+77 silly ADD node_modules/pg-cursor
+78 silly ADD node_modules/pg-connection-string
+79 silly ADD node_modules/pg-cloudflare
+80 silly ADD node_modules/pg
+81 silly ADD node_modules/path-is-absolute
+82 silly ADD node_modules/p-map
+83 silly ADD node_modules/npmlog
+84 silly ADD node_modules/nopt
+85 silly ADD node_modules/node-red-node-sqlite
+86 silly ADD node_modules/node-gyp
+87 silly ADD node_modules/node-addon-api
+88 silly ADD node_modules/node-abi
+89 silly ADD node_modules/napi-build-utils
+90 silly ADD node_modules/mustache
+91 silly ADD node_modules/mkdirp-classic
+92 silly ADD node_modules/mkdirp
+93 silly ADD node_modules/minizlib
+94 silly ADD node_modules/minipass-sized
+95 silly ADD node_modules/minipass-pipeline
+96 silly ADD node_modules/minipass-flush
+97 silly ADD node_modules/minipass-fetch
+98 silly ADD node_modules/minipass-collect
+99 silly ADD node_modules/minipass
+100 silly ADD node_modules/minimist
+101 silly ADD node_modules/minimatch
+102 silly ADD node_modules/mimic-response
+103 silly ADD node_modules/make-fetch-happen
+104 silly ADD node_modules/lru-cache
+105 silly ADD node_modules/jsbn
+106 silly ADD node_modules/isexe
+107 silly ADD node_modules/is-lambda
+108 silly ADD node_modules/is-fullwidth-code-point
+109 silly ADD node_modules/ip-address
+110 silly ADD node_modules/ini
+111 silly ADD node_modules/inflight
+112 silly ADD node_modules/infer-owner
+113 silly ADD node_modules/indent-string
+114 silly ADD node_modules/imurmurhash
+115 silly ADD node_modules/iconv-lite
+116 silly ADD node_modules/humanize-ms
+117 silly ADD node_modules/https-proxy-agent
+118 silly ADD node_modules/https-proxy-agent/node_modules/ms
+119 silly ADD node_modules/https-proxy-agent/node_modules/debug
+120 silly ADD node_modules/http-proxy-agent
+121 silly ADD node_modules/http-proxy-agent/node_modules/ms
+122 silly ADD node_modules/http-proxy-agent/node_modules/debug
+123 silly ADD node_modules/http-cache-semantics
+124 silly ADD node_modules/has-unicode
+125 silly ADD node_modules/graceful-fs
+126 silly ADD node_modules/glob
+127 silly ADD node_modules/github-from-package
+128 silly ADD node_modules/gauge
+129 silly ADD node_modules/fs.realpath
+130 silly ADD node_modules/fs-minipass
+131 silly ADD node_modules/fs-constants
+132 silly ADD node_modules/file-uri-to-path
+133 silly ADD node_modules/expand-template
+134 silly ADD node_modules/err-code
+135 silly ADD node_modules/env-paths
+136 silly ADD node_modules/encoding
+137 silly ADD node_modules/emoji-regex
+138 silly ADD node_modules/detect-libc
+139 silly ADD node_modules/delegates
+140 silly ADD node_modules/deep-extend
+141 silly ADD node_modules/decompress-response
+142 silly ADD node_modules/console-control-strings
+143 silly ADD node_modules/concat-map
+144 silly ADD node_modules/color-support
+145 silly ADD node_modules/clean-stack
+146 silly ADD node_modules/chownr
+147 silly ADD node_modules/cacache
+148 silly ADD node_modules/brace-expansion
+149 silly ADD node_modules/bindings
+150 silly ADD node_modules/balanced-match
+151 silly ADD node_modules/are-we-there-yet
+152 silly ADD node_modules/are-we-there-yet/node_modules/readable-stream
+153 silly ADD node_modules/aproba
+154 silly ADD node_modules/ansi-regex
+155 silly ADD node_modules/aggregate-error
+156 silly ADD node_modules/agentkeepalive
+157 silly ADD node_modules/agent-base
+158 silly ADD node_modules/agent-base/node_modules/ms
+159 silly ADD node_modules/agent-base/node_modules/debug
+160 silly ADD node_modules/abbrev
+161 silly ADD node_modules/@tootallnate/once
+162 silly ADD node_modules/@npmcli/move-file
+163 silly ADD node_modules/@npmcli/fs
+164 silly ADD node_modules/@gar/promisify
+165 verbose cwd /data
+166 verbose os Linux 6.9.3-76060903-generic
+167 verbose node v20.19.0
+168 verbose npm  v10.8.2
+169 verbose exit 0
+170 info ok
