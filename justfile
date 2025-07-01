@@ -29,13 +29,9 @@ devices:
     docker compose build --no-cache devices
     docker compose up devices
 
-migration:
+postgres:
     docker compose build --no-cache database-migrations
     docker compose up database-migrations -d
-
-postgres:
-    docker compose build --no-cache postgres
-    docker compose up postgres -d
 
 backend:
     docker compose build --no-cache backend
@@ -45,5 +41,7 @@ nuxt:
     cd smartparking && npm i && npm run dev
 
 wokwi:
+    chmod +x ./wokwi/set_mqtt_ip.sh
+    ./wokwi/set_mqtt_ip.sh
     docker compose build wokwi
     docker compose up wokwi

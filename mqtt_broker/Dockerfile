@@ -11,5 +11,6 @@ COPY . .
 RUN npm rebuild
 
 EXPOSE 8000
+EXPOSE 1883
 
 CMD ["node", "mqtt_broker.js"]

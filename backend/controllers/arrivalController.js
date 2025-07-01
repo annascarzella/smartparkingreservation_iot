@@ -47,7 +47,7 @@ export async function NotifyArrival(req) {
       return { status: 500, body: { message: "MQTT connection error." } };
     });
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       client.publish(topic, message, (err) => {
         if (err) {
           console.error(`Failed to publish message to ${topic}:`, err);
@@ -97,7 +97,7 @@ export async function NotifyArrival(req) {
                 },
               });
             }
-          }, 10_000);
+          }, 20_000);
 
           client.on("message", async (topic, message) => {
             if (topic === `${lock.gateway_id}/down_link_ack`) {

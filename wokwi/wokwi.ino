@@ -31,7 +31,7 @@
 #define CLIENT_ID "SmartParkingFST"
 #define SSID "Wokwi-GUEST"
 #define PASSWORD ""
-#define MQTT_SERVER "mqtt.eclipseprojects.io"
+#define MQTT_SERVER "192.168.1.11" // Replace automatically with the IP address of the localhost
 #define MQTT_PORT 1883
 #define NUM_LOCKS 2
 
@@ -40,7 +40,7 @@ int lock_status[NUM_LOCKS + 1] = {FREE, FREE};
 bool lock_arrived[NUM_LOCKS + 1] = {false, false};
 unsigned long long lock_endtime[NUM_LOCKS + 1] = {0, 0};
 unsigned long long lastHeartbeat = 0;
-const unsigned long long HEARTBEAT_INTERVAL = 60000; // 60 secondi
+const unsigned long long HEARTBEAT_INTERVAL = 20000; // 20 secondi
 
 // Device objects
 WiFiClient wifiClient;
@@ -159,7 +159,7 @@ void reconnect() {
       Serial.print("failed, rc=");
       Serial.print(client.state());
       Serial.println(" try again in 5 seconds");
-      delay(5000);
+      delay(2500);
     }
   }
 }
@@ -301,13 +301,17 @@ void setup() {
   client.setServer(MQTT_SERVER, MQTT_PORT);
   client.setCallback(on_message);
 
+  client.setKeepAlive(120); // 120 secondi
+
   connect();
 }
 
 void loop() {
   timeClient.update();
   client.loop();
-  reconnect();
+  if (!client.connected()) {
+    reconnect();
+  }  
 
   unsigned long long now = get_current_millis();
   //Serial.println("Current time: " + String(now));
@@ -326,7 +330,7 @@ void loop() {
 
         StaticJsonDocument<256> doc;
         doc["lockId"] = locks[i].id;
-        doc["status"] = "FREE";
+        doc["status"] = "free";
         doc["timestamp"] = now;
 
         char buffer[256];
@@ -338,9 +342,7 @@ void loop() {
       lock_endtime[i] = 0; // reset
       lock_arrived[i] = false; // reset
     }
-
     is_occupied(i);
   }
-
-  delay(5000);
+  delay(2500);
 }

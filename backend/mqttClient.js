@@ -1,8 +1,10 @@
 import Gateway from "./models/gateway.js";
 import Lock from "./models/lock.js";
-import LockStatus from "./models/enums.js";
+import { LockStatus } from "./models/enums.js";
 import mqtt from "mqtt";
 import { wsmqttConfig } from "./config/wsmqtt.js";
+import Reservation from "./models/reservation.js";
+import { Op } from "sequelize";
 
 var IDsgateways = [];
 // Function to fetch gateways from the database and populate IDsgateways
@@ -70,8 +72,13 @@ async function mqttClient() {
             const lock = await Lock.findOne({ where: { id: lockData.id } });
             if (lock) {
               lock.hearthbeatReceived = true; // Update heartbeat received status
+              await lock.save();
+              console.log(`Lock ${lock.id} heartbeat received.`);
+              console.log(`Lock status:`, lock.status);
+              console.log(`Lock data:`, lockData);
+              console.log(`Reserved:`, LockStatus.RESERVED);
               if (lock.status == LockStatus.OUT_OF_ORDER) {
-                if (lockData.status != LockStatus.OCCUPIED) {
+                if (lockData.status == LockStatus.RESERVED) {
                   client.publish(
                     `${gatewayId}/down_link`,
                     JSON.stringify({
@@ -92,9 +99,25 @@ async function mqttClient() {
                       console.log(`Subscribed to ${gatewayId}/down_link_ack`);
                     }
                   });
-
+                  
+                  const timeout = setTimeout(() => {
+                    client.unsubscribe(`${gatewayId}/down_link_ack`, (err) => {
+                      if (err) {
+                        console.error(
+                          `Failed to unsubscribe from ${gatewayId}/down_link_ack after timeout:`,
+                          err
+                        );
+                      } else {
+                        console.log(
+                          `Unsubscribed from ${gatewayId}/down_link_ack after timeout`
+                        );
+                      }
+                    });
+                  }, 10_000);
+                  
                   client.on("message", async (topic, message) => {
                     if (topic === `${gatewayId}/down_link_ack`) {
+                      clearTimeout(timeout); // Clear the timeout if we receive an acknowledgment
                       client.unsubscribe(
                         `${gatewayId}/down_link_ack`,
                         (err) => {
@@ -115,28 +138,40 @@ async function mqttClient() {
                         message.toString()
                       );
                       lock.status = LockStatus.FREE; // era up dobbiamo metterlo down
+                      await lock.save();
                     }
                   });
-
-                  setTimeout(() => {
-                    client.unsubscribe(`${gatewayId}/down_link_ack`, (err) => {
-                      if (err) {
-                        console.error(
-                          `Failed to unsubscribe from ${gatewayId}/down_link_ack after timeout:`,
-                          err
-                        );
-                      } else {
-                        console.log(
-                          `Unsubscribed from ${gatewayId}/down_link_ack after timeout`
-                        );
-                      }
-                    });
-                  }, 10_000);
                 }
-              } else {
+              } else if (lockData.status == LockStatus.RESERVED) {
+                console.log(`Lock ${lock.id} is reserved, checking for active reservation...`);
+                const now = Date.now();
+                const reservationActive = await Reservation.findOne({
+                  where: {
+                    lockId: lock.id,
+                    end_time: {
+                      [Op.gt]: now,
+                    },
+                  }
+                });
+                if (!reservationActive) {
+                  console.log(`Lock ${lock.id} is reserved but no active reservation found.`);
+                  const topic = `${lock.gateway_id}/down_link`;
+                      const message = JSON.stringify({
+                        command: "down",
+                        status: LockStatus.FREE,
+                        lock_id: lock.id,
+                      });
+                  client.publish(topic, message, (err) => {
+                    if (err) {
+                      console.error(`Failed to publish message to ${topic}:`, err);
+                    } else {
+                      console.log(`Message published to ${topic}`);
+                    }
+                  });
+                }
+              } else{
                 lock.status = lockData.status;
               }
-
               await lock.save();
             } else {
               console.error(`Lock with ID ${lockData.id} not found.`);

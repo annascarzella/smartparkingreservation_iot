@@ -58,7 +58,7 @@ export default class Gateway {
         });
         console.log(`Publishing heartbeat for gateway ${this.id}`);
         this.client.publish(`${this.id}/heartbeat`, Json);
-      }, 60_000);
+      }, 20_000); // Publish every 20 seconds
     });
 
     /////////////////
