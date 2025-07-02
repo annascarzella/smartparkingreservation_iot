@@ -9,44 +9,23 @@ import {
 } from "./models/enum.js";
 
 const locks = [
-  //new Lock(1, 45.4642, 9.19, 87),
-  /*new Lock(
-    2,
-    45.4645,
-    9.191,
-    65,
-    Lock_Status.FREE,
-    Lock_Alarm.OFF,
-    Lock_MagneticSensor.ON
-  ),*/
   new Lock(
     3,
     45.465,
     9.192,
-    40,
-    Lock_Status.FREE,
-    Lock_Alarm.ON,
-    Lock_MagneticSensor.OFF
+    40
   ),
-  new Lock(4, 45.466, 9.193, 10, Lock_Status.OUT_OF_ORDER),
+  new Lock(4, 45.466, 9.193, 10),
 ];
 
 const gateways = [
-  /*new Gateway(
-    1,
-    "Gateway 1",
-    [locks[0], locks[1]],
-    45.4642,
-    9.19,
-    Gateway_Status.CONNECTED
-  ),*/
   new Gateway(
     2,
     "Gateway 2",
     [locks[0]],
     45.467,
     9.195,
-    Gateway_Status.NOT_CONNECTED
+    Gateway_Status.CONNECTED
   ),
   new Gateway(
     3,
@@ -54,7 +33,7 @@ const gateways = [
     [locks[1]],
     45.463,
     9.188,
-    Gateway_Status.UNKNOWN
+    Gateway_Status.CONNECTED
   ),
 ];
 

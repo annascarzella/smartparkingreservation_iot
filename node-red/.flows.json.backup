@@ -158,7 +158,7 @@
         "id": "afedeeb17f3a368a",
         "type": "mqtt-broker",
         "name": "mqttBroker",
-        "broker": "ws://localhost:8000",
+        "broker": "ws://mqtt:8000",
         "port": "8000",
         "clientid": "",
         "autoConnect": true,
@@ -409,30 +409,10 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 1110,
-        "y": 180,
+        "x": 930,
+        "y": 220,
         "wires": [
             []
-        ]
-    },
-    {
-        "id": "10297d4e36b138d9",
-        "type": "function",
-        "z": "9c7b55ced3f7365d",
-        "name": "Connected ",
-        "func": "// number of connected gateways\nmsg.payload = msg.payload.filter(item => item.status === \"connected\").length;\nmsg.topic = \"Connected\"\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 790,
-        "y": 160,
-        "wires": [
-            [
-                "5028fa06fc0846c2"
-            ]
         ]
     },
     {
@@ -449,109 +429,7 @@
         "y": 220,
         "wires": [
             [
-                "10297d4e36b138d9",
-                "1bbac37a549e6a88",
-                "15aa592140f761c1"
-            ]
-        ]
-    },
-    {
-        "id": "1bbac37a549e6a88",
-        "type": "function",
-        "z": "9c7b55ced3f7365d",
-        "name": "Unknown",
-        "func": "// number of Unknown gateways\nmsg.payload = msg.payload.filter(item => item.status === \"unknown\").length;\nmsg.topic = \"Unknown\"\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 780,
-        "y": 240,
-        "wires": [
-            [
-                "5028fa06fc0846c2"
-            ]
-        ]
-    },
-    {
-        "id": "15aa592140f761c1",
-        "type": "function",
-        "z": "9c7b55ced3f7365d",
-        "name": "Disconnected",
-        "func": "// number of disconnected gateways\nmsg.payload = msg.payload.filter(item => item.status === \"not_connected\").length;\nmsg.topic = \"Disconnected\"\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 800,
-        "y": 200,
-        "wires": [
-            [
-                "5028fa06fc0846c2"
-            ]
-        ]
-    },
-    {
-        "id": "a3c022a763312f13",
-        "type": "function",
-        "z": "9c7b55ced3f7365d",
-        "name": "Reserved",
-        "func": "// number of reserved lock\nmsg.payload = msg.payload.filter(item => item.status === \"reserved\").length;\nmsg.topic = \"Reserved\"\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 760,
-        "y": 320,
-        "wires": [
-            [
-                "7b729c45ed0461b2"
-            ]
-        ]
-    },
-    {
-        "id": "e5cdec0fbaab2454",
-        "type": "function",
-        "z": "9c7b55ced3f7365d",
-        "name": "Free",
-        "func": "// number of free gateways\nmsg.payload = msg.payload.filter(item => item.status === \"free\").length;\nmsg.topic = \"Free\"\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 750,
-        "y": 400,
-        "wires": [
-            [
-                "7b729c45ed0461b2"
-            ]
-        ]
-    },
-    {
-        "id": "5bd224e31ac24fe3",
-        "type": "function",
-        "z": "9c7b55ced3f7365d",
-        "name": "Occupied",
-        "func": "// number of occupied lock\nmsg.payload = msg.payload.filter(item => item.status === \"occupied\").length;\nmsg.topic = \"Occupied\"\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 760,
-        "y": 360,
-        "wires": [
-            [
-                "7b729c45ed0461b2"
+                "fb4b259fd4b2e728"
             ]
         ]
     },
@@ -569,10 +447,7 @@
         "y": 320,
         "wires": [
             [
-                "a3c022a763312f13",
-                "5bd224e31ac24fe3",
-                "e5cdec0fbaab2454",
-                "0d6be335e4d0891a"
+                "a20e470d75158f77"
             ]
         ]
     },
@@ -614,30 +489,10 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 1110,
+        "x": 890,
         "y": 320,
         "wires": [
             []
-        ]
-    },
-    {
-        "id": "0d6be335e4d0891a",
-        "type": "function",
-        "z": "9c7b55ced3f7365d",
-        "name": "Out of order",
-        "func": "// number of out_of_order gateways\nmsg.payload = msg.payload.filter(item => item.status === \"out_of_order\").length;\nmsg.topic = \"Out of order\"\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 770,
-        "y": 440,
-        "wires": [
-            [
-                "7b729c45ed0461b2"
-            ]
         ]
     },
     {
@@ -653,8 +508,8 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 90,
-        "y": 520,
+        "x": 170,
+        "y": 500,
         "wires": [
             [
                 "aa16cb1e945e8f12"
@@ -673,8 +528,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 350,
-        "y": 640,
+        "x": 470,
+        "y": 620,
         "wires": [
             [
                 "b3d6f18e32e15be3"
@@ -701,8 +556,8 @@
         "payloadType": "str",
         "topic": "topic",
         "topicType": "msg",
-        "x": 210,
-        "y": 700,
+        "x": 330,
+        "y": 680,
         "wires": [
             [
                 "46afff36656bb200"
@@ -721,8 +576,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 410,
-        "y": 700,
+        "x": 530,
+        "y": 680,
         "wires": [
             [
                 "b3d6f18e32e15be3"
@@ -750,7 +605,7 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 240,
+        "x": 200,
         "y": 280,
         "wires": [
             [
@@ -795,7 +650,7 @@
         "topic": "topic",
         "topicType": "msg",
         "className": "",
-        "x": 100,
+        "x": 280,
         "y": 80,
         "wires": [
             [
@@ -815,7 +670,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 260,
+        "x": 440,
         "y": 80,
         "wires": [
             [
@@ -829,7 +684,7 @@
         "z": "9c7b55ced3f7365d",
         "name": "",
         "events": "all",
-        "x": 420,
+        "x": 600,
         "y": 80,
         "wires": [
             []
@@ -856,7 +711,7 @@
         "topic": "",
         "payload": "{\"group\":{\"hide\":[\"Smart_Parking_Heartbeats\",\"Smart_Parking_ActiveReservation\"],\"show\":[\"Smart_Parking_Control\",\"Smart_Parking_Statuses\"]}}",
         "payloadType": "json",
-        "x": 410,
+        "x": 590,
         "y": 140,
         "wires": [
             [
@@ -894,8 +749,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 770,
-        "y": 500,
+        "x": 690,
+        "y": 440,
         "wires": [
             [
                 "d6ceaeee7222d2d3"
@@ -955,8 +810,8 @@
         ],
         "outputs": 1,
         "cts": true,
-        "x": 650,
-        "y": 640,
+        "x": 770,
+        "y": 620,
         "wires": [
             []
         ]
@@ -1024,8 +879,8 @@
         ],
         "outputs": 1,
         "cts": true,
-        "x": 1110,
-        "y": 520,
+        "x": 950,
+        "y": 440,
         "wires": [
             []
         ]
@@ -1043,8 +898,8 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 90,
-        "y": 580,
+        "x": 170,
+        "y": 560,
         "wires": [
             [
                 "aa16cb1e945e8f12"
@@ -1064,11 +919,95 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 90,
-        "y": 640,
+        "x": 170,
+        "y": 620,
         "wires": [
             [
                 "aa16cb1e945e8f12"
+            ]
+        ]
+    },
+    {
+        "id": "fb4b259fd4b2e728",
+        "type": "function",
+        "z": "9c7b55ced3f7365d",
+        "name": "Status Gateways",
+        "func": "// conta tutti e tre gli stati in un unico passaggio\nconst counts = msg.payload.reduce((acc, item) => {\n  if (item.status === \"connected\")     acc.connected++;\n  else if (item.status === \"not_connected\") acc.not_connected++;\n  else if (item.status === \"unknown\")  acc.unknown++;\n  return acc;\n}, { connected: 0, not_connected: 0, unknown: 0 });\n\n// prepara i tre messaggi\nconst msg0 = { payload: counts.connected,     topic: \"Connected\"    };\nconst msg1 = { payload: counts.not_connected, topic: \"Disconnected\" };\nconst msg2 = { payload: counts.unknown,       topic: \"Unknown\"      };\n\n// restituisci array di messaggi, uno per ogni output\nreturn [ msg0, msg1, msg2 ];",
+        "outputs": 3,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 220,
+        "wires": [
+            [
+                "5028fa06fc0846c2"
+            ],
+            [
+                "5028fa06fc0846c2"
+            ],
+            [
+                "5028fa06fc0846c2"
+            ]
+        ]
+    },
+    {
+        "id": "a20e470d75158f77",
+        "type": "function",
+        "z": "9c7b55ced3f7365d",
+        "name": "Status Locks",
+        "func": "// Conta tutti e quattro gli stati in un solo passaggio\nconst counts = msg.payload.reduce((acc, item) => {\n    switch (item.status) {\n        case \"reserved\": acc.reserved++; break;\n        case \"occupied\": acc.occupied++; break;\n        case \"free\": acc.free++; break;\n        case \"out_of_order\": acc.outOfOrder++; break;\n    }\n    return acc;\n}, { reserved: 0, occupied: 0, free: 0, outOfOrder: 0 });\n\n// Prepara un messaggio per ciascuna uscita\nconst msg0 = { payload: counts.reserved, topic: \"Reserved\" };\nconst msg1 = { payload: counts.occupied, topic: \"Occupied\" };\nconst msg2 = { payload: counts.free, topic: \"Free\" };\nconst msg3 = { payload: counts.outOfOrder, topic: \"Out of order\" };\n\n// Ritorna i 4 messaggi come array, uno per ogni output\nreturn [msg0, msg1, msg2, msg3];\n",
+        "outputs": 4,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 320,
+        "wires": [
+            [
+                "7b729c45ed0461b2"
+            ],
+            [
+                "7b729c45ed0461b2"
+            ],
+            [
+                "7b729c45ed0461b2"
+            ],
+            [
+                "7b729c45ed0461b2"
+            ]
+        ]
+    },
+    {
+        "id": "aa1e55b05de309d1",
+        "type": "inject",
+        "z": "9c7b55ced3f7365d",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "Statuses",
+        "payloadType": "str",
+        "x": 120,
+        "y": 80,
+        "wires": [
+            [
+                "fbbd9718c3bb9e05"
             ]
         ]
     }

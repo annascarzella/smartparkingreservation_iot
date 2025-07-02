@@ -323,7 +323,9 @@ void loop() {
 
   for (int i = 0; i < NUM_LOCKS; i++) {
     if (now >= lock_endtime[i] && lock_endtime[i] > 0) {
+      Serial.println("Lock " + String(locks[i].id) + " timeout reached at " + String(now));
       if (!lock_arrived[i]) {
+        Serial.println("Lock " + String(locks[i].id) + " was not arrived, setting to FREE automatically.");
         set_servo(i, DOWN);
         set_status(i, FREE);
         lock_status[i] = FREE;

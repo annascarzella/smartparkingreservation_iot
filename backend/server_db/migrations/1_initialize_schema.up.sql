@@ -52,15 +52,15 @@ CREATE TABLE IF NOT EXISTS reservation (
 );
 
 INSERT INTO gateway (name, status, latitude, longitude) VALUES
-('Gateway 1', 'connected', 40.712776, -74.005974),
-('Gateway 2', 'connected', 34.052235, -118.243683),
-('Gateway 3', 'connected', 51.507351, -0.127758);
+('Gateway 1', 'connected', 44.401986, 8.971098),
+('Gateway 2', 'connected', 44.401412, 8.971528),
+('Gateway 3', 'connected', 44.400338, 8.970780);
 
 INSERT INTO lock (gateway_id, latitude, longitude, status, alarm, magneticsensor) VALUES
-(1, 45.4642, 9.19, 'free', 'off', 'off'),
-(1, 45.4645, 9.191, 'free', 'off', 'off'),
-(2, 45.465, 9.192, 'free', 'off', 'off'),
-(3, 45.466, 9.193, 'free', 'off', 'off');
+(1, 44.401303, 8.970888, 'free', 'off', 'off'),
+(1, 44.401333, 8.971132, 'free', 'off', 'off'),
+(2, 44.400877, 8.971206, 'free', 'off', 'off'),
+(3, 44.400657, 8.970861, 'free', 'off', 'off');
 
 INSERT INTO users (name, email, password_hash) VALUES
 ('Anna', 'anna@gmail.com', '$2a$12$MrvOSALMutnnPQzDIOxh7.GNhI13wC.Hut9oVE9l2w4BSztglZVGu'), -- password1

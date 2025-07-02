@@ -7,6 +7,9 @@ import Reservation from "./models/reservation.js";
 import { Op } from "sequelize";
 
 var IDsgateways = [];
+
+const lockHeartbeatMap = new Map();
+
 // Function to fetch gateways from the database and populate IDsgateways
 async function fetchGateways() {
   try {
@@ -55,10 +58,13 @@ async function mqttClient() {
         console.error(`Lock with ID ${payload.lockId} not found.`);
       }
       console.log(`Received up_link message on ${topic}:`, payload);
+      
+
     } else if (topic.endsWith("/heartbeat")) {
       const gatewayId = topic.split("/")[0];
       const payload = JSON.parse(message.toString());
       console.log(`Received heartbeat message on ${topic}:`, payload);
+
       const gateway = await Gateway.findOne({ where: { id: gatewayId } });
       if (gateway) {
         gateway.status = payload.status; // Update the gateway status
@@ -71,12 +77,7 @@ async function mqttClient() {
           try {
             const lock = await Lock.findOne({ where: { id: lockData.id } });
             if (lock) {
-              lock.hearthbeatReceived = true; // Update heartbeat received status
-              await lock.save();
-              console.log(`Lock ${lock.id} heartbeat received.`);
-              console.log(`Lock status:`, lock.status);
-              console.log(`Lock data:`, lockData);
-              console.log(`Reserved:`, LockStatus.RESERVED);
+              lockHeartbeatMap.set(lock.id, true);
               if (lock.status == LockStatus.OUT_OF_ORDER) {
                 if (lockData.status == LockStatus.RESERVED) {
                   client.publish(
@@ -138,16 +139,18 @@ async function mqttClient() {
                         message.toString()
                       );
                       lock.status = LockStatus.FREE; // era up dobbiamo metterlo down
-                      await lock.save();
                     }
                   });
+                } else {
+                  lock.status = lockData.status;
                 }
+
               } else if (lockData.status == LockStatus.RESERVED) {
                 console.log(`Lock ${lock.id} is reserved, checking for active reservation...`);
                 const now = Date.now();
                 const reservationActive = await Reservation.findOne({
                   where: {
-                    lockId: lock.id,
+                    lock_id: lock.id,
                     end_time: {
                       [Op.gt]: now,
                     },
@@ -188,15 +191,29 @@ async function mqttClient() {
     //check if every lock has sent a heartbeat in the last 120 seconds
     Lock.findAll().then((locks) => {
       locks.forEach(async (lock) => {
-        const lastHeartbeat = lock.hearthbeatReceived;
-        if (!lastHeartbeat && lock.status != LockStatus.OUT_OF_ORDER) {
+        const received = lockHeartbeatMap.get(lock.id) || false;
+        if (!received && lock.status != LockStatus.OUT_OF_ORDER) {
           console.warn(
             `Lock ${lock.id} has not received a heartbeat in the last 120 seconds.`
           );
-          lock.status = LockStatus.OUT_OF_ORDER; // Set status to OUT_OF_ORDER
+          lock.status = LockStatus.OUT_OF_ORDER;
+          const now = Date.now();
+          const reservation = await Reservation.findOne({
+            where: {
+              lock_id: lock.id,
+              end_time: {
+                [Op.gt]: now,
+              },
+            },
+          });
+          if (reservation) {
+            console.log(`Removing reservation for lock ${lock.id} due to heartbeat timeout.`);
+            reservation.endTime = now;
+            await reservation.save();
+          }
           await lock.save();
         }
-        lock.hearthbeatReceived = false; // Reset heartbeat received status
+        lockHeartbeatMap.set(lock.id, false);
       });
     });
   }, 120_000);
