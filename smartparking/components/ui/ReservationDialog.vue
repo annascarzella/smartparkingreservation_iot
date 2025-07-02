@@ -4,7 +4,35 @@
     class="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)] z-50 px-5"
   >
     <div class="bg-white rounded-lg shadow-xl p-6 w-96">
-      <template v-if="lockStatus === 'out_of_order'">
+      <template v-if="reservationLockId && reservationLockId == lockId">
+        <h2 class="text-xl font-semibold mb-4">Your reservation</h2>
+        <p class="text-gray-600 mb-4">
+          This is your current reservation. You can extend it or cancel it below.
+        </p>
+        <div class="flex justify-end">
+          <button
+            @click="close"
+            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+          >
+            Close
+          </button>
+        </div>
+      </template>
+      <template v-else-if="reservationLockId">
+        <h2 class="text-xl font-semibold mb-4">No more reservation</h2>
+        <p class="text-gray-600 mb-4">
+          You can't have more than one reservation at the same time.
+        </p>
+        <div class="flex justify-end">
+          <button
+            @click="close"
+            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+          >
+            Close
+          </button>
+        </div>
+      </template>
+      <template v-else-if="lockStatus === 'out_of_order'">
         <h2 class="text-xl font-semibold mb-4">Lock Out of Order</h2>
         <p class="text-gray-600 mb-4">
           This lock is currently out of order. Please try another one.
@@ -129,7 +157,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 
 const props = defineProps({
   show: Boolean,
@@ -145,6 +173,10 @@ const props = defineProps({
   successMessage: {
     type: String,
     default: "",
+  },
+  reservationLockId: {
+    type: Number,
+    default: null,
   },
 });
 
@@ -168,10 +200,8 @@ function handleSubmit() {
   emit("submit", {
     lockId: props.lockId,
     plate: plate.value,
-    duration: duration.value, // in minutes now
+    duration: duration.value, // in minutes
   });
-
-  //close();
 }
 
 function increaseDuration() {

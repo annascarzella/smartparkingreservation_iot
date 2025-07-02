@@ -4,115 +4,49 @@
       class="text-3xl font-semibold text-center mb-6"
       aria-label="Mappa con OpenStreetMap"
     >
-      🗺️ Mappa
+      Map
     </h1>
     <div class="map-box">
       <div id="map" class="map"></div>
     </div>
-    <div v-if="boolReservation" class="reservation-info">
-      <h2 class="p-6 text-xl font-semibold mb-4">
-        Current Reservation Information
-      </h2>
-      <p><strong>Lock ID:</strong> {{ resCurrentReserv.lock_id }}</p>
-      <p>
-        <strong>Start Time:</strong>
-        {{ formatDate(resCurrentReserv.start_time) }}
-      </p>
-      <p>
-        <strong>End Time:</strong> {{ formatDate(resCurrentReserv.end_time) }}
-      </p>
-      <p><strong>Plate Number:</strong> {{ resCurrentReserv.plate_number }}</p>
-      <p>
-        <strong>Expires in:</strong>
-        {{
-          Math.round((new Date(resCurrentReserv.end_time) - new Date()) / 60000)
-        }}
-        minutes
-      </p>
-      <div class="flex space-x-2">
-        <button
-          type="button"
-          @click="decreaseDuration"
-          class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
-          :disabled="duration <= 5"
-        >
-          −
-        </button>
+    <CurrentReservationInfo
+      v-if="boolReservation"
+      :reservation="resCurrentReserv"
+      :locks="res?.locks"
+      :error="extendError"
+      :success="extendSuccess"
+      @extend="showExtendDialog = true"
+      @notify="showNotifyDialog = true"
+    />
 
-        <input
-          id="duration"
-          type="number"
-          v-model.number="duration"
-          class="border rounded px-3 py-2 text-center"
-          min="5"
-          max="180"
-          step="5"
-          readonly
-        />
-
-        <button
-          type="button"
-          @click="increaseDuration"
-          class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
-          :disabled="duration >= 180"
-        >
-          +
-        </button>
-
-        <span class="text-gray-600 px-3 py-2">minutes</span>
-
-        <button
-          type="button"
-          @click="handleSubmit"
-          class="px-4 py-2 bg-blue-600 text-white rounded"
-        >
-          Extend
-        </button>
-      </div>
-      <template v-if="errorExtend">
-        <p class="text-red-500 mt-2">{{ errorExtend }}</p>
-      </template>
-      <template v-if="successExtend">
-        <p class="text-green-500 mt-2">{{ successExtend }}</p>
-      </template>
-      <button
-        @click="openGoogleMaps"
-        class="mt-4 bg-green-600 text-white px-4 py-2 rounded"
-      >
-        Open on Google Maps
-      </button>
-      <div>
-        <AlertDialog>
-          <AlertDialogTrigger as-child>
-            <Button class="px-4 py-2 bg-blue-600 text-white rounded">
-              Notify arrival
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Sei arrivato?</AlertDialogTitle>
-              <!-- <AlertDialogDescription>
-                Sei arrivato?
-              </AlertDialogDescription> -->
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>No</AlertDialogCancel>
-              <AlertDialogAction @click="handleArrival">Siii</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </div>
-    </div>
   </div>
+  <NotifyArrivalDialog
+    v-if="boolReservation"
+    :show="showNotifyDialog"
+    :reservationId="resCurrentReserv?.id"
+    @close="showNotifyDialog = false"
+  />
   <ReservationDialog
     :show="showDialog"
     :lockId="selectedLockId"
     :lockStatus="selectedLockStatus"
     :errorMessage="errorMessage"
     :successMessage="successMessage"
+    :reservationLockId="resCurrentReserv?.lock_id"
     @close="showDialog = false"
     @submit="handleReservationSubmit"
   />
+  <ExtendDialog
+    v-if="boolReservation"
+    :show="showExtendDialog"
+    :currentEnd="resCurrentReserv?.end_time"
+    :reservationId="resCurrentReserv?.id"
+    :errorMessage="extendError"
+    :successMessage="extendSuccess"
+    @close="showExtendDialog = false"
+    @submit="handleExtendSubmit"
+  />
+  <ReservationExpiredDialog :show="showExpiredDialog" />
 </template>
 
 <script setup>
@@ -121,7 +55,6 @@ import "ol/ol.css";
 import Map from "ol/Map";
 import View from "ol/View";
 import TileLayer from "ol/layer/Tile";
-import OSM from "ol/source/OSM";
 import XYZ from "ol/source/XYZ";
 import Feature from "ol/Feature";
 import Point from "ol/geom/Point";
@@ -141,38 +74,40 @@ import "@/assets/css/map.css";
 import { useGateway } from "@/composables/useGateway";
 import { useCookie } from "#app";
 import { useRouter } from "#imports";
-
 import ReservationDialog from "@/components/ui/ReservationDialog.vue";
 import { useReservation } from "@/composables/useReservation";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
-import { Button } from '@/components/ui/button'
+import ExtendDialog from "@/components/ui/ExtendDialog.vue";
+import NotifyArrivalDialog from "@/components/ui/NotifyArrivalDialog.vue";
+import CurrentReservationInfo from "@/components/ui/CurrentReservationInfo.vue";
+import ReservationExpiredDialog from "@/components/ui/ReservationExpiredDialog.vue";
+import { onUnmounted } from "vue";
 
 const { fetchAll } = useGateway();
-const res = ref();
 const router = useRouter();
-
+const showNotifyDialog = ref(false);
+const showExtendDialog = ref(false);
+const boolReservation = ref(false);
+const showDialog = ref(false);
+const selectedLockId = ref(null);
+const selectedLockStatus = ref(null);
+const error = ref("");
+const extendError = ref("");
+const extendSuccess = ref("");
+const errorMessage = ref("");
+const successMessage = ref("");
+const res = ref();
 const res2 = ref();
 const resCurrentReserv = ref();
-const boolReservation = ref(false);
-const error = ref("");
+const { createReservation, getCurrentReservation, extendReservation } = useReservation();
+
+const showExpiredDialog = ref(false);
+let expirationTimeout = null;
 
 
-const res3 = ref();
-const successExtend = ref("");
-const errorExtend = ref("");
-const duration = ref(5);
+onUnmounted(() => {
+  if (expirationTimeout) clearTimeout(expirationTimeout);
+});
 
-const { createReservation, getCurrentReservation, extendReservation, notifyArrival } = useReservation();
 
 onMounted(async () => {
   if (!useCookie("access_token").value) {
@@ -194,6 +129,7 @@ onMounted(async () => {
     const response = await getCurrentReservation();
     resCurrentReserv.value = response.data;
     boolReservation.value = true;
+    scheduleExpirationCheck(resCurrentReserv.value.end_time);
     console.log("Current Reservation:", resCurrentReserv.value);
   } catch (e) {
     console.log("No current reservation found.");
@@ -223,13 +159,28 @@ onMounted(async () => {
         lockStatus: lock.status,
       });
       const color = statusColorMap[lock.status] || "blue"; // Cluster color
+      const isReservedLock = resCurrentReserv.value?.lock_id === lock.id;
       feat.setStyle(
         new Style({
-          image: new CircleStyle({
-            radius: 8,
-            fill: new Fill({ color }),
-            stroke: new Stroke({ color: "#fff", width: 2 }),
-          }),
+          image: isReservedLock
+            ? new CircleStyle({
+                radius: 10,
+                fill: new Fill({ color: "deepskyblue" }),
+                stroke: new Stroke({ color: "#0033cc", width: 3 }), // bordo blu
+              })
+            : new CircleStyle({
+                radius: 8,
+                fill: new Fill({ color }),
+                stroke: new Stroke({ color: "#fff", width: 2 }),
+              }),
+          text: isReservedLock
+            ? new Text({
+                //text: "★",
+                fill: new Fill({ color: "#0033cc" }),
+                font: "bold 14px sans-serif",
+                offsetY: -15,
+              })
+            : null,
         })
       );
       lockFeatures.push(feat);
@@ -256,8 +207,8 @@ onMounted(async () => {
           // cluster, cerchio con numero
           image: new CircleStyle({
             radius: 15,
-            fill: new Fill({ color: "rgba(0, 153, 255, 0.9)" }),
-            stroke: new Stroke({ color: "#fff", width: 2 }),
+            fill: new Fill({ color: "rgba(255, 255, 255, 0.9)" }),
+            stroke: new Stroke({ color: "#000", width: 2 }),
           }),
           text: new Text({
             text: String(features.length),
@@ -369,13 +320,22 @@ onMounted(async () => {
       map.getView().fit(extent, { padding: [50, 50, 50, 50], maxZoom: 16 });
     }
   }
-});
 
-const showDialog = ref(false);
-const selectedLockId = ref(null);
-const selectedLockStatus = ref(null);
-const errorMessage = ref("");
-const successMessage = ref("");
+  if (resCurrentReserv.value?.lock_id) {
+    const lock = res.value.locks.find(
+      (l) => l.id === resCurrentReserv.value.lock_id
+    );
+    if (lock) {
+      const lat = parseFloat(lock.latitude);
+      const lon = parseFloat(lock.longitude);
+      if (!isNaN(lat) && !isNaN(lon)) {
+        view.setCenter(fromLonLat([lon, lat]));
+        view.setZoom(17); // Zoom sulla prenotazione
+      }
+    }
+  }
+
+});
 
 function openReservationDialog(lockId, status) {
   selectedLockId.value = lockId;
@@ -385,15 +345,14 @@ function openReservationDialog(lockId, status) {
 
 const insertReservation = async (payload) => {
   console.log("Payload for submission:", payload);
-
   try {
     res2.value = await createReservation(payload);
     console.log("Reservation response:", res2);
     successMessage.value =
-      "Reservation created successfully! the page will refresh in 5 seconds.";
+      "Reservation created successfully! The page will refresh in 2 seconds.";
     setTimeout(() => {
       window.location.reload();
-    }, 5000);
+    }, 2000);
   } catch (e) {
     console.error("Error fetching:", e.response);
     errorMessage.value =
@@ -403,80 +362,54 @@ const insertReservation = async (payload) => {
 
 async function handleReservationSubmit(data) {
   console.log("Reservation Submitted:", data);
-
   const payload = {
     lockId: data.lockId,
     startTime: Date.now(),
     endTime: Date.now() + data.duration * 60000, // Convert minutes to milliseconds
     plateNumber: data.plate,
   };
-
-  error.value = ""; // Clear previous errors
+  error.value = "";
   await insertReservation(payload);
 }
 
-function formatDate(isoString) {
-  const date = new Date(isoString);
-  return date.toLocaleString(); // oppure usa .toLocaleDateString() se vuoi solo la data
-}
-
-async function handleSubmit() {
-  const payload = {
-    reservationId: resCurrentReserv.value.id,
-    newEndTime: new Date(
-      new Date(resCurrentReserv.value.end_time).getTime() + duration.value * 60000)
-  }
-  errorExtend.value = ""; // Clear previous errors
-  try {
-    res3.value = await extendReservation(payload);
-    console.log("Reservation extend response:", res3);
-    successExtend.value =
-      "Reservation extended successfully! the page will refresh in 5 seconds.";
-    setTimeout(() => {
-      window.location.reload();
-    }, 5000);
-  } catch (e) {
-    console.error("Error fetching:", e.response);
-    errorExtend.value =
-      e.response?._data?.message || "An error occurred during reservation.";
-  }
-}
-
-function increaseDuration() {
-  if (duration.value < 180) {
-    duration.value += 5;
-  }
-}
-
-function decreaseDuration() {
-  if (duration.value > 5) {
-    duration.value -= 5;
-  }
-}
-
-
-function openGoogleMaps() {
-  const lock = res.value?.locks?.find(
-    (lock) => lock.id === resCurrentReserv.value?.lock_id
+async function handleExtendSubmit({ reservationId, extendBy }) {
+  extendError.value = "";
+  extendSuccess.value = "";
+  const newEndTime = new Date(
+    new Date(resCurrentReserv.value.end_time).getTime() + extendBy * 60000
   );
-  if (lock) {
-    const url = `https://www.google.com/maps/dir/?api=1&destination=${lock.latitude},${lock.longitude}`;
-    window.open(url, "_blank");
-  } else {
-    error.value = "No reserved lock found.";
+  try {
+    await extendReservation({
+      reservationId,
+      newEndTime,
+    });
+    extendSuccess.value = "Reservation extended successfully!";
+    setTimeout(() => window.location.reload(), 2000);
+  } catch (e) {
+    extendError.value = e.response?._data?.message || "Failed to extend.";
+  }
+  await extendReservation({
+    reservationId,
+    newEndTime,
+  });
+  resCurrentReserv.value.end_time = newEndTime;
+  scheduleExpirationCheck(newEndTime);
+  extendSuccess.value = "Reservation extended successfully!";
+
+}
+
+function scheduleExpirationCheck(endTime) {
+  if (expirationTimeout) clearTimeout(expirationTimeout);
+
+  const msRemaining = new Date(endTime) - new Date();
+
+  if (msRemaining > 0) {
+    expirationTimeout = setTimeout(() => {
+      showExpiredDialog.value = true;
+      setTimeout(() => window.location.reload(), 4000);
+    }, msRemaining);
   }
 }
 
-async function handleArrival() {
-  try {
-    await notifyArrival({
-      reservationId: resCurrentReserv.value.id,
-    });
-    successExtend.value = "Arrival notified successfully!";
-  } catch (e) {
-    errorExtend.value =
-      e.response?._data?.message || "An error occurred while notifying arrival.";
-  }
-}
 
 </script>
