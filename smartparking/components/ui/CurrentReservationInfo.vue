@@ -43,7 +43,7 @@
         @click="openGoogleMaps"
         class="px-4 py-2 bg-gray-800 text-white rounded-lg shadow hover:bg-gray-900 transition"
       >
-        <MapPin class="w-6 h-6" />
+        <MapPinned class="w-6 h-6" />
       </button>
     </div>
 
@@ -74,7 +74,7 @@ import ReservationExpiredDialog from "@/components/ui/ReservationExpiredDialog.v
 import ExtendDialog from "@/components/ui/ExtendDialog.vue";
 import NotifyArrivalDialog from "@/components/ui/NotifyArrivalDialog.vue";
 import { useReservation } from "@/composables/useReservation";
-import { MapPin } from "lucide-vue-next";
+import { MapPinned } from "lucide-vue-next";
 
 const props = defineProps({
   reservation: Object,

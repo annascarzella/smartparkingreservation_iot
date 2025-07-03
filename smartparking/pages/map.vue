@@ -3,8 +3,19 @@
   <div class="p-8 sm:p-8 max-w-6xl mx-auto">
     <div class="flex flex-col sm:flex-row gap-6">
       <!-- Mappa -->
-      <div class="flex-1">
-        <div id="map" class="w-full h-[500px] sm:h-[700px] rounded-xl shadow" />
+      <div class="flex-1 relative">
+        <div
+          id="map"
+          class="w-full h-[500px] sm:h-[700px] rounded-xl shadow"
+        ></div>
+        <button
+          v-if="boolReservation"
+          @click="zoomToReservation"
+          class="absolute top-4 right-4 z-10 bg-white border border-gray-300 text-gray-700 p-2 rounded-full shadow hover:bg-gray-100 transition"
+          title="Zoom to Reservation"
+        >
+          <MapPin class="w-5 h-5" />
+        </button>
       </div>
 
       <!-- Info prenotazione (mostrata solo se presente) -->
@@ -31,6 +42,7 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
+import { MapPin } from "lucide-vue-next";
 import Header from "@/components/ui/Header.vue";
 import "ol/ol.css";
 import Map from "ol/Map";
@@ -72,6 +84,31 @@ const res = ref();
 const res2 = ref();
 const resCurrentReserv = ref();
 const { createReservation, getCurrentReservation } = useReservation();
+let view = null;
+
+function zoomToReservation() {
+  if (!resCurrentReserv.value) {
+    console.warn("No current reservation to zoom to.");
+    return;
+  }
+  if (resCurrentReserv?.value.lock_id) {
+    console.log(
+      "Zooming to reservation lock ID:",
+      resCurrentReserv.value.lock_id
+    );
+    const lock = res.value?.locks?.find(
+      (l) => l.id === resCurrentReserv.value.lock_id
+    );
+    if (lock) {
+      const lat = parseFloat(lock.latitude);
+      const lon = parseFloat(lock.longitude);
+      if (!isNaN(lat) && !isNaN(lon)) {
+        view.setCenter(fromLonLat([lon, lat]));
+        view.setZoom(19); // Zoom sulla prenotazione
+      }
+    }
+  }
+}
 
 onMounted(async () => {
   if (!useCookie("access_token").value) {
@@ -97,7 +134,7 @@ onMounted(async () => {
     console.log("No current reservation found.");
   }
 
-  const view = new View({
+  view = new View({
     center: fromLonLat([12.4924, 41.8902]), // Default: Rome
     zoom: 14,
   });
@@ -283,19 +320,7 @@ onMounted(async () => {
     }
   }
 
-  if (resCurrentReserv.value?.lock_id) {
-    const lock = res.value.locks.find(
-      (l) => l.id === resCurrentReserv.value.lock_id
-    );
-    if (lock) {
-      const lat = parseFloat(lock.latitude);
-      const lon = parseFloat(lock.longitude);
-      if (!isNaN(lat) && !isNaN(lon)) {
-        view.setCenter(fromLonLat([lon, lat]));
-        view.setZoom(17); // Zoom sulla prenotazione
-      }
-    }
-  }
+  zoomToReservation();
 });
 
 function openReservationDialog(lockId, status) {
