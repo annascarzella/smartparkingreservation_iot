@@ -7,7 +7,8 @@
       <template v-if="reservationLockId && reservationLockId == lockId">
         <h2 class="text-xl font-semibold mb-4">Your reservation</h2>
         <p class="text-gray-600 mb-4">
-          This is your current reservation. You can extend it or cancel it below.
+          This is your current reservation. You can extend it or cancel it
+          below.
         </p>
         <div class="flex justify-end">
           <button
@@ -139,15 +140,41 @@
             <button
               type="button"
               @click="close"
-              class="px-4 py-2 bg-gray-300 rounded"
+              :class="[
+                'px-4 py-2 rounded',
+                isSubmitting ? 'bg-gray-100 text-gray-400' : 'bg-gray-300',
+              ]"
+              :disabled="isSubmitting"
             >
               Cancel
             </button>
             <button
               type="submit"
-              class="px-4 py-2 bg-blue-600 text-white rounded"
+              class="px-4 py-2 bg-blue-600 text-white rounded flex items-center justify-center min-w-[100px]"
+              :disabled="isSubmitting"
             >
-              Reserve
+              <svg
+                v-if="isSubmitting"
+                class="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                ></path>
+              </svg>
+              <span v-else>Reserve</span>
             </button>
           </div>
         </form>
@@ -157,7 +184,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 const props = defineProps({
   show: Boolean,
@@ -180,6 +207,19 @@ const props = defineProps({
   },
 });
 
+const isSubmitting = ref(false);
+
+watch(
+  () => [props.successMessage, props.errorMessage],
+  ([success, error]) => {
+    if (success || error) {
+      setTimeout(() => {
+        isSubmitting.value = false;
+      }, 2000);
+    }
+  }
+);
+
 const emit = defineEmits(["close", "submit"]);
 
 const plate = ref("");
@@ -196,6 +236,8 @@ function handleSubmit() {
     alert("Reservation must be between 5 and 180 minutes.");
     return;
   }
+
+  isSubmitting.value = true;
 
   emit("submit", {
     lockId: props.lockId,

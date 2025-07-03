@@ -1,55 +1,70 @@
 <template>
-  <div class="p-8 max-w-md mx-auto">
-    <h1 class="text-2xl font-bold mb-4">{{ isLogin ? 'Login' : 'Registration' }}</h1>
+  <div class="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+    <div class="w-full max-w-md bg-white rounded-xl shadow-md p-6">
+      <h1 class="text-2xl font-bold text-center mb-6">
+        {{ isLogin ? "Login" : "Registration" }}
+      </h1>
 
-    <form v-if="!successMessage" @submit.prevent="isLogin ? handleLogin() : handleRegistration()">
-      <input
-        v-if="!isLogin"
-        v-model="name"
-        type="text"
-        placeholder="Name"
-        class="w-full p-2 border mb-2"
-      />
+      <form
+        v-if="!successMessage"
+        @submit.prevent="isLogin ? handleLogin() : handleRegistration()"
+      >
+        <input
+          v-if="!isLogin"
+          v-model="name"
+          type="text"
+          placeholder="Name"
+          class="w-full p-3 border border-gray-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
 
-      <input
-        v-model="email"
-        type="email"
-        placeholder="Email"
-        class="w-full p-2 border mb-2"
-      />
-      <input
-        v-model="password"
-        type="password"
-        placeholder="Password"
-        class="w-full p-2 border mb-2"
-      />
+        <input
+          v-model="email"
+          type="email"
+          placeholder="Email"
+          class="w-full p-3 border border-gray-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
 
-      <input
-        v-if="!isLogin"
-        v-model="confirmPassword"
-        type="password"
-        placeholder="Confirm Password"
-        class="w-full p-2 border mb-4"
-      />
+        <input
+          v-model="password"
+          type="password"
+          placeholder="Password"
+          class="w-full p-3 border border-gray-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
 
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded w-full">
-        {{ isLogin ? 'Login' : 'Register' }}
-      </button>
+        <input
+          v-if="!isLogin"
+          v-model="confirmPassword"
+          type="password"
+          placeholder="Confirm Password"
+          class="w-full p-3 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
 
-      <p class="mt-2 text-center">
-        <span v-if="isLogin">Don't have an account?</span>
-        <span v-else>Already have an account?</span>
-        <button type="button" @click="switchMode" class="text-blue-600 underline ml-1">
-          {{ isLogin ? 'Register' : 'Login' }}
+        <button
+          type="submit"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded w-full transition duration-300"
+        >
+          {{ isLogin ? "Login" : "Register" }}
         </button>
-      </p>
-    </form>
 
-    <div v-else class="text-green-600 text-center font-medium text-lg">
-      {{ successMessage }}
+        <p class="mt-4 text-center text-sm text-gray-700">
+          <span v-if="isLogin">Don't have an account?</span>
+          <span v-else>Already have an account?</span>
+          <button
+            type="button"
+            @click="switchMode"
+            class="text-blue-600 hover:underline ml-1"
+          >
+            {{ isLogin ? "Register" : "Login" }}
+          </button>
+        </p>
+      </form>
+
+      <div v-else class="text-green-600 text-center font-medium text-lg">
+        {{ successMessage }}
+      </div>
+
+      <p v-if="error" class="text-red-500 mt-3 text-center">{{ error }}</p>
     </div>
-
-    <p v-if="error" class="text-red-500 mt-2 text-center">{{ error }}</p>
   </div>
 </template>
 
@@ -100,7 +115,7 @@ const loginUser = async () => {
 
     successMessage.value = "Login confirmed!";
     error.value = "";
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     router.push("/map");
   } catch (e) {
     console.error("Login error:", e);
@@ -130,7 +145,7 @@ const insertUser = async () => {
     res.value = await register(payload);
     successMessage.value = "Registration successful!";
     error.value = "";
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     password.value = "";
     confirmPassword.value = "";
     isLogin.value = true;
@@ -142,7 +157,12 @@ const insertUser = async () => {
 };
 
 async function handleRegistration() {
-  if (!name.value || !email.value || !password.value || !confirmPassword.value) {
+  if (
+    !name.value ||
+    !email.value ||
+    !password.value ||
+    !confirmPassword.value
+  ) {
     error.value = "All fields are required.";
     return;
   }
@@ -155,5 +175,4 @@ async function handleRegistration() {
   error.value = "";
   await insertUser();
 }
-
 </script>

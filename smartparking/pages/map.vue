@@ -1,31 +1,22 @@
 <template>
-  <div class="p-8 max-w-4xl mx-auto">
-    <h1
-      class="text-3xl font-semibold text-center mb-6"
-      aria-label="Mappa con OpenStreetMap"
-    >
-      Map
-    </h1>
-    <div class="map-box">
-      <div id="map" class="map"></div>
-    </div>
-    <CurrentReservationInfo
-      v-if="boolReservation"
-      :reservation="resCurrentReserv"
-      :locks="res?.locks"
-      :error="extendError"
-      :success="extendSuccess"
-      @extend="showExtendDialog = true"
-      @notify="showNotifyDialog = true"
-    />
+  <Header></Header>
+  <div class="p-8 sm:p-8 max-w-6xl mx-auto">
+    <div class="flex flex-col sm:flex-row gap-6">
+      <!-- Mappa -->
+      <div class="flex-1">
+        <div id="map" class="w-full h-[500px] sm:h-[700px] rounded-xl shadow" />
+      </div>
 
+      <!-- Info prenotazione (mostrata solo se presente) -->
+      <div v-if="boolReservation" class="sm:w-[350px] w-full">
+        <CurrentReservationInfo
+          :reservation="resCurrentReserv"
+          :locks="res?.locks"
+        />
+      </div>
+    </div>
   </div>
-  <NotifyArrivalDialog
-    v-if="boolReservation"
-    :show="showNotifyDialog"
-    :reservationId="resCurrentReserv?.id"
-    @close="showNotifyDialog = false"
-  />
+
   <ReservationDialog
     :show="showDialog"
     :lockId="selectedLockId"
@@ -36,21 +27,11 @@
     @close="showDialog = false"
     @submit="handleReservationSubmit"
   />
-  <ExtendDialog
-    v-if="boolReservation"
-    :show="showExtendDialog"
-    :currentEnd="resCurrentReserv?.end_time"
-    :reservationId="resCurrentReserv?.id"
-    :errorMessage="extendError"
-    :successMessage="extendSuccess"
-    @close="showExtendDialog = false"
-    @submit="handleExtendSubmit"
-  />
-  <ReservationExpiredDialog :show="showExpiredDialog" />
 </template>
 
 <script setup>
 import { onMounted, ref } from "vue";
+import Header from "@/components/ui/Header.vue";
 import "ol/ol.css";
 import Map from "ol/Map";
 import View from "ol/View";
@@ -76,38 +57,21 @@ import { useCookie } from "#app";
 import { useRouter } from "#imports";
 import ReservationDialog from "@/components/ui/ReservationDialog.vue";
 import { useReservation } from "@/composables/useReservation";
-import ExtendDialog from "@/components/ui/ExtendDialog.vue";
-import NotifyArrivalDialog from "@/components/ui/NotifyArrivalDialog.vue";
 import CurrentReservationInfo from "@/components/ui/CurrentReservationInfo.vue";
-import ReservationExpiredDialog from "@/components/ui/ReservationExpiredDialog.vue";
-import { onUnmounted } from "vue";
 
 const { fetchAll } = useGateway();
 const router = useRouter();
-const showNotifyDialog = ref(false);
-const showExtendDialog = ref(false);
-const boolReservation = ref(false);
 const showDialog = ref(false);
 const selectedLockId = ref(null);
 const selectedLockStatus = ref(null);
 const error = ref("");
-const extendError = ref("");
-const extendSuccess = ref("");
+const boolReservation = ref(false);
 const errorMessage = ref("");
 const successMessage = ref("");
 const res = ref();
 const res2 = ref();
 const resCurrentReserv = ref();
-const { createReservation, getCurrentReservation, extendReservation } = useReservation();
-
-const showExpiredDialog = ref(false);
-let expirationTimeout = null;
-
-
-onUnmounted(() => {
-  if (expirationTimeout) clearTimeout(expirationTimeout);
-});
-
+const { createReservation, getCurrentReservation } = useReservation();
 
 onMounted(async () => {
   if (!useCookie("access_token").value) {
@@ -127,10 +91,8 @@ onMounted(async () => {
 
   try {
     const response = await getCurrentReservation();
-    resCurrentReserv.value = response.data;
     boolReservation.value = true;
-    scheduleExpirationCheck(resCurrentReserv.value.end_time);
-    console.log("Current Reservation:", resCurrentReserv.value);
+    resCurrentReserv.value = response.data;
   } catch (e) {
     console.log("No current reservation found.");
   }
@@ -334,7 +296,6 @@ onMounted(async () => {
       }
     }
   }
-
 });
 
 function openReservationDialog(lockId, status) {
@@ -357,6 +318,9 @@ const insertReservation = async (payload) => {
     console.error("Error fetching:", e.response);
     errorMessage.value =
       e.response?._data?.message || "An error occurred during reservation.";
+    setTimeout(() => {
+      errorMessage.value = "";
+    }, 2000);
   }
 };
 
@@ -371,45 +335,4 @@ async function handleReservationSubmit(data) {
   error.value = "";
   await insertReservation(payload);
 }
-
-async function handleExtendSubmit({ reservationId, extendBy }) {
-  extendError.value = "";
-  extendSuccess.value = "";
-  const newEndTime = new Date(
-    new Date(resCurrentReserv.value.end_time).getTime() + extendBy * 60000
-  );
-  try {
-    await extendReservation({
-      reservationId,
-      newEndTime,
-    });
-    extendSuccess.value = "Reservation extended successfully!";
-    setTimeout(() => window.location.reload(), 2000);
-  } catch (e) {
-    extendError.value = e.response?._data?.message || "Failed to extend.";
-  }
-  await extendReservation({
-    reservationId,
-    newEndTime,
-  });
-  resCurrentReserv.value.end_time = newEndTime;
-  scheduleExpirationCheck(newEndTime);
-  extendSuccess.value = "Reservation extended successfully!";
-
-}
-
-function scheduleExpirationCheck(endTime) {
-  if (expirationTimeout) clearTimeout(expirationTimeout);
-
-  const msRemaining = new Date(endTime) - new Date();
-
-  if (msRemaining > 0) {
-    expirationTimeout = setTimeout(() => {
-      showExpiredDialog.value = true;
-      setTimeout(() => window.location.reload(), 4000);
-    }, msRemaining);
-  }
-}
-
-
 </script>
