@@ -396,9 +396,9 @@
         "useOneColor": false,
         "useUTC": false,
         "colors": [
-            "#1f77b4",
-            "#aec7e8",
-            "#ff7f0e",
+            "#0fd74b",
+            "#d01b1b",
+            "#858585",
             "#2ca02c",
             "#98df8a",
             "#d62728",
@@ -476,10 +476,10 @@
         "useOneColor": false,
         "useUTC": false,
         "colors": [
-            "#1f77b4",
-            "#aec7e8",
-            "#ff7f0e",
-            "#2ca02c",
+            "#d9e907",
+            "#dc1818",
+            "#33ce09",
+            "#a6b0a6",
             "#98df8a",
             "#d62728",
             "#ff9896",
@@ -529,7 +529,7 @@
         "finalize": "",
         "libs": [],
         "x": 470,
-        "y": 620,
+        "y": 560,
         "wires": [
             [
                 "b3d6f18e32e15be3"
@@ -556,8 +556,8 @@
         "payloadType": "str",
         "topic": "topic",
         "topicType": "msg",
-        "x": 330,
-        "y": 680,
+        "x": 390,
+        "y": 640,
         "wires": [
             [
                 "46afff36656bb200"
@@ -576,8 +576,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 530,
-        "y": 680,
+        "x": 590,
+        "y": 640,
         "wires": [
             [
                 "b3d6f18e32e15be3"
@@ -810,8 +810,8 @@
         ],
         "outputs": 1,
         "cts": true,
-        "x": 770,
-        "y": 620,
+        "x": 830,
+        "y": 560,
         "wires": [
             []
         ]
@@ -932,7 +932,7 @@
         "type": "function",
         "z": "9c7b55ced3f7365d",
         "name": "Status Gateways",
-        "func": "// conta tutti e tre gli stati in un unico passaggio\nconst counts = msg.payload.reduce((acc, item) => {\n  if (item.status === \"connected\")     acc.connected++;\n  else if (item.status === \"not_connected\") acc.not_connected++;\n  else if (item.status === \"unknown\")  acc.unknown++;\n  return acc;\n}, { connected: 0, not_connected: 0, unknown: 0 });\n\n// prepara i tre messaggi\nconst msg0 = { payload: counts.connected,     topic: \"Connected\"    };\nconst msg1 = { payload: counts.not_connected, topic: \"Disconnected\" };\nconst msg2 = { payload: counts.unknown,       topic: \"Unknown\"      };\n\n// restituisci array di messaggi, uno per ogni output\nreturn [ msg0, msg1, msg2 ];",
+        "func": "const counts = msg.payload.reduce((acc, item) => {\n  if (item.status === \"connected\")     acc.connected++;\n  else if (item.status === \"not_connected\") acc.not_connected++;\n  else if (item.status === \"unknown\")  acc.unknown++;\n  return acc;\n}, { connected: 0, not_connected: 0, unknown: 0 });\n\n\nconst msg0 = { payload: counts.connected,     topic: \"Connected\"    };\nconst msg1 = { payload: counts.not_connected, topic: \"Disconnected\" };\nconst msg2 = { payload: counts.unknown,       topic: \"Unknown\"      };\n\n\nreturn [ msg0, msg1, msg2 ];",
         "outputs": 3,
         "timeout": 0,
         "noerr": 0,
@@ -958,7 +958,7 @@
         "type": "function",
         "z": "9c7b55ced3f7365d",
         "name": "Status Locks",
-        "func": "// Conta tutti e quattro gli stati in un solo passaggio\nconst counts = msg.payload.reduce((acc, item) => {\n    switch (item.status) {\n        case \"reserved\": acc.reserved++; break;\n        case \"occupied\": acc.occupied++; break;\n        case \"free\": acc.free++; break;\n        case \"out_of_order\": acc.outOfOrder++; break;\n    }\n    return acc;\n}, { reserved: 0, occupied: 0, free: 0, outOfOrder: 0 });\n\n// Prepara un messaggio per ciascuna uscita\nconst msg0 = { payload: counts.reserved, topic: \"Reserved\" };\nconst msg1 = { payload: counts.occupied, topic: \"Occupied\" };\nconst msg2 = { payload: counts.free, topic: \"Free\" };\nconst msg3 = { payload: counts.outOfOrder, topic: \"Out of order\" };\n\n// Ritorna i 4 messaggi come array, uno per ogni output\nreturn [msg0, msg1, msg2, msg3];\n",
+        "func": "const counts = msg.payload.reduce((acc, item) => {\n    switch (item.status) {\n        case \"reserved\": acc.reserved++; break;\n        case \"occupied\": acc.occupied++; break;\n        case \"free\": acc.free++; break;\n        case \"out_of_order\": acc.outOfOrder++; break;\n    }\n    return acc;\n}, { reserved: 0, occupied: 0, free: 0, outOfOrder: 0 });\n\nconst msg0 = { payload: counts.reserved, topic: \"Reserved\" };\nconst msg1 = { payload: counts.occupied, topic: \"Occupied\" };\nconst msg2 = { payload: counts.free, topic: \"Free\" };\nconst msg3 = { payload: counts.outOfOrder, topic: \"Out of order\" };\n\nreturn [msg0, msg1, msg2, msg3];\n",
         "outputs": 4,
         "timeout": 0,
         "noerr": 0,
