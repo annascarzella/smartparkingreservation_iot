@@ -17,6 +17,35 @@ export async function addReservation(req) {
     };
   }
 
+  if (plateNumber.length > 7) {
+    return {
+      status: 400,
+      body: { message: "Plate number cannot exceed 7 characters." },
+    };
+  }
+
+  // Check that startTime and endTime are valid ISO strings and startTime < endTime
+  const start = new Date(startTime);
+  const end = new Date(endTime);
+  if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+    return {
+      status: 400,
+      body: { message: "Invalid startTime or endTime format." },
+    };
+  }
+  if (start >= end) {
+    return {
+      status: 400,
+      body: { message: "startTime must be before endTime." },
+    };
+  }
+  if (start < new Date()) {
+    return {
+      status: 400,
+      body: { message: "startTime must be in the future." },
+    };
+  }
+
   const start_time = startTime;
   const end_time = endTime;
 
