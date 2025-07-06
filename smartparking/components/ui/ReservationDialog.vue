@@ -88,6 +88,7 @@
               type="text"
               required
               class="w-full border rounded px-3 py-2 mt-1"
+              maxlength="7"
             />
           </div>
           <div class="mb-4">
