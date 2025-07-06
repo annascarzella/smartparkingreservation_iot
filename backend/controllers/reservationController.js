@@ -39,10 +39,10 @@ export async function addReservation(req) {
       body: { message: "startTime must be before endTime." },
     };
   }
-  if (start < new Date()) {
+  if (end < new Date()) {
     return {
       status: 400,
-      body: { message: "startTime must be in the future." },
+      body: { message: "endTime must be in the future." },
     };
   }
 
