@@ -51,6 +51,14 @@ CREATE TABLE IF NOT EXISTS reservation (
     UNIQUE (user_id, lock_id, start_time, end_time)
 );
 
+CREATE TABLE IF NOT EXISTS heartbeats (
+    id serial PRIMARY KEY,
+    gateway_id int NOT NULL REFERENCES gateway(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    lock_id int NOT NULL REFERENCES lock(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    status lock_status DEFAULT 'free',
+    timestamp timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+);
+
 INSERT INTO gateway (name, status, latitude, longitude) VALUES
 ('Gateway 1', 'connected', 44.401986, 8.971098),
 ('Gateway 2', 'connected', 44.401412, 8.971528),
