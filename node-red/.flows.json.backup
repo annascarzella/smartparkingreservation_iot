@@ -409,7 +409,7 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 890,
+        "x": 1230,
         "y": 220,
         "wires": [
             []
@@ -419,13 +419,13 @@
         "id": "272c2be8da5ee20a",
         "type": "postgresql",
         "z": "9c7b55ced3f7365d",
-        "name": "",
+        "name": "SELECT",
         "query": "SET search_path TO smartparking;\nSELECT status FROM gateway;",
         "postgreSQLConfig": "c51a91cb42a5ee81",
         "split": false,
         "rowsPerMsg": 1,
         "outputs": 1,
-        "x": 450,
+        "x": 760,
         "y": 220,
         "wires": [
             [
@@ -437,13 +437,13 @@
         "id": "eae48066c573b857",
         "type": "postgresql",
         "z": "9c7b55ced3f7365d",
-        "name": "",
+        "name": "SELECT",
         "query": "SET search_path TO smartparking;\nSELECT status FROM lock;",
         "postgreSQLConfig": "c51a91cb42a5ee81",
         "split": false,
         "rowsPerMsg": 1,
         "outputs": 1,
-        "x": 450,
+        "x": 760,
         "y": 320,
         "wires": [
             [
@@ -489,7 +489,7 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 870,
+        "x": 1210,
         "y": 320,
         "wires": [
             []
@@ -508,7 +508,7 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 130,
+        "x": 210,
         "y": 600,
         "wires": [
             [
@@ -521,18 +521,19 @@
         "type": "function",
         "z": "9c7b55ced3f7365d",
         "name": "Format locks",
-        "func": "const gatewayId = parseInt(msg.topic.split(\"/\")[0]) || 0;\nconst ts = msg.timestamp || new Date().toISOString();\n\nif (!msg.payload.locks || !Array.isArray(msg.payload.locks)) {\n    node.warn(\"msg.payload.locks non è un array valido\");\n    return null;\n}\n\nconst messages = msg.payload.locks.map(lock => {\n    const lockId = parseInt(lock.id);\n    const status = lock.status;\n    const timestamp = ts.replace(/'/g, \"''\");\n    const statusEscaped = status.replace(/'/g, \"''\");\n\n    return { gatewayId:gatewayId, lockId:lockId, statusEscaped:statusEscaped, timestamp:timestamp };\n});\n\nreturn [messages];",
+        "func": "const gatewayId = parseInt(msg.topic.split(\"/\")[0]) || 0;\nconst ts = msg.timestamp || new Date().toISOString();\n\nif (!msg.payload.locks || !Array.isArray(msg.payload.locks)) {\n    node.warn(\"msg.payload.locks non è un array valido\");\n    return null;\n}\n\nconst messages = msg.payload.locks.map(lock => {\n    const lockId = parseInt(lock.id);\n    const status = lock.status;\n    const timestamp = ts.replace(/'/g, \"''\");\n    const statusEscaped = status.replace(/'/g, \"''\");\n\n    return { gateway_id:gatewayId, lock_id:lockId, status:statusEscaped, timestamp:timestamp };\n});\n\nreturn [messages];",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 410,
+        "x": 490,
         "y": 720,
         "wires": [
             [
-                "8cd179e4895fb7b0"
+                "8cd179e4895fb7b0",
+                "5b8b883cd13923ce"
             ]
         ]
     },
@@ -546,17 +547,17 @@
         "width": 6,
         "height": 1,
         "passthru": false,
-        "label": "Clear button",
-        "tooltip": "",
+        "label": "Clear button ",
+        "tooltip": "Remove from DB also",
         "color": "",
-        "bgcolor": "",
+        "bgcolor": "red",
         "className": "",
         "icon": "",
         "payload": "",
         "payloadType": "str",
         "topic": "topic",
         "topicType": "msg",
-        "x": 330,
+        "x": 390,
         "y": 560,
         "wires": [
             [
@@ -576,7 +577,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 710,
+        "x": 790,
         "y": 560,
         "wires": [
             [
@@ -605,14 +606,13 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 200,
+        "x": 520,
         "y": 280,
         "wires": [
             [
                 "272c2be8da5ee20a",
                 "eae48066c573b857",
-                "90e8615ba7fa7d14",
-                "1a69ab3975a1abb7"
+                "90e8615ba7fa7d14"
             ]
         ]
     },
@@ -655,7 +655,8 @@
         "y": 80,
         "wires": [
             [
-                "23cc690e9c789e0e"
+                "23cc690e9c789e0e",
+                "7ba450cded54c897"
             ]
         ]
     },
@@ -671,7 +672,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 440,
+        "x": 520,
         "y": 80,
         "wires": [
             [
@@ -685,7 +686,7 @@
         "z": "9c7b55ced3f7365d",
         "name": "",
         "events": "all",
-        "x": 620,
+        "x": 700,
         "y": 80,
         "wires": [
             []
@@ -712,8 +713,8 @@
         "topic": "",
         "payload": "{\"group\":{\"hide\":[\"Smart_Parking_Heartbeats\",\"Smart_Parking_ActiveReservation\"],\"show\":[\"Smart_Parking_Control\",\"Smart_Parking_Statuses\"]}}",
         "payloadType": "json",
-        "x": 430,
-        "y": 140,
+        "x": 530,
+        "y": 160,
         "wires": [
             [
                 "dbf5b85b59d98add"
@@ -724,13 +725,13 @@
         "id": "90e8615ba7fa7d14",
         "type": "postgresql",
         "z": "9c7b55ced3f7365d",
-        "name": "",
+        "name": "SELECT ACTIVE",
         "query": "SET search_path TO smartparking;\nSELECT * FROM reservation\nWHERE start_time <= NOW()\nAND end_time >= NOW();\n",
         "postgreSQLConfig": "c51a91cb42a5ee81",
         "split": false,
         "rowsPerMsg": 1,
         "outputs": 1,
-        "x": 450,
+        "x": 790,
         "y": 420,
         "wires": [
             [
@@ -750,7 +751,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 650,
+        "x": 1010,
         "y": 420,
         "wires": [
             [
@@ -771,7 +772,7 @@
             {
                 "field": "gateway_id",
                 "title": "Gateway ID",
-                "width": "25%",
+                "width": "24%",
                 "align": "left",
                 "formatter": "plaintext",
                 "formatterParams": {
@@ -781,7 +782,7 @@
             {
                 "field": "lock_id",
                 "title": "Lock ID",
-                "width": "25%",
+                "width": "24%",
                 "align": "left",
                 "formatter": "plaintext",
                 "formatterParams": {
@@ -791,7 +792,7 @@
             {
                 "field": "status",
                 "title": "Status",
-                "width": "25%",
+                "width": "24%",
                 "align": "left",
                 "formatter": "plaintext",
                 "formatterParams": {
@@ -801,7 +802,7 @@
             {
                 "field": "timestamp",
                 "title": "Timestamp",
-                "width": "25%",
+                "width": "24%",
                 "align": "left",
                 "formatter": "plaintext",
                 "formatterParams": {
@@ -809,13 +810,11 @@
                 }
             }
         ],
-        "outputs": 1,
-        "cts": true,
-        "x": 950,
+        "outputs": 0,
+        "cts": false,
+        "x": 1030,
         "y": 500,
-        "wires": [
-            []
-        ]
+        "wires": []
     },
     {
         "id": "d6ceaeee7222d2d3",
@@ -880,7 +879,7 @@
         ],
         "outputs": 1,
         "cts": true,
-        "x": 910,
+        "x": 1250,
         "y": 420,
         "wires": [
             []
@@ -899,7 +898,7 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 130,
+        "x": 210,
         "y": 660,
         "wires": [
             [
@@ -920,7 +919,7 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 130,
+        "x": 210,
         "y": 720,
         "wires": [
             [
@@ -940,7 +939,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 650,
+        "x": 1010,
         "y": 220,
         "wires": [
             [
@@ -966,7 +965,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 630,
+        "x": 990,
         "y": 320,
         "wires": [
             [
@@ -987,7 +986,7 @@
         "id": "aa1e55b05de309d1",
         "type": "inject",
         "z": "9c7b55ced3f7365d",
-        "name": "",
+        "name": "Dropdown default",
         "props": [
             {
                 "p": "payload"
@@ -1004,7 +1003,7 @@
         "topic": "",
         "payload": "Statuses",
         "payloadType": "str",
-        "x": 120,
+        "x": 110,
         "y": 80,
         "wires": [
             [
@@ -1016,13 +1015,13 @@
         "id": "8cd179e4895fb7b0",
         "type": "postgresql",
         "z": "9c7b55ced3f7365d",
-        "name": "",
-        "query": "SET search_path TO smartparking;\nINSERT INTO smartparking.heartbeats (gateway_id, lock_id, status, timestamp)\nVALUES ( '{{{msg.gatewayId}}}', '{{{msg.lockId}}}', '{{{msg.statusEscaped}}}', '{{{msg.timestamp}}}');",
+        "name": "INSERT",
+        "query": "SET search_path TO smartparking;\nINSERT INTO smartparking.heartbeats (gateway_id, lock_id, status, timestamp)\nVALUES ( '{{{msg.gateway_id}}}', '{{{msg.lock_id}}}', '{{{msg.status}}}', '{{{msg.timestamp}}}');",
         "postgreSQLConfig": "c51a91cb42a5ee81",
         "split": false,
         "rowsPerMsg": "1",
         "outputs": 1,
-        "x": 630,
+        "x": 700,
         "y": 720,
         "wires": [
             []
@@ -1032,13 +1031,13 @@
         "id": "1a69ab3975a1abb7",
         "type": "postgresql",
         "z": "9c7b55ced3f7365d",
-        "name": "",
+        "name": "SELECT",
         "query": "SET search_path TO smartparking;\nSELECT * FROM heartbeats;",
         "postgreSQLConfig": "c51a91cb42a5ee81",
         "split": false,
         "rowsPerMsg": 1,
         "outputs": 1,
-        "x": 450,
+        "x": 520,
         "y": 500,
         "wires": [
             [
@@ -1050,20 +1049,19 @@
         "id": "561a875f1e5a2267",
         "type": "function",
         "z": "9c7b55ced3f7365d",
-        "name": "Prepare data function",
-        "func": "const newArgs = msg.payload.map(obj => JSON.stringify(obj));\n\nconst msgRes = {\n    payload: {\n        command: \"replaceData\",\n        arguments: newArgs  // array di stringhe JSON\n    }\n};\n\nreturn msgRes;\n",
+        "name": "Extract db data",
+        "func": "\n\nconst rows = msg.payload;\n                \nconst msgs = rows.map(row => ({\n        payload: {\n        command: \"addRow\",\n        arguments: [row]\n        }\n    }));\nreturn [msgs];",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 660,
+        "x": 720,
         "y": 500,
         "wires": [
             [
-                "b3d6f18e32e15be3",
-                "aa390849463f0178"
+                "b3d6f18e32e15be3"
             ]
         ]
     },
@@ -1071,13 +1069,13 @@
         "id": "1c3af9fc75ff70f2",
         "type": "postgresql",
         "z": "9c7b55ced3f7365d",
-        "name": "",
+        "name": "DELETE",
         "query": "SET search_path TO smartparking;\nDELETE FROM heartbeats;",
         "postgreSQLConfig": "c51a91cb42a5ee81",
         "split": false,
         "rowsPerMsg": 1,
         "outputs": 1,
-        "x": 510,
+        "x": 580,
         "y": 560,
         "wires": [
             [
@@ -1086,19 +1084,73 @@
         ]
     },
     {
-        "id": "aa390849463f0178",
-        "type": "debug",
+        "id": "7ba450cded54c897",
+        "type": "switch",
         "z": "9c7b55ced3f7365d",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 960,
-        "y": 560,
-        "wires": []
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Heartbeats",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 270,
+        "y": 260,
+        "wires": [
+            [
+                "3cd3dd64c8553177"
+            ]
+        ]
+    },
+    {
+        "id": "3cd3dd64c8553177",
+        "type": "delay",
+        "z": "9c7b55ced3f7365d",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 300,
+        "y": 480,
+        "wires": [
+            [
+                "1a69ab3975a1abb7"
+            ]
+        ]
+    },
+    {
+        "id": "5b8b883cd13923ce",
+        "type": "function",
+        "z": "9c7b55ced3f7365d",
+        "name": "insert new heartbeats",
+        "func": "\n\nconst msgadd = {payload: {\n        command: \"addRow\",\n        arguments: [{gateway_id:msg.gateway_id, lock_id:msg.lock_id, status:msg.status, timestamp:msg.timestamp }]\n        }}\n\nreturn msgadd;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 640,
+        "wires": [
+            [
+                "b3d6f18e32e15be3"
+            ]
+        ]
     }
 ]
