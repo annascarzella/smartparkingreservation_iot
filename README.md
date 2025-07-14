@@ -79,14 +79,7 @@ If the reservation expires, the lock will automatically reset to available statu
 
 The `.env` file is not included in the repository for security reasons. To run the project you need to create the file in the root directory with the following variables.
 
-WSMQTT=ws://mqtt:8000
-POSTGRES_PASSWORD=your_postgres_password
-POSTGRES_USER=your_postgres_user
-POSTGRES_DB=smartparking
-DB_URL=postgres://<user>:<password>@postgres:5432/smartparking
-JWT_SECRET=your_jwt_secret
-BACKEND_URL=http://localhost:5002/
-BACKEND_PORT=5002
+```env WSMQTT=ws://mqtt:8000 POSTGRES_PASSWORD=your_postgres_password POSTGRES_USER=your_postgres_user POSTGRES_DB=smartparking DB_URL=postgres://&lt;user&gt;:&lt;password&gt;@postgres:5432/smartparking JWT_SECRET=your_jwt_secret BACKEND_URL=http://localhost:5002/ BACKEND_PORT=5002 ```
 
 ## Authors
 
