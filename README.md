@@ -83,7 +83,7 @@ The `.env` file is not included in the repository for security reasons. To run t
 WSMQTT="ws://mqtt:8000"
 POSTGRES_PASSWORD="your_postgres_password"
 POSTGRES_USER="your_postgres_user"
-POSTGRES_DB=s"martparking"
+POSTGRES_DB="smartparking"
 DB_URL="postgres://<user>:<password>@postgres:5432/smartparking"
 JWT_SECRET="your_jwt_secret"
 BACKEND_URL="http://localhost:5002/"
