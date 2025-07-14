@@ -35,8 +35,6 @@ The following Node-RED libraries are used in this project:
 To run this project locally, ensure the following tools are installed on your system:
 - **Docker** 
 - **Docker compose** 
-- **Just**
-- **Node.js** 
 - **Wokwi Simulator** (extension in Visual Studio Code)
 - **dotenv** (to manage environment variables)
 
