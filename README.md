@@ -17,6 +17,7 @@ Since most of the low-level details of the project couldn't be implemented due t
     - `/ID_gateway/down_link` – Commands to locks
     - `/ID_gateway/down_link_ack` – Command acknowledgment
     - `/ID_gateway/heartbeat` – Periodic health check
+      
 All messages are exchanged in JSON format.
 
 - **Node-RED**: Node-RED is used to display a real-time dashboard that includes:
@@ -24,6 +25,7 @@ All messages are exchanged in JSON format.
     - Locks statuses (reserved, occupied, free, out of order)
     - Heartbeats timestamps for each lock
     - Active reservations data
+      
 The following Node-RED libraries are used in this project:  
 `node-red`, `node-red-contrib-aedes`, `node-red-contrib-postgresql`, `node-red-contrib-web-worldmap-cn`, `node-red-dashboard`, `node-red-node-sqlite`, `node-red-node-ui-table`.
 
