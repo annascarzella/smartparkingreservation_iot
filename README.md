@@ -38,7 +38,7 @@ To run this project locally, ensure the following tools are installed on your sy
 - **Just**
 - **Node.js** 
 - **Wokwi Simulator** (extension in Visual Studio Code)
-- **dotenv** this project uses **dotenv** to manage environment variables.
+- **dotenv** (to manage environment variables)
 
 ## Environment setup
 
@@ -73,6 +73,8 @@ Note: Two of the locks are powered by Wokwi, while the other two are Node.js-bas
     - `Arrived?`: you have to confirm your arrival to lower the lock arm, allowing you to park
     - `Open in Google Maps (icon)`: allows you to navigate to the parking location using Google Maps
 If the reservation expires, the lock will automatically reset to available status.
+
+5. You can visit the Node-RED dashboard at `http://localhost:1880/ui/`
 
 ## Additional notes
 
