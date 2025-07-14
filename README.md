@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project implements a Smart parking reservation system designed as an IoT solution to improve urban mobility and it's based on a responsive web application where users can reserve parking slots in advance. 
+This project implements a **Smart parking reservation system** designed as an IoT solution to improve urban mobility and it's based on a responsive web application where users can reserve parking slots in advance. 
 Since most of the low-level details of the project couldn't be implemented due to practical constraints, both gateways and locks are simulated. 
 
 
