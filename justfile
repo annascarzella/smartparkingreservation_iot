@@ -45,3 +45,12 @@ wokwi:
     ./wokwi/set_mqtt_ip.sh
     docker compose build wokwi
     docker compose up wokwi
+    
+destroy:
+    docker compose down --remove-orphans
+    docker volume prune -f
+    docker network prune -f
+    docker system prune -f
+    docker builder prune -f
+    docker image prune -f
+    docker container prune -f
