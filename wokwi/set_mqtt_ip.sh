@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
-# Get the first IP that starts with 192.
-IP=$(hostname -I 2>/dev/null | tr ' ' '\n' | grep -m1 '^192\.')
-
-if [ -z "$IP" ]; then
-    echo "No IP starting with 192. found"
-    exit 1
+# Get the first private IP (starting with 192) — macOS & Linux support
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS: try common interfaces or fall back to parsing ifconfig
+    IP=$(ipconfig getifaddr en0 || ipconfig getifaddr en1 || ifconfig | grep -Eo 'inet (192\.[0-9]+\.[0-9]+\.[0-9]+)' | awk '{print $2}' | head -n1)
+else
+    # Linux
+    IP=$(hostname -I 2>/dev/null | tr ' ' '\n' | grep -m1 '^192\.')
 fi
 
 echo "MQTT_SERVER will be set to: $IP"
